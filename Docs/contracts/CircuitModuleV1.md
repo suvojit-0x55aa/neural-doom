@@ -49,6 +49,8 @@ Future programs use `exact-i32-u32-v1` (`HM_EXACT_INTEGER_ENCODING_V1`). Registe
 
 Operations write consecutive registers after immutable inputs, may read only earlier registers, and carry zero flags/reserved words in version 1. CPU and Metal execute the same record without Float conversion. `CircuitExactV1.msl` returns a status and output count; it zeros the count before evaluation so overflow, table bounds, invalid opcode/order, division failure, or incomplete roots cannot partly commit.
 
+The Metal dispatch carries live counts and caller capacities for inputs, operations, table descriptors, flattened table cells, output-register roots, scratch registers, outputs, and status words. It validates every span and every table descriptor before reading inputs, operations, roots, or cells, or writing scratch and outputs.
+
 ## Serialization and hashing
 
 Canonical integers are unsigned little-endian words; signed values contribute the same 32 raw bits. Struct padding, pointer values, unused capacity contents, and host endianness never contribute. Tables and events must already be in canonical order.

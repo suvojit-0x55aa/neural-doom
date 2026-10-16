@@ -227,6 +227,36 @@ static HMModuleStatus hm_validate_events(const HMModuleEventV1 *events,
     return HM_MODULE_EXACT;
 }
 
+static HMModuleStatus hm_validate_result_record(const HMModuleResultV1 *result) {
+    if (!result) return HM_MODULE_MALFORMED_SPAN;
+    if (result->abi_version != HM_CIRCUIT_MODULE_ABI_VERSION)
+        return HM_MODULE_INVALID_ABI;
+    if (!HM_IsKnownModuleIDV1(result->module_id)) return HM_MODULE_UNKNOWN_ID;
+    if (!result->source_hash) return HM_MODULE_SOURCE_HASH_MISMATCH;
+    if (result->reserved) return HM_MODULE_MALFORMED_SPAN;
+    if (result->status > HM_MODULE_PARTIAL_RESULT) return HM_MODULE_UNKNOWN_ID;
+    if ((result->output_capacity && !result->outputs) ||
+        (result->state_delta_capacity && !result->state_deltas) ||
+        (result->event_capacity && !result->events))
+        return HM_MODULE_MALFORMED_SPAN;
+    if (result->output_count > result->output_capacity ||
+        result->state_delta_count > result->state_delta_capacity ||
+        result->event_count > result->event_capacity)
+        return HM_MODULE_CAPACITY_EXCEEDED;
+    if (result->status != HM_MODULE_EXACT &&
+        (result->output_count || result->state_delta_count || result->event_count))
+        return HM_MODULE_PARTIAL_RESULT;
+    for (uint32_t i = 0; i < result->state_delta_count; ++i) {
+        const HMStateDeltaV1 *delta = &result->state_deltas[i];
+        if (!HM_IsKnownWorldArrayIDV1(delta->array_id) ||
+            !HM_IsKnownWorldCellIDV1(delta->array_id, delta->cell_id))
+            return HM_MODULE_UNKNOWN_ID;
+        if (i && !hm_delta_before(&result->state_deltas[i - 1], delta))
+            return HM_MODULE_INVALID_ORDER;
+    }
+    return hm_validate_events(result->events, result->event_count);
+}
+
 HMModuleStatus HM_ValidateModuleInputV1(const HMModuleInputV1 *input,
                                         uint32_t expected_module_id,
                                         uint64_t expected_source_hash) {
@@ -286,49 +316,23 @@ HMModuleStatus HM_FinalizeModuleResultV1(const HMModuleInputV1 *input,
         HM_RejectModuleResultV1(result, status);
         return status;
     }
-    if (result->abi_version != input->abi_version) status = HM_MODULE_INVALID_ABI;
-    else if (!HM_IsKnownModuleIDV1(result->module_id) ||
-             result->module_id != input->module_id)
+    status = hm_validate_result_record(result);
+    if (status == HM_MODULE_EXACT && result->abi_version != input->abi_version)
+        status = HM_MODULE_INVALID_ABI;
+    else if (status == HM_MODULE_EXACT && result->module_id != input->module_id)
         status = HM_MODULE_UNKNOWN_ID;
-    else if (result->tic_id != input->tic_id ||
-             result->source_hash != input->source_hash)
+    else if (status == HM_MODULE_EXACT && (result->tic_id != input->tic_id ||
+             result->source_hash != input->source_hash))
         status = HM_MODULE_SOURCE_HASH_MISMATCH;
-    else if (result->reserved) status = HM_MODULE_MALFORMED_SPAN;
-    else if (result->status > HM_MODULE_PARTIAL_RESULT)
-        status = HM_MODULE_UNKNOWN_ID;
-    else if (result->output_capacity != input->output_capacity ||
+    else if (status == HM_MODULE_EXACT &&
+             (result->output_capacity != input->output_capacity ||
              result->state_delta_capacity != input->state_delta_capacity ||
-             result->event_capacity != input->event_capacity)
+             result->event_capacity != input->event_capacity))
         status = HM_MODULE_MALFORMED_SPAN;
-    else if ((result->output_capacity && !result->outputs) ||
-             (result->state_delta_capacity && !result->state_deltas) ||
-             (result->event_capacity && !result->events))
-        status = HM_MODULE_MALFORMED_SPAN;
-    else if (result->output_count > result->output_capacity ||
-             result->state_delta_count > result->state_delta_capacity ||
-             result->event_count > result->event_capacity)
-        status = HM_MODULE_CAPACITY_EXCEEDED;
-    else if (result->status != HM_MODULE_EXACT) {
-        status = (result->output_count || result->state_delta_count || result->event_count)
-                     ? HM_MODULE_PARTIAL_RESULT
-                     : result->status;
-    } else if (result->output_count != input->output_count) {
+    else if (status == HM_MODULE_EXACT && result->status != HM_MODULE_EXACT)
+        status = result->status;
+    else if (status == HM_MODULE_EXACT && result->output_count != input->output_count) {
         status = HM_MODULE_PARTIAL_RESULT;
-    } else {
-        for (uint32_t i = 0; i < result->state_delta_count; ++i) {
-            const HMStateDeltaV1 *delta = &result->state_deltas[i];
-            if (!HM_IsKnownWorldArrayIDV1(delta->array_id) ||
-                !HM_IsKnownWorldCellIDV1(delta->array_id, delta->cell_id)) {
-                status = HM_MODULE_UNKNOWN_ID;
-                break;
-            }
-            if (i && !hm_delta_before(&result->state_deltas[i - 1], delta)) {
-                status = HM_MODULE_INVALID_ORDER;
-                break;
-            }
-        }
-        if (status == HM_MODULE_EXACT)
-            status = hm_validate_events(result->events, result->event_count);
     }
     if (status != HM_MODULE_EXACT) HM_RejectModuleResultV1(result, status);
     return status;
@@ -362,7 +366,7 @@ size_t HM_SerializeModuleEventV1(const HMModuleEventV1 *event,
     hm_put_u32(&at, event->payload_count);
     hm_put_u32(&at, event->flags);
     for (uint32_t i = 0; i < 4; ++i)
-        hm_put_u32(&at, (uint32_t)event->payload[i]);
+        hm_put_u32(&at, i < event->payload_count ? (uint32_t)event->payload[i] : 0);
     return HM_EVENT_SERIALIZED_SIZE_V1;
 }
 
@@ -432,25 +436,7 @@ size_t HM_SerializeModuleInputV1(const HMModuleInputV1 *input,
 }
 
 size_t HM_CanonicalModuleResultSizeV1(const HMModuleResultV1 *result) {
-    if (!result || result->status > HM_MODULE_PARTIAL_RESULT ||
-        result->output_count > result->output_capacity ||
-        result->state_delta_count > result->state_delta_capacity ||
-        result->event_count > result->event_capacity ||
-        (result->output_count && !result->outputs) ||
-        (result->state_delta_count && !result->state_deltas) ||
-        (result->event_count && !result->events))
-        return 0;
-    if (result->status != HM_MODULE_EXACT &&
-        (result->output_count || result->state_delta_count || result->event_count))
-        return 0;
-    for (uint32_t i = 0; i < result->state_delta_count; ++i) {
-        const HMStateDeltaV1 *delta = &result->state_deltas[i];
-        if (!HM_IsKnownWorldArrayIDV1(delta->array_id) ||
-            !HM_IsKnownWorldCellIDV1(delta->array_id, delta->cell_id) ||
-            (i && !hm_delta_before(&result->state_deltas[i - 1], delta)))
-            return 0;
-    }
-    if (hm_validate_events(result->events, result->event_count) != HM_MODULE_EXACT)
+    if (hm_validate_result_record(result) != HM_MODULE_EXACT)
         return 0;
     size_t total = 60;
     if (!hm_add_size(&total, result->output_count, 4) ||

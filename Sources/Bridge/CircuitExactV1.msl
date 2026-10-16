@@ -10,6 +10,7 @@ constant uint HM_MODULE_CAPACITY_EXCEEDED_MSL = 2u;
 constant uint HM_MODULE_EXECUTION_ERROR_MSL = 3u;
 constant uint HM_MODULE_INVALID_ABI_MSL = 5u;
 constant uint HM_MODULE_UNKNOWN_ID_MSL = 6u;
+constant uint HM_MODULE_MALFORMED_SPAN_MSL = 8u;
 constant uint HM_MODULE_INVALID_ORDER_MSL = 9u;
 constant uint HM_MODULE_TABLE_BOUNDS_MSL = 10u;
 constant uint HM_MODULE_INTEGER_OVERFLOW_MSL = 11u;
@@ -41,6 +42,7 @@ struct HMExactOpV1MSL {
 struct HMExactTableDescriptorV1MSL {
     uint table_id;
     uint length;
+    uint capacity;
     uint offset;
     uint reserved;
 };
@@ -49,12 +51,36 @@ struct HMExactDispatchV1MSL {
     uint abi_version;
     uint integer_encoding;
     uint input_count;
+    uint input_capacity;
     uint register_count;
+    uint scratch_capacity;
     uint operation_count;
+    uint operation_capacity;
     uint output_count;
+    uint output_capacity;
     uint table_count;
-    uint reserved;
+    uint table_capacity;
+    uint table_cell_count;
+    uint table_cell_capacity;
+    uint output_register_capacity;
+    uint status_capacity;
+    uint2 reserved;
 };
+
+static bool hm_is_known_table_v1(uint table_id) {
+    switch (table_id) {
+        case 0x00030001u: case 0x00030002u: case 0x00030003u:
+        case 0x00030004u: case 0x00030005u: case 0x00030006u:
+        case 0x00030007u: case 0x00030008u: case 0x00030009u:
+        case 0x0003000au: case 0x0003000bu: case 0x0003000cu:
+        case 0x0003000du: case 0x0003000eu: case 0x0003000fu:
+        case 0x00030010u: case 0x00030011u:
+        case 0x00060001u: case 0x00060002u: case 0x00060003u:
+        case 0x00070001u: case 0x00090001u:
+        case 0x000a0001u: case 0x000a0002u: return true;
+        default: return false;
+    }
+}
 
 kernel void evaluateExactCircuitV1(
     const device uint *inputs [[buffer(0)]],
@@ -68,22 +94,55 @@ kernel void evaluateExactCircuitV1(
     constant HMExactDispatchV1MSL &dispatch [[buffer(8)]],
     uint tid [[thread_position_in_grid]]) {
     if (tid != 0) return;
+    if (dispatch.status_capacity < 2u) return;
     status[0] = HM_MODULE_EXECUTION_ERROR_MSL;
     status[1] = 0;
-    if (dispatch.output_count <= HM_EXACT_MAX_REGISTERS_V1_MSL) {
-        for (uint i = 0; i < dispatch.output_count; ++i) outputs[i] = 0;
-    }
     if (dispatch.abi_version != HM_EXACT_PROGRAM_ABI_VERSION_MSL ||
         dispatch.integer_encoding != HM_EXACT_INTEGER_ENCODING_V1_MSL) {
         status[0] = HM_MODULE_INVALID_ABI_MSL;
         return;
     }
+    if (any(dispatch.reserved != uint2(0u))) {
+        status[0] = HM_MODULE_MALFORMED_SPAN_MSL;
+        return;
+    }
     if (dispatch.register_count > HM_EXACT_MAX_REGISTERS_V1_MSL ||
         dispatch.input_count > dispatch.register_count ||
-        dispatch.output_count > dispatch.register_count) {
+        dispatch.output_count > dispatch.register_count ||
+        dispatch.input_count > dispatch.input_capacity ||
+        dispatch.register_count > dispatch.scratch_capacity ||
+        dispatch.operation_count > dispatch.operation_capacity ||
+        dispatch.output_count > dispatch.output_capacity ||
+        dispatch.output_count > dispatch.output_register_capacity ||
+        dispatch.table_count > dispatch.table_capacity ||
+        dispatch.table_cell_count > dispatch.table_cell_capacity) {
         status[0] = HM_MODULE_CAPACITY_EXCEEDED_MSL;
         return;
     }
+    for (uint table_index = 0; table_index < dispatch.table_count; ++table_index) {
+        HMExactTableDescriptorV1MSL table = tables[table_index];
+        if (!hm_is_known_table_v1(table.table_id)) {
+            status[0] = HM_MODULE_UNKNOWN_ID_MSL;
+            return;
+        }
+        if (table_index != 0u && tables[table_index - 1u].table_id >= table.table_id) {
+            status[0] = HM_MODULE_INVALID_ORDER_MSL;
+            return;
+        }
+        if (table.length > table.capacity ||
+            table.offset > dispatch.table_cell_count ||
+            table.length > dispatch.table_cell_count - table.offset ||
+            table.offset > dispatch.table_cell_capacity ||
+            table.capacity > dispatch.table_cell_capacity - table.offset) {
+            status[0] = HM_MODULE_CAPACITY_EXCEEDED_MSL;
+            return;
+        }
+        if (table.reserved != 0u) {
+            status[0] = HM_MODULE_MALFORMED_SPAN_MSL;
+            return;
+        }
+    }
+    for (uint i = 0; i < dispatch.output_count; ++i) outputs[i] = 0;
     for (uint i = 0; i < dispatch.input_count; ++i) scratch[i] = inputs[i];
     for (uint i = 0; i < dispatch.operation_count; ++i) {
         HMExactOpV1MSL op = operations[i];

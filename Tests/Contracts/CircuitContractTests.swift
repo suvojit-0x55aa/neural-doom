@@ -370,6 +370,15 @@ private func canonicalAuxiliaryRecords() {
     require(eventBytes.withUnsafeMutableBufferPointer {
         HM_SerializeModuleEventV1(&event, $0.baseAddress, $0.count)
     } == 48, "canonical event serialization")
+    var staleEvent = event
+    staleEvent.payload.1 = 17
+    staleEvent.payload.2 = -21
+    staleEvent.payload.3 = 33
+    var staleEventBytes = [UInt8](repeating: 0xff, count: 48)
+    require(staleEventBytes.withUnsafeMutableBufferPointer {
+        HM_SerializeModuleEventV1(&staleEvent, $0.baseAddress, $0.count)
+    } == 48 && staleEventBytes == eventBytes,
+    "inactive event payload changed canonical serialization")
     event.event_id = 0xffff_ffff
     require(eventBytes.withUnsafeMutableBufferPointer {
         HM_SerializeModuleEventV1(&event, $0.baseAddress, $0.count)
@@ -392,6 +401,28 @@ private func canonicalAuxiliaryRecords() {
     require(primitiveBytes.withUnsafeMutableBufferPointer {
         HM_SerializeDrawPrimitiveV1(&primitive, $0.baseAddress, $0.count)
     } == 0, "unknown draw primitive serialized")
+
+    func expectResultSerializationRejection(
+        _ label: String, _ mutate: (inout HMModuleResultV1) -> Void
+    ) {
+        withContractFixture { _, result in
+            mutate(&result)
+            var bytes = [UInt8](repeating: 0, count: 256)
+            require(HM_CanonicalModuleResultSizeV1(&result) == 0 &&
+                    bytes.withUnsafeMutableBufferPointer {
+                        HM_SerializeModuleResultV1(&result, $0.baseAddress, $0.count)
+                    } == 0,
+                    "invalid canonical result serialized: \(label)")
+        }
+    }
+    expectResultSerializationRejection("ABI") { $0.abi_version += 1 }
+    expectResultSerializationRejection("module") { $0.module_id = 0xffff_ffff }
+    expectResultSerializationRejection("source hash") { $0.source_hash = 0 }
+    expectResultSerializationRejection("reserved") { $0.reserved = 1 }
+    expectResultSerializationRejection("null capacity") {
+        $0.output_count = 0
+        $0.outputs = nil
+    }
 }
 
 private func exactOp(_ opcode: UInt32, _ destination: UInt32,
@@ -402,7 +433,8 @@ private func exactOp(_ opcode: UInt32, _ destination: UInt32,
 }
 
 private func exactCPU(inputs: [UInt32], operations: [HMExactOpV1], roots: [UInt32],
-                      tableCells: [Int32] = [7, -9], badHash: Bool = false)
+                      tableCells: [Int32] = [7, -9], badHash: Bool = false,
+                      mutateProgram: ((inout HMExactProgramV1) -> Void)? = nil)
     -> (UInt32, [UInt32], UInt32) {
     var mutableInputs = inputs
     var mutableOperations = operations
@@ -440,6 +472,7 @@ private func exactCPU(inputs: [UInt32], operations: [HMExactOpV1], roots: [UInt3
                                     operations: UnsafePointer(operationBuffer.baseAddress!),
                                     output_registers: UnsafePointer(rootBuffer.baseAddress!))
                                 program.source_hash = HM_ExactProgramHashV1(&program)
+                                mutateProgram?(&program)
                                 if badHash { program.source_hash ^= 1 }
                                 returnedStatus = HM_EvaluateExactProgramV1(
                                     &program, inputBuffer.baseAddress, UInt32(inputs.count),
@@ -458,18 +491,34 @@ private func exactCPU(inputs: [UInt32], operations: [HMExactOpV1], roots: [UInt3
 
 private func exactMetal(device: MTLDevice, pipeline: MTLComputePipelineState,
                         inputs: [UInt32], operations: [HMExactOpV1], roots: [UInt32],
-                        tableCells: [Int32] = [7, -9]) -> (UInt32, [UInt32], UInt32) {
-    let descriptors: [HMExactTableDescriptorV1] = tableCells.isEmpty ? [] : [
+                        tableCells: [Int32] = [7, -9],
+                        mutateDescriptors: ((inout [HMExactTableDescriptorV1]) -> Void)? = nil,
+                        mutateDispatch: ((inout HMExactDispatchV1) -> Void)? = nil)
+    -> (UInt32, [UInt32], UInt32) {
+    var descriptors: [HMExactTableDescriptorV1] = tableCells.isEmpty ? [] : [
         HMExactTableDescriptorV1(table_id: UInt32(HM_TABLE_VERTICES),
-                                 length: UInt32(tableCells.count), offset: 0, reserved: 0)
+                                 length: UInt32(tableCells.count),
+                                 capacity: UInt32(tableCells.count), offset: 0, reserved: 0)
     ]
-    var dispatch = HMExactDispatchV1(
-        abi_version: UInt32(HM_EXACT_PROGRAM_ABI_VERSION),
-        integer_encoding: UInt32(HM_EXACT_INTEGER_ENCODING_V1),
-        input_count: UInt32(inputs.count),
-        register_count: UInt32(inputs.count + operations.count),
-        operation_count: UInt32(operations.count), output_count: UInt32(roots.count),
-        table_count: UInt32(descriptors.count), reserved: 0)
+    mutateDescriptors?(&descriptors)
+    var dispatch = HMExactDispatchV1()
+    dispatch.abi_version = UInt32(HM_EXACT_PROGRAM_ABI_VERSION)
+    dispatch.integer_encoding = UInt32(HM_EXACT_INTEGER_ENCODING_V1)
+    dispatch.input_count = UInt32(inputs.count)
+    dispatch.input_capacity = UInt32(inputs.count)
+    dispatch.register_count = UInt32(inputs.count + operations.count)
+    dispatch.scratch_capacity = dispatch.register_count
+    dispatch.operation_count = UInt32(operations.count)
+    dispatch.operation_capacity = dispatch.operation_count
+    dispatch.output_count = UInt32(roots.count)
+    dispatch.output_capacity = dispatch.output_count
+    dispatch.table_count = UInt32(descriptors.count)
+    dispatch.table_capacity = dispatch.table_count
+    dispatch.table_cell_count = UInt32(tableCells.count)
+    dispatch.table_cell_capacity = dispatch.table_cell_count
+    dispatch.output_register_capacity = dispatch.output_count
+    dispatch.status_capacity = 2
+    mutateDispatch?(&dispatch)
     func buffer<T>(_ values: [T]) -> MTLBuffer {
         if values.isEmpty { return device.makeBuffer(length: 4, options: .storageModeShared)! }
         return values.withUnsafeBytes {
@@ -534,31 +583,33 @@ private func exactIntegerConformance() {
 
     let inputs: [UInt32] = [
         UInt32(bitPattern: Int32.min), UInt32(bitPattern: Int32.max),
-        UInt32.max, 65_536, 98_304, UInt32(bitPattern: -65_536), 1, 1
+        UInt32.max, 65_536, 98_304, UInt32(bitPattern: -65_536), 1, 1, 0
     ]
     let operations = [
-        exactOp(UInt32(HM_EXACT_OP_MOVE), 8, 0),
-        exactOp(UInt32(HM_EXACT_OP_MOVE), 9, 1),
-        exactOp(UInt32(HM_EXACT_OP_ANGLE_ADD_U32), 10, 2, 7),
-        exactOp(UInt32(HM_EXACT_OP_FIXED_MUL_16_16), 11, 4, 5),
-        exactOp(UInt32(HM_EXACT_OP_FIXED_DIV_16_16), 12, 4, 5),
-        exactOp(UInt32(HM_EXACT_OP_COMPARE_LT_I32), 13, 0, 1),
-        exactOp(UInt32(HM_EXACT_OP_GATE), 14, 1, 7),
-        exactOp(UInt32(HM_EXACT_OP_TABLE_READ_I32), 15, 6,
+        exactOp(UInt32(HM_EXACT_OP_MOVE), 9, 0),
+        exactOp(UInt32(HM_EXACT_OP_MOVE), 10, 1),
+        exactOp(UInt32(HM_EXACT_OP_ANGLE_ADD_U32), 11, 2, 7),
+        exactOp(UInt32(HM_EXACT_OP_FIXED_MUL_16_16), 12, 4, 5),
+        exactOp(UInt32(HM_EXACT_OP_FIXED_DIV_16_16), 13, 4, 5),
+        exactOp(UInt32(HM_EXACT_OP_COMPARE_LT_I32), 14, 0, 1),
+        exactOp(UInt32(HM_EXACT_OP_GATE), 15, 1, 7),
+        exactOp(UInt32(HM_EXACT_OP_TABLE_READ_I32), 16, 6,
                 table: UInt32(HM_TABLE_VERTICES)),
-        exactOp(UInt32(HM_EXACT_OP_ADD_I32), 16, 0, 1),
-        exactOp(UInt32(HM_EXACT_OP_FIXED_MUL_16_16), 17, 0, 3),
-        exactOp(UInt32(HM_EXACT_OP_FIXED_MUL_16_16), 18, 1, 3),
-        exactOp(UInt32(HM_EXACT_OP_FIXED_DIV_16_16), 19, 0, 3),
-        exactOp(UInt32(HM_EXACT_OP_FIXED_DIV_16_16), 20, 1, 3)
+        exactOp(UInt32(HM_EXACT_OP_ADD_I32), 17, 0, 1),
+        exactOp(UInt32(HM_EXACT_OP_FIXED_MUL_16_16), 18, 0, 3),
+        exactOp(UInt32(HM_EXACT_OP_FIXED_MUL_16_16), 19, 1, 3),
+        exactOp(UInt32(HM_EXACT_OP_FIXED_DIV_16_16), 20, 0, 3),
+        exactOp(UInt32(HM_EXACT_OP_FIXED_DIV_16_16), 21, 1, 3),
+        exactOp(UInt32(HM_EXACT_OP_COMPARE_EQUAL_BITS), 22, 6, 7),
+        exactOp(UInt32(HM_EXACT_OP_GATE), 23, 1, 8)
     ]
-    let roots = Array(UInt32(8)...UInt32(20))
+    let roots = Array(UInt32(9)...UInt32(23))
     let expected: [UInt32] = [
         UInt32(bitPattern: Int32.min), UInt32(bitPattern: Int32.max), 0,
         UInt32(bitPattern: -98_304), UInt32(bitPattern: -98_304), 1,
         UInt32(bitPattern: Int32.max), UInt32(bitPattern: -9), UInt32.max,
         UInt32(bitPattern: Int32.min), UInt32(bitPattern: Int32.max),
-        UInt32(bitPattern: Int32.min), UInt32(bitPattern: Int32.max)
+        UInt32(bitPattern: Int32.min), UInt32(bitPattern: Int32.max), 1, 0
     ]
     let cpu = exactCPU(inputs: inputs, operations: operations, roots: roots)
     require(cpu.0 == UInt32(HM_MODULE_EXACT) && cpu.2 == UInt32(expected.count) &&
@@ -567,6 +618,92 @@ private func exactIntegerConformance() {
                            operations: operations, roots: roots)
     require(metal.0 == UInt32(HM_MODULE_EXACT) && metal.2 == UInt32(expected.count) &&
             metal.1 == expected, "exact integer Metal edge vectors")
+
+    let spanInputs = [UInt32(1)]
+    let spanOperations = [exactOp(UInt32(HM_EXACT_OP_MOVE), 1, 0)]
+    let spanRoots = [UInt32(1)]
+    func expectCPUProgramRejection(
+        _ label: String, _ expectedStatus: UInt32,
+        _ mutate: @escaping (inout HMExactProgramV1) -> Void
+    ) {
+        let result = exactCPU(inputs: spanInputs, operations: spanOperations,
+                              roots: spanRoots, tableCells: [], mutateProgram: mutate)
+        require(result.0 == expectedStatus && result.2 == 0,
+                "exact CPU program span accepted: \(label)")
+    }
+    expectCPUProgramRejection("operation count", UInt32(HM_MODULE_CAPACITY_EXCEEDED)) {
+        $0.operation_capacity = 0
+    }
+    expectCPUProgramRejection("output-register count", UInt32(HM_MODULE_CAPACITY_EXCEEDED)) {
+        $0.output_capacity = 0
+    }
+    expectCPUProgramRejection("null operations", UInt32(HM_MODULE_MALFORMED_SPAN)) {
+        $0.operations = nil
+    }
+    expectCPUProgramRejection("null output registers", UInt32(HM_MODULE_MALFORMED_SPAN)) {
+        $0.output_registers = nil
+    }
+
+    func expectMetalDispatchRejection(
+        _ label: String, _ expectedStatus: UInt32,
+        _ mutate: @escaping (inout HMExactDispatchV1) -> Void
+    ) {
+        let result = exactMetal(device: device, pipeline: pipeline, inputs: spanInputs,
+                                operations: spanOperations, roots: spanRoots,
+                                tableCells: [], mutateDispatch: mutate)
+        require(result.0 == expectedStatus && result.2 == 0,
+                "exact Metal dispatch span accepted: \(label)")
+    }
+    expectMetalDispatchRejection("inputs", UInt32(HM_MODULE_CAPACITY_EXCEEDED)) {
+        $0.input_capacity = 0
+    }
+    expectMetalDispatchRejection("scratch", UInt32(HM_MODULE_CAPACITY_EXCEEDED)) {
+        $0.scratch_capacity = 1
+    }
+    expectMetalDispatchRejection("operations", UInt32(HM_MODULE_CAPACITY_EXCEEDED)) {
+        $0.operation_capacity = 0
+    }
+    expectMetalDispatchRejection("outputs", UInt32(HM_MODULE_CAPACITY_EXCEEDED)) {
+        $0.output_capacity = 0
+    }
+    expectMetalDispatchRejection("output registers", UInt32(HM_MODULE_CAPACITY_EXCEEDED)) {
+        $0.output_register_capacity = 0
+    }
+    expectMetalDispatchRejection("tables", UInt32(HM_MODULE_CAPACITY_EXCEEDED)) {
+        $0.table_count = 1
+    }
+    expectMetalDispatchRejection("table cells", UInt32(HM_MODULE_CAPACITY_EXCEEDED)) {
+        $0.table_cell_count = 1
+    }
+
+    let descriptorInputs = [UInt32(0)]
+    let descriptorOperations = [exactOp(UInt32(HM_EXACT_OP_TABLE_READ_I32), 1, 0,
+                                        table: UInt32(HM_TABLE_VERTICES))]
+    func expectMetalDescriptorRejection(
+        _ label: String, _ expectedStatus: UInt32,
+        _ mutate: @escaping (inout [HMExactTableDescriptorV1]) -> Void
+    ) {
+        let result = exactMetal(device: device, pipeline: pipeline,
+                                inputs: descriptorInputs, operations: descriptorOperations,
+                                roots: [1], mutateDescriptors: mutate)
+        require(result.0 == expectedStatus && result.2 == 0,
+                "exact Metal table descriptor accepted: \(label)")
+    }
+    expectMetalDescriptorRejection("unknown ID", UInt32(HM_MODULE_UNKNOWN_ID)) {
+        $0[0].table_id = 0xffff_ffff
+    }
+    expectMetalDescriptorRejection("reserved", UInt32(HM_MODULE_MALFORMED_SPAN)) {
+        $0[0].reserved = 1
+    }
+    expectMetalDescriptorRejection("length capacity", UInt32(HM_MODULE_CAPACITY_EXCEEDED)) {
+        $0[0].capacity = 1
+    }
+    expectMetalDescriptorRejection("flattened range", UInt32(HM_MODULE_CAPACITY_EXCEEDED)) {
+        $0[0].offset = UInt32.max
+    }
+    expectMetalDescriptorRejection("ordering", UInt32(HM_MODULE_INVALID_ORDER)) {
+        $0.append($0[0])
+    }
 
     let overflowInputs = [UInt32(bitPattern: Int32.max), UInt32(1)]
     let overflowOps = [exactOp(UInt32(HM_EXACT_OP_ADD_I32), 2, 0, 1)]
@@ -649,7 +786,8 @@ func runCircuitContractTests() {
             "Swift result/delta layout")
     require(MemoryLayout<HMExactOpV1>.size == 32 &&
             MemoryLayout<HMExactProgramV1>.size == 56 &&
-            MemoryLayout<HMExactDispatchV1>.size == 32,
+            MemoryLayout<HMExactTableDescriptorV1>.size == 20 &&
+            MemoryLayout<HMExactDispatchV1>.size == 72,
             "Swift exact-program layout")
     require(MemoryLayout<HMWorldSnapshotV1>.size == 56 &&
             MemoryLayout<HMDrawPrimitiveV1>.size == 72,

@@ -130,6 +130,7 @@ require(graph.operationCount <= 232, "frozen graph exceeds 256-cell Metal scratc
 require(graph.liveOperationCount == graph.operationCount, "manifest counts dead builder allocations")
 require(MemoryLayout<CircuitOp>.stride == 32, "operation ABI is not 32 bytes")
 runCircuitContractTests()
+if CommandLine.arguments.contains("--contracts") { exit(0) }
 guard MTLCreateSystemDefaultDevice() != nil else { fputs("FAIL: Apple Silicon Metal device unavailable\n", stderr); exit(1) }
 let circuit = CircuitRuntime(deadlineNs: 1_000_000_000)
 var generator = Generator()

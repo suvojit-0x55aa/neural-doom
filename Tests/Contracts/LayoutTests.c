@@ -38,8 +38,8 @@ _Static_assert(sizeof(HMExactProgramV1) == 56, "HMExactProgramV1 size");
 _Static_assert(_Alignof(HMExactProgramV1) == 8, "HMExactProgramV1 alignment");
 _Static_assert(offsetof(HMExactProgramV1, source_hash) == 32, "HMExactProgramV1.source_hash");
 _Static_assert(offsetof(HMExactProgramV1, operations) == 40, "HMExactProgramV1.operations");
-_Static_assert(sizeof(HMExactTableDescriptorV1) == 16, "HMExactTableDescriptorV1 size");
-_Static_assert(sizeof(HMExactDispatchV1) == 32, "HMExactDispatchV1 size");
+_Static_assert(sizeof(HMExactTableDescriptorV1) == 20, "HMExactTableDescriptorV1 size");
+_Static_assert(sizeof(HMExactDispatchV1) == 72, "HMExactDispatchV1 size");
 
 _Static_assert(sizeof(HMWorldSnapshotV1) == 56, "HMWorldSnapshotV1 size");
 _Static_assert(_Alignof(HMWorldSnapshotV1) == 8, "HMWorldSnapshotV1 alignment");

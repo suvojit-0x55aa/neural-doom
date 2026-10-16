@@ -150,6 +150,7 @@ typedef struct {
 typedef struct {
     uint32_t table_id;
     uint32_t length;
+    uint32_t capacity;
     uint32_t offset;
     uint32_t reserved;
 } HMExactTableDescriptorV1;
@@ -158,11 +159,20 @@ typedef struct {
     uint32_t abi_version;
     uint32_t integer_encoding;
     uint32_t input_count;
+    uint32_t input_capacity;
     uint32_t register_count;
+    uint32_t scratch_capacity;
     uint32_t operation_count;
+    uint32_t operation_capacity;
     uint32_t output_count;
+    uint32_t output_capacity;
     uint32_t table_count;
-    uint32_t reserved;
+    uint32_t table_capacity;
+    uint32_t table_cell_count;
+    uint32_t table_cell_capacity;
+    uint32_t output_register_capacity;
+    uint32_t status_capacity;
+    uint32_t reserved[2];
 } HMExactDispatchV1;
 
 HMModuleStatus HM_ValidateModuleInputV1(const HMModuleInputV1 *input,
