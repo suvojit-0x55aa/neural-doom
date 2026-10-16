@@ -45,7 +45,7 @@ Future programs use `exact-i32-u32-v1` (`HM_EXACT_INTEGER_ENCODING_V1`). Registe
 | angle-add-u32 | Modulo-2^32 unsigned addition, including immediate bits. |
 | compare-lt-i32 / compare-equal-bits | Produce exactly 0 or 1. |
 | gate | Return the first operand's bits when the second is nonzero, otherwise zero. |
-| table-read-i32 | Load raw table-cell bits; reject unknown handles or out-of-range indices. |
+| table-read-i32 | Load raw table-cell bits; reject unknown table IDs as `unknown-id`, and known but absent tables or out-of-range indices as `table-bounds`. |
 
 Operations write consecutive registers after immutable inputs, may read only earlier registers, and carry zero flags/reserved words in version 1. CPU and Metal execute the same record without Float conversion. `CircuitExactV1.msl` returns a status and output count; it zeros the count before evaluation so overflow, table bounds, invalid opcode/order, division failure, or incomplete roots cannot partly commit.
 
@@ -53,7 +53,7 @@ The Metal dispatch carries live counts and caller capacities for inputs, operati
 
 ## Serialization and hashing
 
-Canonical integers are unsigned little-endian words; signed values contribute the same 32 raw bits. Struct padding, pointer values, unused capacity contents, and host endianness never contribute. Tables and events must already be in canonical order.
+Canonical integers are unsigned little-endian words; signed values contribute the same 32 raw bits. Struct padding, pointer values, unused capacity contents, stored contents of inactive event payload slots, and host endianness never contribute; inactive payload slots serialize as zero. Tables and events must already be in canonical order. A structurally invalid result has no canonical serialization, even when all live counts are zero.
 
 - Module input begins with ASCII `HMI1`, the fixed envelope fields, live input/state words, each table header plus live cells, then prior events.
 - Module result begins with ASCII `HMR1`, the fixed result envelope, live output words, deltas, then events.
