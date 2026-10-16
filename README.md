@@ -4,7 +4,7 @@
 
 Neural Doom is a native macOS Doom port being rebuilt one subsystem at a time so **deterministic neural circuits** own gameplay and rendering. These are exact, frozen circuit graphs—not a trained probabilistic bot. DoomGeneric currently supplies the unported game engine and software renderer while each replacement is proved against the original behavior.
 
-In the current public milestone, two Metal circuit modules own the complete `G_BuildTiccmd` command and its carried state on supported tics: player locomotion and the remaining command behavior. The [coverage ledger](Docs/circuit-coverage.json) tracks that boundary as 2 of 10 planned core modules. DoomGeneric leaves the runtime only after every gameplay and rendering module is circuit-owned; the replacement contract is documented in [Docs/architecture.md](Docs/architecture.md).
+In the current public milestone, two Metal circuit modules own the complete `G_BuildTiccmd` command and its carried state on supported tics: player locomotion and the remaining command behavior. The authoritative [coverage ledger](Docs/circuit-coverage.json) tracks that boundary as 2 of 10 planned core modules. DoomGeneric leaves the runtime only after every gameplay and rendering module is circuit-owned; the replacement contract is documented in [Docs/architecture.md](Docs/architecture.md).
 
 The app includes bundled **Freedoom Phase 1** for immediate play and a live circuit inspector toggled with **⌘⇧N**.
 
