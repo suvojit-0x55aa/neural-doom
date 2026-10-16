@@ -30,6 +30,7 @@ xcodebuild -project NeuralDoom.xcodeproj -scheme CircuitTests \
   -configuration Debug -derivedDataPath DerivedData \
   -destination 'platform=macOS,arch=arm64' build CODE_SIGNING_ALLOWED=NO
 DerivedData/Build/Products/Debug/CircuitTests
+DerivedData/Build/Products/Debug/CircuitTests --data-directory-compatibility
 DerivedData/Build/Products/Debug/CircuitTests --app-bundle \
   "$PWD/DerivedData/Build/Products/Debug/NeuralDoom.app"
 ```
