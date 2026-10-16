@@ -493,7 +493,8 @@ private func exactMetal(device: MTLDevice, pipeline: MTLComputePipelineState,
                         inputs: [UInt32], operations: [HMExactOpV1], roots: [UInt32],
                         tableCells: [Int32] = [7, -9],
                         mutateDescriptors: ((inout [HMExactTableDescriptorV1]) -> Void)? = nil,
-                        mutateDispatch: ((inout HMExactDispatchV1) -> Void)? = nil)
+                        mutateDispatch: ((inout HMExactDispatchV1) -> Void)? = nil,
+                        reusableStatusBuffer: MTLBuffer? = nil)
     -> (UInt32, [UInt32], UInt32) {
     var descriptors: [HMExactTableDescriptorV1] = tableCells.isEmpty ? [] : [
         HMExactTableDescriptorV1(table_id: UInt32(HM_TABLE_VERTICES),
@@ -535,7 +536,19 @@ private func exactMetal(device: MTLDevice, pipeline: MTLComputePipelineState,
         length: max(4, (inputs.count + operations.count) * 4), options: .storageModeShared)!
     let outputBuffer = device.makeBuffer(length: max(4, roots.count * 4),
                                          options: .storageModeShared)!
-    let statusBuffer = device.makeBuffer(length: 8, options: .storageModeShared)!
+    let statusBuffer = reusableStatusBuffer ??
+        device.makeBuffer(length: 8, options: .storageModeShared)!
+    guard statusBuffer.length >= 8 else {
+        return (UInt32(HM_MODULE_CAPACITY_EXCEEDED),
+                [UInt32](repeating: 0, count: roots.count), 0)
+    }
+    let statusWords = statusBuffer.contents().bindMemory(to: UInt32.self, capacity: 2)
+    statusWords[0] = UInt32(HM_MODULE_EXECUTION_ERROR)
+    statusWords[1] = 0
+    guard dispatch.status_capacity >= 2 else {
+        statusWords[0] = UInt32(HM_MODULE_CAPACITY_EXCEEDED)
+        return (statusWords[0], [UInt32](repeating: 0, count: roots.count), statusWords[1])
+    }
     let dispatchBuffer = withUnsafeBytes(of: &dispatch) {
         device.makeBuffer(bytes: $0.baseAddress!, length: $0.count,
                           options: .storageModeShared)!
@@ -559,7 +572,6 @@ private func exactMetal(device: MTLDevice, pipeline: MTLComputePipelineState,
     command.commit()
     command.waitUntilCompleted()
     require(command.status == .completed, "exact integer Metal command failed")
-    let statusWords = statusBuffer.contents().bindMemory(to: UInt32.self, capacity: 2)
     let outputWords = outputBuffer.contents().bindMemory(to: UInt32.self,
                                                         capacity: max(1, roots.count))
     return (statusWords[0], (0..<roots.count).map { outputWords[$0] }, statusWords[1])
@@ -675,6 +687,20 @@ private func exactIntegerConformance() {
     expectMetalDispatchRejection("table cells", UInt32(HM_MODULE_CAPACITY_EXCEEDED)) {
         $0.table_cell_count = 1
     }
+    let reusedStatusBuffer = device.makeBuffer(length: 8, options: .storageModeShared)!
+    let successfulStatus = exactMetal(device: device, pipeline: pipeline,
+                                      inputs: spanInputs, operations: spanOperations,
+                                      roots: spanRoots, tableCells: [],
+                                      reusableStatusBuffer: reusedStatusBuffer)
+    require(successfulStatus.0 == UInt32(HM_MODULE_EXACT) && successfulStatus.2 == 1,
+            "exact Metal status-buffer setup did not succeed")
+    let shortStatus = exactMetal(device: device, pipeline: pipeline,
+                                 inputs: spanInputs, operations: spanOperations,
+                                 roots: spanRoots, tableCells: [],
+                                 mutateDispatch: { $0.status_capacity = 1 },
+                                 reusableStatusBuffer: reusedStatusBuffer)
+    require(shortStatus.0 == UInt32(HM_MODULE_CAPACITY_EXCEEDED) && shortStatus.2 == 0,
+            "short Metal status span committed stale success")
 
     let descriptorInputs = [UInt32(0)]
     let descriptorOperations = [exactOp(UInt32(HM_EXACT_OP_TABLE_READ_I32), 1, 0,
