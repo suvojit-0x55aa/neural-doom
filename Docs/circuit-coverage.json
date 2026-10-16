@@ -1,14 +1,21 @@
 {
   "schema": 1,
   "destination": "All Doom gameplay, world simulation, AI, BSP traversal, and rasterization are circuit-owned; no DoomGeneric game loop or renderer executes.",
-  "moduleABI": "CircuitModuleV1",
+  "moduleABI": "CircuitModuleV1 / ABI 1 / exact-i32-u32-v1 (future programs); existing command graphs retain fp32-exact-v1",
   "coverageMetric": {
     "name": "circuit-owned core modules / enumerated core modules",
     "circuitOwned": 2,
     "total": 10,
     "meaning": "A migration ledger count, not a fraction of executed instructions or gameplay behavior."
   },
-  "hostBoundaries": ["AppKit window and menus", "input/event collection", "file access", "Metal submission", "display presentation"],
+  "hostBoundaries": ["AppKit window and menus", "input/event collection", "monotonic scheduling", "local file access", "audio-device I/O for circuit-selected logical events", "Metal submission", "display presentation"],
+  "contract": {
+    "registry": "contracts/registry-v1.json",
+    "serialization": "canonical little-endian-v1 plus FNV-1a-64",
+    "capacities": "Every input/state/table/prior-event and output/delta/event span carries an explicit count/capacity; module-specific maxima belong to versioned manifests.",
+    "failure": "Every non-exact status has zero output, state-delta, and event counts; no partial commit.",
+    "soundOwnership": "Circuits select and order logical sound/music events; the host only performs audio-device I/O."
+  },
   "modules": [
     {"id":"tic.locomotion","stage":1,"status":"circuit-owned","oracle":"reference-C every eligible tic","fallback":"reference-C on out-of-domain input, Metal error/2 ms timeout, or mismatch","state":["turnheld"],"graph":"locomotion-graph.json","verifiedSnapshots":100000},
     {"id":"tic.remainder","stage":2,"status":"circuit-owned","oracle":"reference-C every eligible tic","fallback":"reference-C on out-of-domain input, Metal error/2 ms timeout, or mismatch","graph":"tic-remainder-graph.json","verifiedSnapshots":100000,"state":["double-click timers/states/counts","low-resolution turn carry","test-controls mouse speed","next weapon","pause/save flags","mouse consumption"],"covers":["attack","use","weapon selection and cycling","chat","double-click","save","pause","low-resolution turn carry"]},

@@ -1,0 +1,193 @@
+#include <metal_stdlib>
+using namespace metal;
+
+constant uint HM_EXACT_PROGRAM_ABI_VERSION_MSL = 1u;
+constant uint HM_EXACT_INTEGER_ENCODING_V1_MSL = 1u;
+constant uint HM_EXACT_MAX_REGISTERS_V1_MSL = 4096u;
+
+constant uint HM_MODULE_EXACT_MSL = 0u;
+constant uint HM_MODULE_CAPACITY_EXCEEDED_MSL = 2u;
+constant uint HM_MODULE_EXECUTION_ERROR_MSL = 3u;
+constant uint HM_MODULE_INVALID_ABI_MSL = 5u;
+constant uint HM_MODULE_UNKNOWN_ID_MSL = 6u;
+constant uint HM_MODULE_INVALID_ORDER_MSL = 9u;
+constant uint HM_MODULE_TABLE_BOUNDS_MSL = 10u;
+constant uint HM_MODULE_INTEGER_OVERFLOW_MSL = 11u;
+constant uint HM_MODULE_PARTIAL_RESULT_MSL = 12u;
+
+constant uint HM_EXACT_OP_MOVE_MSL = 1u;
+constant uint HM_EXACT_OP_CONSTANT_MSL = 2u;
+constant uint HM_EXACT_OP_ADD_I32_MSL = 3u;
+constant uint HM_EXACT_OP_SUB_I32_MSL = 4u;
+constant uint HM_EXACT_OP_FIXED_MUL_16_16_MSL = 5u;
+constant uint HM_EXACT_OP_FIXED_DIV_16_16_MSL = 6u;
+constant uint HM_EXACT_OP_ANGLE_ADD_U32_MSL = 7u;
+constant uint HM_EXACT_OP_COMPARE_LT_I32_MSL = 8u;
+constant uint HM_EXACT_OP_COMPARE_EQUAL_BITS_MSL = 9u;
+constant uint HM_EXACT_OP_GATE_MSL = 10u;
+constant uint HM_EXACT_OP_TABLE_READ_I32_MSL = 11u;
+
+struct HMExactOpV1MSL {
+    uint opcode;
+    uint destination;
+    uint lhs;
+    uint rhs;
+    int immediate;
+    uint table_id;
+    uint flags;
+    uint reserved;
+};
+
+struct HMExactTableDescriptorV1MSL {
+    uint table_id;
+    uint length;
+    uint offset;
+    uint reserved;
+};
+
+struct HMExactDispatchV1MSL {
+    uint abi_version;
+    uint integer_encoding;
+    uint input_count;
+    uint register_count;
+    uint operation_count;
+    uint output_count;
+    uint table_count;
+    uint reserved;
+};
+
+kernel void evaluateExactCircuitV1(
+    const device uint *inputs [[buffer(0)]],
+    const device HMExactOpV1MSL *operations [[buffer(1)]],
+    const device HMExactTableDescriptorV1MSL *tables [[buffer(2)]],
+    const device int *table_cells [[buffer(3)]],
+    const device uint *output_registers [[buffer(4)]],
+    device uint *scratch [[buffer(5)]],
+    device uint *outputs [[buffer(6)]],
+    device uint *status [[buffer(7)]],
+    constant HMExactDispatchV1MSL &dispatch [[buffer(8)]],
+    uint tid [[thread_position_in_grid]]) {
+    if (tid != 0) return;
+    status[0] = HM_MODULE_EXECUTION_ERROR_MSL;
+    status[1] = 0;
+    if (dispatch.output_count <= HM_EXACT_MAX_REGISTERS_V1_MSL) {
+        for (uint i = 0; i < dispatch.output_count; ++i) outputs[i] = 0;
+    }
+    if (dispatch.abi_version != HM_EXACT_PROGRAM_ABI_VERSION_MSL ||
+        dispatch.integer_encoding != HM_EXACT_INTEGER_ENCODING_V1_MSL) {
+        status[0] = HM_MODULE_INVALID_ABI_MSL;
+        return;
+    }
+    if (dispatch.register_count > HM_EXACT_MAX_REGISTERS_V1_MSL ||
+        dispatch.input_count > dispatch.register_count ||
+        dispatch.output_count > dispatch.register_count) {
+        status[0] = HM_MODULE_CAPACITY_EXCEEDED_MSL;
+        return;
+    }
+    for (uint i = 0; i < dispatch.input_count; ++i) scratch[i] = inputs[i];
+    for (uint i = 0; i < dispatch.operation_count; ++i) {
+        HMExactOpV1MSL op = operations[i];
+        uint expected_destination = dispatch.input_count + i;
+        if (op.destination != expected_destination ||
+            op.destination >= dispatch.register_count || op.flags != 0 ||
+            op.reserved != 0) {
+            status[0] = HM_MODULE_INVALID_ORDER_MSL;
+            return;
+        }
+        if (op.opcode != HM_EXACT_OP_CONSTANT_MSL && op.lhs >= op.destination) {
+            status[0] = HM_MODULE_INVALID_ORDER_MSL;
+            return;
+        }
+        if (op.opcode != HM_EXACT_OP_CONSTANT_MSL &&
+            op.opcode != HM_EXACT_OP_MOVE_MSL &&
+            op.opcode != HM_EXACT_OP_TABLE_READ_I32_MSL &&
+            op.rhs >= op.destination) {
+            status[0] = HM_MODULE_INVALID_ORDER_MSL;
+            return;
+        }
+        uint a = op.opcode == HM_EXACT_OP_CONSTANT_MSL ? 0 : scratch[op.lhs];
+        uint b = (op.opcode == HM_EXACT_OP_CONSTANT_MSL ||
+                  op.opcode == HM_EXACT_OP_MOVE_MSL ||
+                  op.opcode == HM_EXACT_OP_TABLE_READ_I32_MSL)
+                     ? 0 : scratch[op.rhs];
+        if (op.opcode == HM_EXACT_OP_MOVE_MSL) {
+            scratch[op.destination] = a;
+        } else if (op.opcode == HM_EXACT_OP_CONSTANT_MSL) {
+            scratch[op.destination] = as_type<uint>(op.immediate);
+        } else if (op.opcode == HM_EXACT_OP_ADD_I32_MSL ||
+                   op.opcode == HM_EXACT_OP_SUB_I32_MSL) {
+            long value = long(as_type<int>(a));
+            value += op.opcode == HM_EXACT_OP_ADD_I32_MSL
+                         ? long(as_type<int>(b)) : -long(as_type<int>(b));
+            value += long(op.immediate);
+            if (value < -2147483648l || value > 2147483647l) {
+                status[0] = HM_MODULE_INTEGER_OVERFLOW_MSL;
+                return;
+            }
+            scratch[op.destination] = as_type<uint>(int(value));
+        } else if (op.opcode == HM_EXACT_OP_FIXED_MUL_16_16_MSL) {
+            long product = long(as_type<int>(a)) * long(as_type<int>(b));
+            long value = product / 65536l;
+            if (product < 0 && product % 65536l != 0) --value;
+            if (value < -2147483648l || value > 2147483647l) {
+                status[0] = HM_MODULE_INTEGER_OVERFLOW_MSL;
+                return;
+            }
+            scratch[op.destination] = as_type<uint>(int(value));
+        } else if (op.opcode == HM_EXACT_OP_FIXED_DIV_16_16_MSL) {
+            int divisor = as_type<int>(b);
+            if (divisor == 0) {
+                status[0] = HM_MODULE_EXECUTION_ERROR_MSL;
+                return;
+            }
+            long value = (long(as_type<int>(a)) * 65536l) / long(divisor);
+            if (value < -2147483648l || value > 2147483647l) {
+                status[0] = HM_MODULE_INTEGER_OVERFLOW_MSL;
+                return;
+            }
+            scratch[op.destination] = as_type<uint>(int(value));
+        } else if (op.opcode == HM_EXACT_OP_ANGLE_ADD_U32_MSL) {
+            scratch[op.destination] = a + b + as_type<uint>(op.immediate);
+        } else if (op.opcode == HM_EXACT_OP_COMPARE_LT_I32_MSL) {
+            scratch[op.destination] = as_type<int>(a) < as_type<int>(b) ? 1u : 0u;
+        } else if (op.opcode == HM_EXACT_OP_COMPARE_EQUAL_BITS_MSL) {
+            scratch[op.destination] = a == b ? 1u : 0u;
+        } else if (op.opcode == HM_EXACT_OP_GATE_MSL) {
+            scratch[op.destination] = b != 0 ? a : 0u;
+        } else if (op.opcode == HM_EXACT_OP_TABLE_READ_I32_MSL) {
+            bool found = false;
+            for (uint table_index = 0; table_index < dispatch.table_count; ++table_index) {
+                HMExactTableDescriptorV1MSL table = tables[table_index];
+                if (table.table_id != op.table_id) continue;
+                found = true;
+                if (a >= table.length) {
+                    status[0] = HM_MODULE_TABLE_BOUNDS_MSL;
+                    return;
+                }
+                scratch[op.destination] = as_type<uint>(table_cells[table.offset + a]);
+                break;
+            }
+            if (!found) {
+                status[0] = HM_MODULE_UNKNOWN_ID_MSL;
+                return;
+            }
+        } else {
+            status[0] = HM_MODULE_UNKNOWN_ID_MSL;
+            return;
+        }
+    }
+    if (dispatch.input_count + dispatch.operation_count != dispatch.register_count) {
+        status[0] = HM_MODULE_PARTIAL_RESULT_MSL;
+        return;
+    }
+    for (uint i = 0; i < dispatch.output_count; ++i) {
+        uint root = output_registers[i];
+        if (root >= dispatch.register_count) {
+            status[0] = HM_MODULE_INVALID_ORDER_MSL;
+            return;
+        }
+        outputs[i] = scratch[root];
+    }
+    status[0] = HM_MODULE_EXACT_MSL;
+    status[1] = dispatch.output_count;
+}

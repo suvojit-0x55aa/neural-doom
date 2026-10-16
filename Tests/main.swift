@@ -89,6 +89,7 @@ if let at = CommandLine.arguments.firstIndex(of: "--app-bundle"), at + 1 < Comma
           let credits = bundle.url(forResource: "FREEDOOM-CREDITS", withExtension: "txt"),
           bundle.url(forResource: "Locomotion", withExtension: "msl") != nil,
           bundle.url(forResource: "TicRemainder", withExtension: "msl") != nil,
+          bundle.url(forResource: "CircuitExactV1", withExtension: "msl") != nil,
           bundle.url(forResource: "Present", withExtension: "msl") != nil else {
         fputs("FAIL: clean app is missing a bundled IWAD, attribution, or circuit shader\n", stderr); exit(1)
     }
@@ -128,6 +129,7 @@ require(remainderGraph.liveOperationCount == remainderGraph.operationCount, "rem
 require(graph.operationCount <= 232, "frozen graph exceeds 256-cell Metal scratch bound")
 require(graph.liveOperationCount == graph.operationCount, "manifest counts dead builder allocations")
 require(MemoryLayout<CircuitOp>.stride == 32, "operation ABI is not 32 bytes")
+runCircuitContractTests()
 guard MTLCreateSystemDefaultDevice() != nil else { fputs("FAIL: Apple Silicon Metal device unavailable\n", stderr); exit(1) }
 let circuit = CircuitRuntime(deadlineNs: 1_000_000_000)
 var generator = Generator()
