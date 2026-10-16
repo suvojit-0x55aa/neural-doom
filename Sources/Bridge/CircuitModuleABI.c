@@ -512,6 +512,108 @@ size_t HM_SerializeWorldSnapshotHeaderV1(const HMWorldSnapshotV1 *snapshot,
     return HM_WORLD_HEADER_SERIALIZED_SIZE_V1;
 }
 
+static int hm_world_cell_before(const HMWorldCellV1 *a,
+                                const HMWorldCellV1 *b) {
+    if (a->array_id != b->array_id) return a->array_id < b->array_id;
+    if (a->element_index != b->element_index)
+        return a->element_index < b->element_index;
+    return a->cell_id < b->cell_id;
+}
+
+int HM_ValidateWorldSnapshotV1(const HMWorldSnapshotV1 *snapshot,
+                              const HMWorldArrayV1 *arrays,
+                              uint32_t array_capacity,
+                              const HMWorldCellV1 *cells,
+                              uint32_t cell_count,
+                              uint32_t cell_capacity) {
+    if (!snapshot || snapshot->abi_version != HM_WORLD_SNAPSHOT_ABI_VERSION ||
+        snapshot->schema_version != HM_WORLD_SCHEMA_VERSION ||
+        !snapshot->source_hash || snapshot->reserved ||
+        snapshot->array_count > array_capacity || cell_count > cell_capacity ||
+        (array_capacity && !arrays) || (cell_capacity && !cells))
+        return 0;
+    uint64_t directory_end = UINT64_C(14) + (uint64_t)snapshot->array_count * 6u;
+    uint64_t data_end = directory_end + (uint64_t)cell_count * 4u;
+    if (snapshot->array_directory_offset != 14u ||
+        snapshot->data_offset != directory_end || snapshot->word_count != data_end)
+        return 0;
+    uint32_t cell_at = 0;
+    uint32_t scalar_count = 0;
+    uint64_t expected_data_offset = snapshot->data_offset;
+    for (uint32_t i = 0; i < snapshot->array_count; ++i) {
+        const HMWorldArrayV1 *array = &arrays[i];
+        if (!HM_IsKnownWorldArrayIDV1(array->array_id) || array->reserved ||
+            array->element_count > array->element_capacity ||
+            (i && arrays[i - 1].array_id >= array->array_id) ||
+            array->data_offset != expected_data_offset ||
+            array->cell_count > cell_count - cell_at)
+            return 0;
+        for (uint32_t j = 0; j < array->cell_count; ++j) {
+            const HMWorldCellV1 *cell = &cells[cell_at + j];
+            if (cell->array_id != array->array_id ||
+                cell->element_index >= array->element_count ||
+                !HM_IsKnownWorldCellIDV1(cell->array_id, cell->cell_id) ||
+                ((cell_at + j) && !hm_world_cell_before(&cells[cell_at + j - 1], cell)))
+                return 0;
+        }
+        if (array->array_id == HM_WORLD_ARRAY_SCALARS)
+            scalar_count = array->cell_count;
+        cell_at += array->cell_count;
+        expected_data_offset += (uint64_t)array->cell_count * 4u;
+    }
+    return cell_at == cell_count && scalar_count == snapshot->scalar_count &&
+           expected_data_offset == snapshot->word_count;
+}
+
+size_t HM_CanonicalWorldSnapshotSizeV1(const HMWorldSnapshotV1 *snapshot,
+                                       const HMWorldArrayV1 *arrays,
+                                       uint32_t array_capacity,
+                                       const HMWorldCellV1 *cells,
+                                       uint32_t cell_count,
+                                       uint32_t cell_capacity) {
+    if (!HM_ValidateWorldSnapshotV1(snapshot, arrays, array_capacity, cells,
+                                    cell_count, cell_capacity))
+        return 0;
+    size_t needed = (size_t)snapshot->word_count * 4u;
+    return needed / 4u == snapshot->word_count ? needed : 0;
+}
+
+size_t HM_SerializeWorldSnapshotV1(const HMWorldSnapshotV1 *snapshot,
+                                   const HMWorldArrayV1 *arrays,
+                                   uint32_t array_capacity,
+                                   const HMWorldCellV1 *cells,
+                                   uint32_t cell_count,
+                                   uint32_t cell_capacity,
+                                   uint8_t *destination,
+                                   size_t capacity) {
+    size_t needed = HM_CanonicalWorldSnapshotSizeV1(
+        snapshot, arrays, array_capacity, cells, cell_count, cell_capacity);
+    if (!needed || !destination || capacity < needed) return 0;
+    memset(destination, 0, needed);
+    if (!HM_SerializeWorldSnapshotHeaderV1(snapshot, destination, needed)) return 0;
+    uint8_t *at = destination + (size_t)snapshot->array_directory_offset * 4u;
+    for (uint32_t i = 0; i < snapshot->array_count; ++i) {
+        hm_put_u32(&at, arrays[i].array_id);
+        hm_put_u32(&at, arrays[i].element_count);
+        hm_put_u32(&at, arrays[i].element_capacity);
+        hm_put_u32(&at, arrays[i].cell_count);
+        hm_put_u32(&at, arrays[i].data_offset);
+        hm_put_u32(&at, arrays[i].reserved);
+    }
+    uint32_t cell_at = 0;
+    for (uint32_t i = 0; i < snapshot->array_count; ++i) {
+        at = destination + (size_t)arrays[i].data_offset * 4u;
+        for (uint32_t j = 0; j < arrays[i].cell_count; ++j) {
+            const HMWorldCellV1 *cell = &cells[cell_at++];
+            hm_put_u32(&at, cell->array_id);
+            hm_put_u32(&at, cell->element_index);
+            hm_put_u32(&at, cell->cell_id);
+            hm_put_u32(&at, (uint32_t)cell->value);
+        }
+    }
+    return needed;
+}
+
 size_t HM_SerializeDrawPrimitiveV1(const HMDrawPrimitiveV1 *primitive,
                                    uint8_t *destination,
                                    size_t capacity) {
@@ -586,6 +688,25 @@ static const HMTableViewV1 *hm_find_table(const HMTableViewV1 *tables,
     for (uint32_t i = 0; i < count; ++i)
         if (tables[i].table_id == table_id) return &tables[i];
     return 0;
+}
+
+HMModuleStatus HM_PrepareExactDispatchV1(const HMExactDispatchV1 *dispatch,
+                                         uint32_t *status,
+                                         uint32_t status_capacity) {
+    if (status_capacity < 2u) return HM_MODULE_CAPACITY_EXCEEDED;
+    if (!status) return HM_MODULE_MALFORMED_SPAN;
+    status[0] = HM_MODULE_EXECUTION_ERROR;
+    status[1] = 0;
+    if (!dispatch) {
+        status[0] = HM_MODULE_MALFORMED_SPAN;
+        return status[0];
+    }
+    if (dispatch->status_capacity < 2u ||
+        dispatch->status_capacity > status_capacity) {
+        status[0] = HM_MODULE_CAPACITY_EXCEEDED;
+        return status[0];
+    }
+    return HM_MODULE_EXACT;
 }
 
 HMModuleStatus HM_EvaluateExactProgramV1(const HMExactProgramV1 *program,

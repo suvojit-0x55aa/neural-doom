@@ -349,19 +349,136 @@ private func canonicalAuxiliaryRecords() {
     world.source_hash = fixtureSourceHash
     world.map_fingerprint = 0xfedc_ba98_7654_3210
     world.scalar_count = 1
-    world.array_count = 1
+    world.array_count = 2
     world.array_directory_offset = 14
-    world.data_offset = 20
-    world.word_count = 21
-    var worldBytes = [UInt8](repeating: 0, count: 56)
-    require(worldBytes.withUnsafeMutableBufferPointer {
-        HM_SerializeWorldSnapshotHeaderV1(&world, $0.baseAddress, $0.count)
-    } == 56 && HM_HashBytesV1(worldBytes, worldBytes.count) != 0,
-    "canonical world header serialization")
-    world.data_offset = 19
-    require(worldBytes.withUnsafeMutableBufferPointer {
-        HM_SerializeWorldSnapshotHeaderV1(&world, $0.baseAddress, $0.count)
-    } == 0, "invalid world offsets serialized")
+    world.data_offset = 26
+    world.word_count = 38
+    let baseArrays = [
+        HMWorldArrayV1(array_id: UInt32(HM_WORLD_ARRAY_SCALARS), element_count: 1,
+                       element_capacity: 1, cell_count: 1, data_offset: 26, reserved: 0),
+        HMWorldArrayV1(array_id: UInt32(HM_WORLD_ARRAY_PLAYERS), element_count: 1,
+                       element_capacity: 2, cell_count: 2, data_offset: 30, reserved: 0)
+    ]
+    let baseCells = [
+        HMWorldCellV1(array_id: UInt32(HM_WORLD_ARRAY_SCALARS), element_index: 0,
+                      cell_id: UInt32(HM_SCALAR_GAME_SKILL), value: 2),
+        HMWorldCellV1(array_id: UInt32(HM_WORLD_ARRAY_PLAYERS), element_index: 0,
+                      cell_id: UInt32(HM_PLAYER_X), value: 10),
+        HMWorldCellV1(array_id: UInt32(HM_WORLD_ARRAY_PLAYERS), element_index: 0,
+                      cell_id: UInt32(HM_PLAYER_Y), value: -20)
+    ]
+    var worldArrays = baseArrays
+    var worldCells = baseCells
+    var worldBytes = [UInt8](repeating: 0xff, count: 152)
+    let worldWritten = worldArrays.withUnsafeMutableBufferPointer { arrayBuffer in
+        worldCells.withUnsafeMutableBufferPointer { cellBuffer in
+            worldBytes.withUnsafeMutableBufferPointer { byteBuffer in
+                HM_SerializeWorldSnapshotV1(
+                    &world, arrayBuffer.baseAddress, UInt32(arrayBuffer.count),
+                    cellBuffer.baseAddress, UInt32(cellBuffer.count), UInt32(cellBuffer.count),
+                    byteBuffer.baseAddress, byteBuffer.count)
+            }
+        }
+    }
+    require(worldWritten == worldBytes.count &&
+            HM_HashBytesV1(worldBytes, worldBytes.count) != 0,
+            "canonical whole-world serialization")
+
+    func expectWorldRejection(
+        _ label: String,
+        _ mutate: (inout HMWorldSnapshotV1, inout [HMWorldArrayV1],
+                   inout [HMWorldCellV1], inout UInt32, inout UInt32, inout UInt32) -> Void
+    ) {
+        var rejectedWorld = world
+        var rejectedArrays = baseArrays
+        var rejectedCells = baseCells
+        var arrayCapacity = UInt32(rejectedArrays.count)
+        var cellCount = UInt32(rejectedCells.count)
+        var cellCapacity = cellCount
+        mutate(&rejectedWorld, &rejectedArrays, &rejectedCells,
+               &arrayCapacity, &cellCount, &cellCapacity)
+        var bytes = [UInt8](repeating: 0, count: 152)
+        rejectedArrays.withUnsafeMutableBufferPointer { arrayBuffer in
+            rejectedCells.withUnsafeMutableBufferPointer { cellBuffer in
+                require(HM_ValidateWorldSnapshotV1(
+                    &rejectedWorld, arrayBuffer.baseAddress, arrayCapacity,
+                    cellBuffer.baseAddress, cellCount, cellCapacity) == 0 &&
+                    HM_CanonicalWorldSnapshotSizeV1(
+                        &rejectedWorld, arrayBuffer.baseAddress, arrayCapacity,
+                        cellBuffer.baseAddress, cellCount, cellCapacity) == 0 &&
+                    bytes.withUnsafeMutableBufferPointer { byteBuffer in
+                        HM_SerializeWorldSnapshotV1(
+                            &rejectedWorld, arrayBuffer.baseAddress, arrayCapacity,
+                            cellBuffer.baseAddress, cellCount, cellCapacity,
+                            byteBuffer.baseAddress, byteBuffer.count)
+                    } == 0,
+                    "invalid world snapshot accepted: \(label)")
+            }
+        }
+    }
+    expectWorldRejection("array capacity") { _, _, _, arrayCapacity, _, _ in
+        arrayCapacity = 1
+    }
+    expectWorldRejection("cell capacity") { _, _, _, _, _, cellCapacity in
+        cellCapacity = 2
+    }
+    expectWorldRejection("ABI version") { snapshot, _, _, _, _, _ in
+        snapshot.abi_version += 1
+    }
+    expectWorldRejection("schema version") { snapshot, _, _, _, _, _ in
+        snapshot.schema_version += 1
+    }
+    expectWorldRejection("source hash") { snapshot, _, _, _, _, _ in
+        snapshot.source_hash = 0
+    }
+    expectWorldRejection("directory offset") { snapshot, _, _, _, _, _ in
+        snapshot.array_directory_offset += 1
+    }
+    expectWorldRejection("scalar count") { snapshot, _, _, _, _, _ in
+        snapshot.scalar_count += 1
+    }
+    expectWorldRejection("element capacity") { _, arrays, _, _, _, _ in
+        arrays[1].element_count = arrays[1].element_capacity + 1
+    }
+    expectWorldRejection("unknown array") { _, arrays, _, _, _, _ in
+        arrays[1].array_id = 0xffff_ffff
+    }
+    expectWorldRejection("array reserved") { _, arrays, _, _, _, _ in
+        arrays[1].reserved = 1
+    }
+    expectWorldRejection("array offset") { _, arrays, _, _, _, _ in
+        arrays[1].data_offset += 1
+    }
+    expectWorldRejection("array cell count") { _, arrays, _, _, _, _ in
+        arrays[1].cell_count += 1
+    }
+    expectWorldRejection("cell order") { _, _, cells, _, _, _ in
+        cells.swapAt(1, 2)
+    }
+    expectWorldRejection("unknown cell") { _, _, cells, _, _, _ in
+        cells[1].cell_id = 0xffff_ffff
+    }
+    expectWorldRejection("element bounds") { _, _, cells, _, _, _ in
+        cells[1].element_index = 1
+    }
+    expectWorldRejection("word count") { snapshot, _, _, _, _, _ in
+        snapshot.word_count += 1
+    }
+    var nullWorld = world
+    worldCells = baseCells
+    worldCells.withUnsafeMutableBufferPointer { cellBuffer in
+        require(HM_ValidateWorldSnapshotV1(
+            &nullWorld, nil, UInt32(baseArrays.count), cellBuffer.baseAddress,
+            UInt32(cellBuffer.count), UInt32(cellBuffer.count)) == 0,
+            "null world-array span accepted")
+    }
+    worldArrays = baseArrays
+    worldArrays.withUnsafeMutableBufferPointer { arrayBuffer in
+        require(HM_ValidateWorldSnapshotV1(
+            &nullWorld, arrayBuffer.baseAddress, UInt32(arrayBuffer.count), nil,
+            UInt32(baseCells.count), UInt32(baseCells.count)) == 0,
+            "null world-cell span accepted")
+    }
 
     var event = makeEvent(phase: UInt32(HM_PHASE_INTERACTIONS_COMBAT),
                           id: UInt32(HM_EVENT_SOUND), emitter: 1,
@@ -560,16 +677,13 @@ private func exactMetal(device: MTLDevice, pipeline: MTLComputePipelineState,
                                          options: .storageModeShared)!
     let statusBuffer = reusableStatusBuffer ??
         device.makeBuffer(length: 8, options: .storageModeShared)!
-    guard statusBuffer.length >= 8 else {
-        return (UInt32(HM_MODULE_CAPACITY_EXCEEDED),
-                [UInt32](repeating: 0, count: roots.count), 0)
-    }
-    let statusWords = statusBuffer.contents().bindMemory(to: UInt32.self, capacity: 2)
-    statusWords[0] = UInt32(HM_MODULE_EXECUTION_ERROR)
-    statusWords[1] = 0
-    guard dispatch.status_capacity >= 2 else {
-        statusWords[0] = UInt32(HM_MODULE_CAPACITY_EXCEEDED)
-        return (statusWords[0], [UInt32](repeating: 0, count: roots.count), statusWords[1])
+    let actualStatusCapacity = UInt32(statusBuffer.length / MemoryLayout<UInt32>.stride)
+    let statusWords = statusBuffer.contents().bindMemory(
+        to: UInt32.self, capacity: max(1, Int(actualStatusCapacity)))
+    let prepareStatus = HM_PrepareExactDispatchV1(
+        &dispatch, statusWords, actualStatusCapacity)
+    guard prepareStatus == UInt32(HM_MODULE_EXACT) else {
+        return (prepareStatus, [UInt32](repeating: 0, count: roots.count), 0)
     }
     let dispatchBuffer = withUnsafeBytes(of: &dispatch) {
         device.makeBuffer(bytes: $0.baseAddress!, length: $0.count,
@@ -769,6 +883,13 @@ private func exactIntegerConformance() {
                                  reusableStatusBuffer: reusedStatusBuffer)
     require(shortStatus.0 == UInt32(HM_MODULE_CAPACITY_EXCEEDED) && shortStatus.2 == 0,
             "short Metal status span committed stale success")
+    let physicalShortStatus = exactMetal(
+        device: device, pipeline: pipeline, inputs: spanInputs,
+        operations: spanOperations, roots: spanRoots, tableCells: [],
+        reusableStatusBuffer: device.makeBuffer(length: 4, options: .storageModeShared)!)
+    require(physicalShortStatus.0 == UInt32(HM_MODULE_CAPACITY_EXCEEDED) &&
+            physicalShortStatus.2 == 0,
+            "physically short Metal status span reached dispatch")
 
     let descriptorInputs = [UInt32(0)]
     let descriptorOperations = [exactOp(UInt32(HM_EXACT_OP_TABLE_READ_I32), 1, 0,

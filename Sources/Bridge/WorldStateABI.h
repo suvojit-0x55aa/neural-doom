@@ -295,6 +295,26 @@ typedef struct {
 
 int HM_IsKnownWorldArrayIDV1(uint32_t value);
 int HM_IsKnownWorldCellIDV1(uint32_t array_id, uint32_t value);
+int HM_ValidateWorldSnapshotV1(const HMWorldSnapshotV1 *snapshot,
+                              const HMWorldArrayV1 *arrays,
+                              uint32_t array_capacity,
+                              const HMWorldCellV1 *cells,
+                              uint32_t cell_count,
+                              uint32_t cell_capacity);
+size_t HM_CanonicalWorldSnapshotSizeV1(const HMWorldSnapshotV1 *snapshot,
+                                       const HMWorldArrayV1 *arrays,
+                                       uint32_t array_capacity,
+                                       const HMWorldCellV1 *cells,
+                                       uint32_t cell_count,
+                                       uint32_t cell_capacity);
+size_t HM_SerializeWorldSnapshotV1(const HMWorldSnapshotV1 *snapshot,
+                                   const HMWorldArrayV1 *arrays,
+                                   uint32_t array_capacity,
+                                   const HMWorldCellV1 *cells,
+                                   uint32_t cell_count,
+                                   uint32_t cell_capacity,
+                                   uint8_t *destination,
+                                   size_t capacity);
 size_t HM_SerializeWorldSnapshotHeaderV1(const HMWorldSnapshotV1 *snapshot,
                                          uint8_t *destination,
                                          size_t capacity);

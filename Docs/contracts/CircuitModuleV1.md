@@ -22,7 +22,7 @@ Capacities are intentionally caller- and manifest-supplied rather than global co
 
 ## Canonical records
 
-`HMWorldSnapshotV1` is a pointer-free header for a little-endian word blob. Array directory and data locations are 32-bit word offsets from the header. Array records use stable IDs, element counts/capacities, cell counts, and data offsets. Cells are ordered by array ID, element index, then cell ID. Runtime bridges may expose bounded pointers, but pointers never enter a snapshot, fixture, event, primitive, serialization, or hash.
+`HMWorldSnapshotV1` is a pointer-free header for a little-endian word blob. Array directory and data locations are 32-bit word offsets from the header. Canonical blobs pack the 14-word header, six-word array records, then four-word cell records without gaps. An array's `cell_count` is its total number of cell records, and its `data_offset` identifies the first one. Array IDs are strictly increasing; cells are strictly ordered by array ID, element index, then cell ID. The whole-snapshot validator rejects unknown IDs, count/capacity errors, null runtime spans, nonzero reserved fields, bad offsets, duplicate/out-of-order cells, and element indices outside the live element count. Runtime bridges may expose bounded pointers, but pointers never enter a snapshot, fixture, event, primitive, serialization, or hash.
 
 `HMModuleEventV1` is 48 bytes. It carries a stable phase/event ID, emitter slot, local sequence, source/target handles, flags, and up to four signed payload words. Event order is total and independent of worker completion order.
 
@@ -58,7 +58,7 @@ Canonical integers are unsigned little-endian words; signed values contribute th
 - Module input begins with ASCII `HMI1`, the fixed envelope fields, live input/state words, each table header plus live cells, then prior events.
 - Module result begins with ASCII `HMR1`, the fixed result envelope, live output words, deltas, then events.
 - Exact program hashing begins with `HMP1`, program versions/counts, every 32-byte operation, then output-register IDs. Its `source_hash` field and runtime pointers/capacities are excluded.
-- `HMWorldSnapshotV1`, events, and draw primitives have field-wise serializers with no native padding.
+- Whole world snapshots, events, and draw primitives have field-wise serializers with no native padding.
 
 FNV-1a-64 uses offset basis `14695981039346656037` and prime `1099511628211`. `Tests/Contracts/circuit-module-v1-fixture.json` freezes canonical input/result bytes and hashes. Any serialization change requires a new serialization/ABI version rather than replacing that fixture.
 

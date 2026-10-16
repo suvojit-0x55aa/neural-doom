@@ -175,6 +175,10 @@ typedef struct {
     uint32_t reserved[2];
 } HMExactDispatchV1;
 
+HMModuleStatus HM_PrepareExactDispatchV1(const HMExactDispatchV1 *dispatch,
+                                         uint32_t *status,
+                                         uint32_t status_capacity);
+
 HMModuleStatus HM_ValidateModuleInputV1(const HMModuleInputV1 *input,
                                         uint32_t expected_module_id,
                                         uint64_t expected_source_hash);
