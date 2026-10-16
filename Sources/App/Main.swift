@@ -122,10 +122,18 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             return
         }
         guard let engine else { status.stringValue = "Metal is unavailable on this Mac."; return }
-        if ProcessInfo.processInfo.environment["HANDWIRED_DOOM_DATA_DIR"] == nil {
-            let support = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-                .appendingPathComponent("NeuralDoom", isDirectory: true)
-            setenv("HANDWIRED_DOOM_DATA_DIR", support.path, 1)
+        let fileManager = FileManager.default
+        if let support = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first,
+           let dataDirectory = defaultDoomDataDirectory(
+               environment: ProcessInfo.processInfo.environment,
+               applicationSupportDirectory: support,
+               directoryExists: { path in
+                   var isDirectory: ObjCBool = false
+                   return fileManager.fileExists(atPath: path, isDirectory: &isDirectory)
+                       && isDirectory.boolValue
+               }
+           ) {
+            setenv("HANDWIRED_DOOM_DATA_DIR", dataDirectory.path, 0)
         }
         selectedIWAD = url
         status.stringValue = "Loading \(url.lastPathComponent)…"

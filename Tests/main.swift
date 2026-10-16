@@ -58,6 +58,28 @@ func percentile(_ xs: [UInt64], _ p: Double) -> Double {
     let ordered = xs.sorted()
     return Double(ordered[min(ordered.count-1, Int(Double(ordered.count-1)*p))]) / 1_000_000
 }
+if CommandLine.arguments.contains("--data-directory-compatibility") {
+    let support = URL(fileURLWithPath: "/test/Application Support", isDirectory: true)
+    let legacy = support.appendingPathComponent("HandwiredDoom", isDirectory: true)
+    let current = support.appendingPathComponent("NeuralDoom", isDirectory: true)
+    require(defaultDoomDataDirectory(
+        environment: ["HANDWIRED_DOOM_DATA_DIR": "/explicit/profile"],
+        applicationSupportDirectory: support,
+        directoryExists: { _ in true }
+    ) == nil, "explicit data directory was overridden")
+    require(defaultDoomDataDirectory(
+        environment: [:],
+        applicationSupportDirectory: support,
+        directoryExists: { $0 == legacy.path }
+    ) == legacy, "legacy data directory was not reused")
+    require(defaultDoomDataDirectory(
+        environment: [:],
+        applicationSupportDirectory: support,
+        directoryExists: { _ in false }
+    ) == current, "fresh install did not select NeuralDoom data directory")
+    print("data directory: explicit override preserved, legacy profile reused, fresh profile renamed")
+    exit(0)
+}
 let graph = CircuitGraph()
 if let at = CommandLine.arguments.firstIndex(of: "--app-bundle"), at + 1 < CommandLine.arguments.count {
     let app = URL(fileURLWithPath: CommandLine.arguments[at+1], isDirectory: true)
