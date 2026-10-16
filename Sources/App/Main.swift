@@ -16,7 +16,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 960, height: 650),
                           styleMask: [.titled, .closable, .miniaturizable, .resizable],
                           backing: .buffered, defer: false)
-        window.title = "Handwired Doom"
+        window.title = "Neural Doom"
         window.center()
         window.minSize = NSSize(width: 640, height: 440)
         let root = NSView(frame: window.contentView!.bounds)
@@ -52,10 +52,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             stack.centerYAnchor.constraint(equalTo: overlay.centerYAnchor),
             stack.widthAnchor.constraint(lessThanOrEqualTo: overlay.widthAnchor, constant: -40)
         ])
-        let title = NSTextField(labelWithString: "HANDWIRED DOOM")
+        let title = NSTextField(labelWithString: "NEURAL DOOM")
         title.font = .monospacedSystemFont(ofSize: 28, weight: .bold)
         stack.addArrangedSubview(title)
-        let subtitle = NSTextField(wrappingLabelWithString: "Native macOS · DoomGeneric reference · Metal locomotion circuit")
+        let subtitle = NSTextField(wrappingLabelWithString: "Native macOS · DoomGeneric reference · Metal locomotion + command remainder circuits")
         subtitle.alignment = .center
         stack.addArrangedSubview(subtitle)
         status = NSTextField(wrappingLabelWithString: engine == nil ? "Metal device unavailable." : "Loading bundled Freedoom Phase 1…")
@@ -85,7 +85,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let menu = NSMenu()
         let appItem = NSMenuItem(); menu.addItem(appItem)
         let appMenu = NSMenu(); appItem.submenu = appMenu
-        appMenu.addItem(withTitle: "Quit Handwired Doom", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+        appMenu.addItem(withTitle: "Quit Neural Doom", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         let fileItem = NSMenuItem(); menu.addItem(fileItem)
         let fileMenu = NSMenu(title: "File"); fileItem.submenu = fileMenu
         fileMenu.addItem(withTitle: "Open IWAD…", action: #selector(chooseIWAD), keyEquivalent: "o").target = self
@@ -124,7 +124,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         guard let engine else { status.stringValue = "Metal is unavailable on this Mac."; return }
         if ProcessInfo.processInfo.environment["HANDWIRED_DOOM_DATA_DIR"] == nil {
             let support = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-                .appendingPathComponent("HandwiredDoom", isDirectory: true)
+                .appendingPathComponent("NeuralDoom", isDirectory: true)
             setenv("HANDWIRED_DOOM_DATA_DIR", support.path, 1)
         }
         selectedIWAD = url

@@ -190,7 +190,7 @@ final class InspectorPanel: NSPanel {
     init(model: InspectorModel) {
         super.init(contentRect: NSRect(x: 100, y: 100, width: 580, height: 690),
                    styleMask: [.titled, .closable, .resizable, .utilityWindow], backing: .buffered, defer: false)
-        title = "Handwired Doom — Circuit Inspector"
+        title = "Neural Doom — Circuit Inspector"
         contentView = NSHostingView(rootView: InspectorView(model: model))
         isReleasedWhenClosed = false
     }

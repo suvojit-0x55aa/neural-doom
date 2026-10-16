@@ -13,25 +13,25 @@ The app includes bundled **Freedoom Phase 1** for immediate play and a live circ
 Requires Apple Silicon, macOS 14+, and Xcode. The project compiles its small Metal shaders from bundled source at runtime, so Xcode's optional offline Metal Toolchain component is not required.
 
 ```sh
-xcodebuild -project HandwiredDoom.xcodeproj -scheme HandwiredDoom \
+xcodebuild -project NeuralDoom.xcodeproj -scheme NeuralDoom \
   -configuration Debug -derivedDataPath DerivedData \
   -destination 'platform=macOS,arch=arm64' build CODE_SIGNING_ALLOWED=NO
-open DerivedData/Build/Products/Debug/HandwiredDoom.app
+open DerivedData/Build/Products/Debug/NeuralDoom.app
 ```
 
-Arrow keys move/turn; Shift runs; Option strafes; Space uses; Control or left click fires. **⌘⇧N** toggles the live circuit inspector; its buttons Pause, Step one tic, and Resume control simulation at tic boundaries. The menu's **File → Open IWAD…** accepts a user-owned commercial IWAD or another local Freedoom IWAD as an optional override. It relaunches the app with the selected path because DoomGeneric's current loader is single-boot. For development, `--iwad /absolute/path/to/freedoom2.wad` or `FREEDOOM_IWAD=/absolute/path/to/freedoom2.wad` overrides the bundled default. Config and saves normally live under `~/Library/Application Support/HandwiredDoom`; `HANDWIRED_DOOM_DATA_DIR` changes that local development directory.
+Arrow keys move/turn; Shift runs; Option strafes; Space uses; Control or left click fires. **⌘⇧N** toggles the live circuit inspector; its buttons Pause, Step one tic, and Resume control simulation at tic boundaries. The menu's **File → Open IWAD…** accepts a user-owned commercial IWAD or another local Freedoom IWAD as an optional override. It relaunches the app with the selected path because DoomGeneric's current loader is single-boot. For development, `--iwad /absolute/path/to/freedoom2.wad` or `FREEDOOM_IWAD=/absolute/path/to/freedoom2.wad` overrides the bundled default. Config and saves normally live under `~/Library/Application Support/NeuralDoom`; `HANDWIRED_DOOM_DATA_DIR` remains the development override for compatibility.
 
 The included `Assets/freedoom1.wad` is **official Freedoom 0.13.0**, release archive SHA-256 `3f9b264f3e3ce503b4fb7f6bdcb1f419d93c7b546f4df3e874dd878db9688f59`, WAD SHA-256 `7323bcc168c5a45ff10749b339960e98314740a734c30d4b9f3337001f9e703d`. Its BSD-style notice and credits are in `Assets/` and copied into the app. To keep local development data ignored, `.local/` is excluded from Git. No commercial WAD is copied or packaged.
 
 ## Test
 
 ```sh
-xcodebuild -project HandwiredDoom.xcodeproj -scheme CircuitTests \
+xcodebuild -project NeuralDoom.xcodeproj -scheme CircuitTests \
   -configuration Debug -derivedDataPath DerivedData \
   -destination 'platform=macOS,arch=arm64' build CODE_SIGNING_ALLOWED=NO
 DerivedData/Build/Products/Debug/CircuitTests
 DerivedData/Build/Products/Debug/CircuitTests --app-bundle \
-  "$PWD/DerivedData/Build/Products/Debug/HandwiredDoom.app"
+  "$PWD/DerivedData/Build/Products/Debug/NeuralDoom.app"
 ```
 
 The parity executable compares 100,000 seeded locomotion snapshots and 100,000 full-command snapshots against **the actual upstream `G_BuildTiccmd`**, the pure C extraction, the CPU graphs, and the Metal graphs. It also tests 61 adversarial command/state snapshots, domain rejection, ring bounds/drops, pause/step scheduling, visualization invariance, and warm submit/wait latency. `--quick` runs 1,000 snapshots per module. `--emit-manifest Docs/locomotion-graph.json` and `--emit-remainder-manifest Docs/tic-remainder-graph.json` regenerate the graph manifests, which tests compare byte-for-byte to the committed versions. For WAD-backed evidence and performance limits, see [Docs/stage2-validation.md](Docs/stage2-validation.md); [stage-one evidence](Docs/validation.md) remains as a checkpoint.

@@ -220,5 +220,5 @@ func HM_HostFrameReady() {
 func HM_HostSetTitle(_ title: UnsafePointer<CChar>?) {
     guard let title else { return }
     let name = String(cString: title)
-    DispatchQueue.main.async { NSApp.mainWindow?.title = "Handwired Doom — \(name)" }
+    DispatchQueue.main.async { NSApp.mainWindow?.title = "Neural Doom — \(name)" }
 }

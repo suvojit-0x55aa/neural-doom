@@ -20,7 +20,7 @@ void HM_EngineStart(const char *iwad_path) {
     setvbuf(stdout, NULL, _IONBF, 0);
     const char *data_dir = getenv("HANDWIRED_DOOM_DATA_DIR");
     if (data_dir) { mkdir(data_dir, 0700); chdir(data_dir); }
-    argv[0] = "Handwired Doom"; argv[1] = "-iwad";
+    argv[0] = "Neural Doom"; argv[1] = "-iwad";
     argv[2] = strdup(iwad_path); argv[3] = "-warp"; argv[4] = "1";
     argv[5] = "-skill"; argv[6] = "3"; argv[7] = "-nosound";
     argv[8] = NULL;
