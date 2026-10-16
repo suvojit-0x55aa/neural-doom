@@ -627,7 +627,8 @@ HMModuleStatus HM_EvaluateExactProgramV1(const HMExactProgramV1 *program,
         if ((tables[i].capacity && !tables[i].cells) || tables[i].reserved)
             return HM_MODULE_MALFORMED_SPAN;
     }
-    memcpy(scratch, inputs, (size_t)input_count * sizeof(*scratch));
+    if (input_count)
+        memcpy(scratch, inputs, (size_t)input_count * sizeof(*scratch));
     for (uint32_t i = 0; i < program->operation_count; ++i) {
         const HMExactOpV1 *op = &program->operations[i];
         uint32_t expected_destination = program->input_count + i;

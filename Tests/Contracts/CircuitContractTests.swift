@@ -432,9 +432,21 @@ private func exactOp(_ opcode: UInt32, _ destination: UInt32,
                 immediate: immediate, table_id: table, flags: 0, reserved: 0)
 }
 
+private struct ExactRuntimeArgumentsV1 {
+    var inputs: UnsafePointer<UInt32>?
+    var inputCount: UInt32
+    var tables: UnsafePointer<HMTableViewV1>?
+    var tableCount: UInt32
+    var scratch: UnsafeMutablePointer<UInt32>?
+    var scratchCapacity: UInt32
+    var outputs: UnsafeMutablePointer<UInt32>?
+    var outputCapacity: UInt32
+}
+
 private func exactCPU(inputs: [UInt32], operations: [HMExactOpV1], roots: [UInt32],
                       tableCells: [Int32] = [7, -9], badHash: Bool = false,
-                      mutateProgram: ((inout HMExactProgramV1) -> Void)? = nil)
+                      mutateProgram: ((inout HMExactProgramV1) -> Void)? = nil,
+                      mutateRuntime: ((inout ExactRuntimeArgumentsV1) -> Void)? = nil)
     -> (UInt32, [UInt32], UInt32) {
     var mutableInputs = inputs
     var mutableOperations = operations
@@ -455,7 +467,7 @@ private func exactCPU(inputs: [UInt32], operations: [HMExactOpV1], roots: [UInt3
                         HMTableViewV1(table_id: UInt32(HM_TABLE_VERTICES),
                                       length: UInt32(tableCells.count),
                                       capacity: UInt32(tableCells.count), reserved: 0,
-                                      cells: UnsafePointer(tableCellBuffer.baseAddress!))
+                                      cells: tableCellBuffer.baseAddress.map { UnsafePointer($0) })
                     ]
                     tables.withUnsafeMutableBufferPointer { tableBuffer in
                         scratch.withUnsafeMutableBufferPointer { scratchBuffer in
@@ -469,16 +481,26 @@ private func exactCPU(inputs: [UInt32], operations: [HMExactOpV1], roots: [UInt3
                                     operation_capacity: UInt32(operations.count),
                                     output_count: UInt32(roots.count),
                                     output_capacity: UInt32(roots.count), source_hash: 0,
-                                    operations: UnsafePointer(operationBuffer.baseAddress!),
-                                    output_registers: UnsafePointer(rootBuffer.baseAddress!))
+                                    operations: operationBuffer.baseAddress.map { UnsafePointer($0) },
+                                    output_registers: rootBuffer.baseAddress.map { UnsafePointer($0) })
                                 program.source_hash = HM_ExactProgramHashV1(&program)
                                 mutateProgram?(&program)
                                 if badHash { program.source_hash ^= 1 }
+                                var runtime = ExactRuntimeArgumentsV1(
+                                    inputs: inputBuffer.baseAddress.map { UnsafePointer($0) },
+                                    inputCount: UInt32(inputs.count),
+                                    tables: tableBuffer.baseAddress.map { UnsafePointer($0) },
+                                    tableCount: tableCount,
+                                    scratch: scratchBuffer.baseAddress,
+                                    scratchCapacity: scratchCount,
+                                    outputs: outputBuffer.baseAddress,
+                                    outputCapacity: outputCapacity)
+                                mutateRuntime?(&runtime)
                                 returnedStatus = HM_EvaluateExactProgramV1(
-                                    &program, inputBuffer.baseAddress, UInt32(inputs.count),
-                                    tableBuffer.baseAddress, tableCount,
-                                    scratchBuffer.baseAddress, scratchCount,
-                                    outputBuffer.baseAddress, outputCapacity, &produced)
+                                    &program, runtime.inputs, runtime.inputCount,
+                                    runtime.tables, runtime.tableCount,
+                                    runtime.scratch, runtime.scratchCapacity,
+                                    runtime.outputs, runtime.outputCapacity, &produced)
                             }
                         }
                     }
@@ -631,6 +653,24 @@ private func exactIntegerConformance() {
     require(metal.0 == UInt32(HM_MODULE_EXACT) && metal.2 == UInt32(expected.count) &&
             metal.1 == expected, "exact integer Metal edge vectors")
 
+    let repeatedRootsCPU = exactCPU(inputs: [42], operations: [], roots: [0, 0],
+                                    tableCells: [])
+    let repeatedRootsMetal = exactMetal(device: device, pipeline: pipeline,
+                                        inputs: [42], operations: [], roots: [0, 0],
+                                        tableCells: [])
+    require(repeatedRootsCPU.0 == UInt32(HM_MODULE_EXACT) &&
+            repeatedRootsCPU.1 == [42, 42] && repeatedRootsCPU.2 == 2 &&
+            repeatedRootsMetal.0 == UInt32(HM_MODULE_EXACT) &&
+            repeatedRootsMetal.1 == [42, 42] && repeatedRootsMetal.2 == 2,
+            "repeated output roots diverged between CPU and Metal")
+
+    let emptyCPU = exactCPU(inputs: [], operations: [], roots: [], tableCells: [])
+    let emptyMetal = exactMetal(device: device, pipeline: pipeline,
+                                inputs: [], operations: [], roots: [], tableCells: [])
+    require(emptyCPU.0 == UInt32(HM_MODULE_EXACT) && emptyCPU.2 == 0 &&
+            emptyMetal.0 == UInt32(HM_MODULE_EXACT) && emptyMetal.2 == 0,
+            "empty exact program was not deterministic")
+
     let spanInputs = [UInt32(1)]
     let spanOperations = [exactOp(UInt32(HM_EXACT_OP_MOVE), 1, 0)]
     let spanRoots = [UInt32(1)]
@@ -654,6 +694,34 @@ private func exactIntegerConformance() {
     }
     expectCPUProgramRejection("null output registers", UInt32(HM_MODULE_MALFORMED_SPAN)) {
         $0.output_registers = nil
+    }
+
+    func expectCPURuntimeRejection(
+        _ label: String, _ expectedStatus: UInt32,
+        _ mutate: @escaping (inout ExactRuntimeArgumentsV1) -> Void
+    ) {
+        let result = exactCPU(inputs: spanInputs, operations: spanOperations,
+                              roots: spanRoots, tableCells: [7], mutateRuntime: mutate)
+        require(result.0 == expectedStatus && result.2 == 0,
+                "exact CPU runtime span accepted: \(label)")
+    }
+    expectCPURuntimeRejection("scratch capacity", UInt32(HM_MODULE_CAPACITY_EXCEEDED)) {
+        $0.scratchCapacity = 1
+    }
+    expectCPURuntimeRejection("output capacity", UInt32(HM_MODULE_CAPACITY_EXCEEDED)) {
+        $0.outputCapacity = 0
+    }
+    expectCPURuntimeRejection("null inputs", UInt32(HM_MODULE_MALFORMED_SPAN)) {
+        $0.inputs = nil
+    }
+    expectCPURuntimeRejection("null tables", UInt32(HM_MODULE_MALFORMED_SPAN)) {
+        $0.tables = nil
+    }
+    expectCPURuntimeRejection("null scratch", UInt32(HM_MODULE_MALFORMED_SPAN)) {
+        $0.scratch = nil
+    }
+    expectCPURuntimeRejection("null outputs", UInt32(HM_MODULE_MALFORMED_SPAN)) {
+        $0.outputs = nil
     }
 
     func expectMetalDispatchRejection(
@@ -771,6 +839,32 @@ private func exactIntegerConformance() {
     require(overreadCPU.0 == UInt32(HM_MODULE_TABLE_BOUNDS) && overreadCPU.2 == 0 &&
             overreadMetal.0 == UInt32(HM_MODULE_TABLE_BOUNDS) && overreadMetal.2 == 0,
             "table overread was not rejected by CPU/Metal")
+
+    let missingTableInputs = [UInt32(0)]
+    let missingTableOps = [exactOp(UInt32(HM_EXACT_OP_TABLE_READ_I32), 1, 0,
+                                   table: UInt32(HM_TABLE_VERTICES))]
+    let missingTableCPU = exactCPU(inputs: missingTableInputs, operations: missingTableOps,
+                                   roots: [1], tableCells: [])
+    let missingTableMetal = exactMetal(device: device, pipeline: pipeline,
+                                       inputs: missingTableInputs, operations: missingTableOps,
+                                       roots: [1], tableCells: [])
+    require(missingTableCPU.0 == UInt32(HM_MODULE_TABLE_BOUNDS) &&
+            missingTableCPU.2 == 0 &&
+            missingTableMetal.0 == UInt32(HM_MODULE_TABLE_BOUNDS) &&
+            missingTableMetal.2 == 0,
+            "missing known table diverged between CPU and Metal")
+
+    let unknownTableOps = [exactOp(UInt32(HM_EXACT_OP_TABLE_READ_I32), 1, 0,
+                                   table: 0xffff_ffff)]
+    let unknownTableCPU = exactCPU(inputs: missingTableInputs, operations: unknownTableOps,
+                                   roots: [1], tableCells: [])
+    let unknownTableMetal = exactMetal(device: device, pipeline: pipeline,
+                                       inputs: missingTableInputs, operations: unknownTableOps,
+                                       roots: [1], tableCells: [])
+    require(unknownTableCPU.0 == UInt32(HM_MODULE_UNKNOWN_ID) && unknownTableCPU.2 == 0 &&
+            unknownTableMetal.0 == UInt32(HM_MODULE_UNKNOWN_ID) &&
+            unknownTableMetal.2 == 0,
+            "unknown table ID diverged between CPU and Metal")
 
     let badHash = exactCPU(inputs: overflowInputs,
                            operations: [exactOp(UInt32(HM_EXACT_OP_MOVE), 2, 0)],
