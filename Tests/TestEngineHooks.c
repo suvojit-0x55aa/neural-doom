@@ -1,7 +1,11 @@
 #include "MovementABI.h"
+#include "TicRemainderABI.h"
 #include "doomgeneric.h"
 #include <stdint.h>
 int HM_EvaluateMovement(const HMMovementInput *in, const HMMovementOutput *reference, HMMovementOutput *committed) {
+    (void)in; (void)reference; (void)committed; return 0;
+}
+int HM_EvaluateRemainder(const HMTicRemainderInput *in, const HMTicRemainderOutput *reference, HMTicRemainderOutput *committed) {
     (void)in; (void)reference; (void)committed; return 0;
 }
 void DG_Init(void) {}

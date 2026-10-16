@@ -8,6 +8,7 @@ final class EngineCoordinator {
     static var active: EngineCoordinator?
     let queue = DispatchQueue(label: "handwired.doom.engine", qos: .userInteractive)
     let circuit: CircuitRuntime
+    let remainder: RemainderRuntime
     let presentationQueue: MTLCommandQueue
     weak var gameView: GameView?
     weak var inspector: InspectorModel?
@@ -26,7 +27,9 @@ final class EngineCoordinator {
 
     init(device: MTLDevice) {
         circuit = CircuitRuntime(device: device)
+        remainder = RemainderRuntime(device: device)
         circuit.visualizationEnabled = ProcessInfo.processInfo.environment["HANDWIRED_DOOM_VISUALIZE"] == "1"
+        remainder.visualizationEnabled = circuit.visualizationEnabled
         presentationQueue = device.makeCommandQueue()!
         Self.active = self
         circuit.traceHandler = { [weak self] trace, dropped in
@@ -61,6 +64,36 @@ final class EngineCoordinator {
                                               fallbackReason: fallbackReason)
             }
         }
+        remainder.traceHandler = { [weak self] trace, dropped in
+            guard let self else { return }
+            let graph = self.remainder.graph
+            let circuitTics = self.remainder.circuitTics
+            let domainFallbacks = self.remainder.domainFallbacks
+            let metalFallbacks = self.remainder.metalFallbacks
+            let mismatches = self.remainder.mismatches
+            let fallbackReason = self.remainder.lastFallback
+            DispatchQueue.main.async {
+                self.inspector?.publishRemainder(trace: trace, graph: graph, dropped: dropped,
+                                                 circuitTics: circuitTics, domainFallbacks: domainFallbacks,
+                                                 metalFallbacks: metalFallbacks, mismatches: mismatches,
+                                                 fallbackReason: fallbackReason)
+            }
+        }
+        remainder.countersHandler = { [weak self] in
+            guard let self else { return }
+            let circuitTics = self.remainder.circuitTics
+            let domainFallbacks = self.remainder.domainFallbacks
+            let metalFallbacks = self.remainder.metalFallbacks
+            let mismatches = self.remainder.mismatches
+            let fallbackReason = self.remainder.lastFallback
+            DispatchQueue.main.async {
+                self.inspector?.refreshRemainderCounts(circuitTics: circuitTics,
+                                                       domainFallbacks: domainFallbacks,
+                                                       metalFallbacks: metalFallbacks,
+                                                       mismatches: mismatches,
+                                                       fallbackReason: fallbackReason)
+            }
+        }
     }
     func start(iwad: URL, completion: @escaping (String?) -> Void) {
         queue.async {
@@ -69,7 +102,7 @@ final class EngineCoordinator {
             if let path = ProcessInfo.processInfo.environment["HANDWIRED_DOOM_TRACE_PATH"] {
                 FileManager.default.createFile(atPath: path, contents: nil)
                 self.evidenceFile = FileHandle(forWritingAtPath: path)
-                self.writeEvidence("host_tick,gametic,in_level,x,y,angle,forward,side,turn,turnheld,ref_forward,ref_side,ref_turn,ref_held,fallback,latency_ns,engine_tic_ns,late_tics,catch_up_tics,frame_interval_ns,trace_count,trace_drops\n")
+                self.writeEvidence("host_tick,gametic,in_level,x,y,angle,forward,side,turn,turnheld,ref_forward,ref_side,ref_turn,ref_held,fallback,latency_ns,engine_tic_ns,late_tics,catch_up_tics,frame_interval_ns,trace_count,trace_drops,r_buttons,r_angle,r_ref_buttons,r_ref_angle,r_fallback,r_latency_ns,r_circuit_tics,r_trace_count,r_trace_drops,r_ref_dclicks,r_ref_dclicks2,r_ref_carry,r_ref_chat,r_ref_sendpause,r_ref_sendsave,r_ref_next_weapon\n")
             }
             iwad.path.withCString { HM_EngineStart($0) }
             self.scheduler.resume(now: DispatchTime.now().uptimeNanoseconds)
@@ -95,6 +128,16 @@ final class EngineCoordinator {
             if scriptedTics == 0 { enqueueKey(pressed: true, key: 0xad) }
             if scriptedTics == 140 { enqueueKey(pressed: false, key: 0xad); enqueueKey(pressed: true, key: 0xae) }
             if scriptedTics == 210 { enqueueKey(pressed: false, key: 0xae) }
+            if scriptedTics == 220 { enqueueKey(pressed: true, key: 0xa3) }
+            if scriptedTics == 230 { enqueueKey(pressed: false, key: 0xa3) }
+            if scriptedTics == 234 { enqueueKey(pressed: true, key: 0xa2) }
+            if scriptedTics == 239 { enqueueKey(pressed: false, key: 0xa2) }
+            if scriptedTics == 244 { enqueueKey(pressed: true, key: 0x32) }
+            if scriptedTics == 249 { enqueueKey(pressed: false, key: 0x32) }
+            if scriptedTics == 250 { enqueueKey(pressed: true, key: 0xae) }
+            if scriptedTics == 260 || scriptedTics == 268 || scriptedTics == 310 || scriptedTics == 318 { enqueueMouse(buttons: 4, dx: 0, dy: 0) }
+            if scriptedTics == 263 || scriptedTics == 271 || scriptedTics == 313 || scriptedTics == 321 { enqueueMouse(buttons: 0, dx: 0, dy: 0) }
+            if scriptedTics == 280 { enqueueKey(pressed: false, key: 0xae) }
             scriptedTics += 1
         }
         let before = DispatchTime.now().uptimeNanoseconds
@@ -109,14 +152,15 @@ final class EngineCoordinator {
             let s = HM_EnginePlayerState()
             let r = circuit.lastResult
             let c = circuit.lastReference
-            writeEvidence("\(scriptedTics),\(s.gametic),\(s.in_level),\(s.x),\(s.y),\(s.angle),\(r?.forwardmove ?? 0),\(r?.sidemove ?? 0),\(r?.angleturn ?? 0),\(r?.turnheld ?? 0),\(c?.forwardmove ?? 0),\(c?.sidemove ?? 0),\(c?.angleturn ?? 0),\(c?.turnheld ?? 0),\(circuit.lastFallback),\(circuit.lastLatencyNs),\(elapsed),\(lateTics),\(catchUpTics),\(frameInterval),\(circuit.traces.items.count),\(circuit.traces.dropped)\n")
+            let rr = remainder.lastResult, rc = remainder.lastReference
+            writeEvidence("\(scriptedTics),\(s.gametic),\(s.in_level),\(s.x),\(s.y),\(s.angle),\(r?.forwardmove ?? 0),\(r?.sidemove ?? 0),\(r?.angleturn ?? 0),\(r?.turnheld ?? 0),\(c?.forwardmove ?? 0),\(c?.sidemove ?? 0),\(c?.angleturn ?? 0),\(c?.turnheld ?? 0),\(circuit.lastFallback),\(circuit.lastLatencyNs),\(elapsed),\(lateTics),\(catchUpTics),\(frameInterval),\(circuit.traces.items.count),\(circuit.traces.dropped),\(rr?.buttons ?? 0),\(rr?.angleturn ?? 0),\(rc?.buttons ?? 0),\(rc?.angleturn ?? 0),\(remainder.lastFallback),\(remainder.lastLatencyNs),\(remainder.circuitTics),\(remainder.traces.items.count),\(remainder.traces.dropped),\(rc?.dclicks ?? 0),\(rc?.dclicks2 ?? 0),\(rc?.lowres_carry ?? 0),\(rc?.chatchar ?? 0),\(rc?.sendpause ?? 0),\(rc?.sendsave ?? 0),\(rc?.next_weapon ?? 0)\n")
         }
     }
     private func writeEvidence(_ line: String) { evidenceFile?.write(line.data(using: .utf8)!) }
     func pause() { queue.async { self.scheduler.pause(now: DispatchTime.now().uptimeNanoseconds) } }
     func resume() { queue.async { self.scheduler.resume(now: DispatchTime.now().uptimeNanoseconds) } }
     func step() { queue.async { if self.started && self.scheduler.step() == 1 { self.runOneTic() } } }
-    func setVisualization(_ enabled: Bool) { queue.async { self.circuit.visualizationEnabled = enabled } }
+    func setVisualization(_ enabled: Bool) { queue.async { self.circuit.visualizationEnabled = enabled; self.remainder.visualizationEnabled = enabled } }
 
     func enqueueKey(pressed: Bool, key: UInt8) {
         inputLock.lock(); defer { inputLock.unlock() }
@@ -150,6 +194,15 @@ func HM_EvaluateMovementNative(_ input: UnsafePointer<HMMovementInput>?,
                                _ output: UnsafeMutablePointer<HMMovementOutput>?) -> Int32 {
     guard let input, let reference, let output, let circuit = EngineCoordinator.active?.circuit,
           let result = circuit.evaluate(input.pointee, reference: reference.pointee) else { return 0 }
+    output.pointee = result
+    return 1
+}
+@_cdecl("HM_EvaluateRemainder")
+func HM_EvaluateRemainderNative(_ input: UnsafePointer<HMTicRemainderInput>?,
+                                _ reference: UnsafePointer<HMTicRemainderOutput>?,
+                                _ output: UnsafeMutablePointer<HMTicRemainderOutput>?) -> Int32 {
+    guard let input, let reference, let output, let remainder = EngineCoordinator.active?.remainder,
+          let result = remainder.evaluate(input.pointee, reference: reference.pointee) else { return 0 }
     output.pointee = result
     return 1
 }

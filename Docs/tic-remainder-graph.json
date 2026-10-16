@@ -1,0 +1,7279 @@
+{
+  "abi" : 1,
+  "compiledLiveOperations" : 674,
+  "graphHash" : "cc5b3098e0cec98a",
+  "inputABI" : "Sources\/Bridge\/TicRemainderABI.h",
+  "inputCount" : 55,
+  "layerCount" : 83,
+  "module" : "tic.remainder",
+  "operationCount" : 674,
+  "operations" : [
+    {
+      "boolean" : false,
+      "id" : 55,
+      "kind" : "affine",
+      "label" : "constant.zero",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 56,
+      "kind" : "affine",
+      "label" : "constant.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 57,
+      "kind" : "affine",
+      "label" : "buttons.attack.sum",
+      "layer" : 1,
+      "parents" : [
+        4,
+        5
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 58,
+      "kind" : "affine",
+      "label" : "buttons.attack.sum",
+      "layer" : 2,
+      "parents" : [
+        57,
+        6
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 59,
+      "kind" : "affine",
+      "label" : "buttons.attack.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 60,
+      "kind" : "reglu",
+      "label" : "buttons.attack.hi",
+      "layer" : 3,
+      "parents" : [
+        58,
+        59
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 61,
+      "kind" : "affine",
+      "label" : "buttons.attack.minusOne",
+      "layer" : 3,
+      "parents" : [
+        58
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 62,
+      "kind" : "affine",
+      "label" : "buttons.attack.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 63,
+      "kind" : "reglu",
+      "label" : "buttons.attack.lo",
+      "layer" : 4,
+      "parents" : [
+        61,
+        62
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 64,
+      "kind" : "affine",
+      "label" : "buttons.attack",
+      "layer" : 5,
+      "parents" : [
+        60,
+        63
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 65,
+      "kind" : "affine",
+      "label" : "buttons.directUse.sum",
+      "layer" : 1,
+      "parents" : [
+        7,
+        8
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 66,
+      "kind" : "affine",
+      "label" : "buttons.directUse.sum",
+      "layer" : 2,
+      "parents" : [
+        65,
+        9
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 67,
+      "kind" : "affine",
+      "label" : "buttons.directUse.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 68,
+      "kind" : "reglu",
+      "label" : "buttons.directUse.hi",
+      "layer" : 3,
+      "parents" : [
+        66,
+        67
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 69,
+      "kind" : "affine",
+      "label" : "buttons.directUse.minusOne",
+      "layer" : 3,
+      "parents" : [
+        66
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 70,
+      "kind" : "affine",
+      "label" : "buttons.directUse.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 71,
+      "kind" : "reglu",
+      "label" : "buttons.directUse.lo",
+      "layer" : 4,
+      "parents" : [
+        69,
+        70
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 72,
+      "kind" : "affine",
+      "label" : "buttons.directUse",
+      "layer" : 5,
+      "parents" : [
+        68,
+        71
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 73,
+      "kind" : "affine",
+      "label" : "weapon.key0.notFound",
+      "layer" : 2,
+      "parents" : [
+        55
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 74,
+      "kind" : "reglu",
+      "label" : "weapon.key0.first",
+      "layer" : 3,
+      "parents" : [
+        10,
+        73
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 75,
+      "kind" : "affine",
+      "label" : "weapon.key0.number",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 76,
+      "kind" : "affine",
+      "label" : "weapon.manualNumber",
+      "layer" : 2,
+      "parents" : [
+        55,
+        75
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 77,
+      "kind" : "affine",
+      "label" : "weapon.manualFound.sum",
+      "layer" : 4,
+      "parents" : [
+        55,
+        74
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 78,
+      "kind" : "affine",
+      "label" : "weapon.manualFound.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 79,
+      "kind" : "reglu",
+      "label" : "weapon.manualFound.hi",
+      "layer" : 5,
+      "parents" : [
+        77,
+        78
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 80,
+      "kind" : "affine",
+      "label" : "weapon.manualFound.minusOne",
+      "layer" : 5,
+      "parents" : [
+        77
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 81,
+      "kind" : "affine",
+      "label" : "weapon.manualFound.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 82,
+      "kind" : "reglu",
+      "label" : "weapon.manualFound.lo",
+      "layer" : 6,
+      "parents" : [
+        80,
+        81
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 83,
+      "kind" : "affine",
+      "label" : "weapon.manualFound",
+      "layer" : 7,
+      "parents" : [
+        79,
+        82
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 84,
+      "kind" : "affine",
+      "label" : "weapon.key1.notFound",
+      "layer" : 8,
+      "parents" : [
+        83
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 85,
+      "kind" : "reglu",
+      "label" : "weapon.key1.first",
+      "layer" : 9,
+      "parents" : [
+        11,
+        84
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 86,
+      "kind" : "affine",
+      "label" : "weapon.key1.number",
+      "layer" : 10,
+      "parents" : [
+        85
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 87,
+      "kind" : "affine",
+      "label" : "weapon.manualNumber",
+      "layer" : 11,
+      "parents" : [
+        76,
+        86
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 88,
+      "kind" : "affine",
+      "label" : "weapon.manualFound.sum",
+      "layer" : 10,
+      "parents" : [
+        83,
+        85
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 89,
+      "kind" : "affine",
+      "label" : "weapon.manualFound.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 90,
+      "kind" : "reglu",
+      "label" : "weapon.manualFound.hi",
+      "layer" : 11,
+      "parents" : [
+        88,
+        89
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 91,
+      "kind" : "affine",
+      "label" : "weapon.manualFound.minusOne",
+      "layer" : 11,
+      "parents" : [
+        88
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 92,
+      "kind" : "affine",
+      "label" : "weapon.manualFound.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 93,
+      "kind" : "reglu",
+      "label" : "weapon.manualFound.lo",
+      "layer" : 12,
+      "parents" : [
+        91,
+        92
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 94,
+      "kind" : "affine",
+      "label" : "weapon.manualFound",
+      "layer" : 13,
+      "parents" : [
+        90,
+        93
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 95,
+      "kind" : "affine",
+      "label" : "weapon.key2.notFound",
+      "layer" : 14,
+      "parents" : [
+        94
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 96,
+      "kind" : "reglu",
+      "label" : "weapon.key2.first",
+      "layer" : 15,
+      "parents" : [
+        12,
+        95
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 97,
+      "kind" : "affine",
+      "label" : "weapon.key2.number",
+      "layer" : 16,
+      "parents" : [
+        96
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 98,
+      "kind" : "affine",
+      "label" : "weapon.manualNumber",
+      "layer" : 17,
+      "parents" : [
+        87,
+        97
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 99,
+      "kind" : "affine",
+      "label" : "weapon.manualFound.sum",
+      "layer" : 16,
+      "parents" : [
+        94,
+        96
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 100,
+      "kind" : "affine",
+      "label" : "weapon.manualFound.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 101,
+      "kind" : "reglu",
+      "label" : "weapon.manualFound.hi",
+      "layer" : 17,
+      "parents" : [
+        99,
+        100
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 102,
+      "kind" : "affine",
+      "label" : "weapon.manualFound.minusOne",
+      "layer" : 17,
+      "parents" : [
+        99
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 103,
+      "kind" : "affine",
+      "label" : "weapon.manualFound.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 104,
+      "kind" : "reglu",
+      "label" : "weapon.manualFound.lo",
+      "layer" : 18,
+      "parents" : [
+        102,
+        103
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 105,
+      "kind" : "affine",
+      "label" : "weapon.manualFound",
+      "layer" : 19,
+      "parents" : [
+        101,
+        104
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 106,
+      "kind" : "affine",
+      "label" : "weapon.key3.notFound",
+      "layer" : 20,
+      "parents" : [
+        105
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 107,
+      "kind" : "reglu",
+      "label" : "weapon.key3.first",
+      "layer" : 21,
+      "parents" : [
+        13,
+        106
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 108,
+      "kind" : "affine",
+      "label" : "weapon.key3.number",
+      "layer" : 22,
+      "parents" : [
+        107
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 109,
+      "kind" : "affine",
+      "label" : "weapon.manualNumber",
+      "layer" : 23,
+      "parents" : [
+        98,
+        108
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 110,
+      "kind" : "affine",
+      "label" : "weapon.manualFound.sum",
+      "layer" : 22,
+      "parents" : [
+        105,
+        107
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 111,
+      "kind" : "affine",
+      "label" : "weapon.manualFound.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 112,
+      "kind" : "reglu",
+      "label" : "weapon.manualFound.hi",
+      "layer" : 23,
+      "parents" : [
+        110,
+        111
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 113,
+      "kind" : "affine",
+      "label" : "weapon.manualFound.minusOne",
+      "layer" : 23,
+      "parents" : [
+        110
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 114,
+      "kind" : "affine",
+      "label" : "weapon.manualFound.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 115,
+      "kind" : "reglu",
+      "label" : "weapon.manualFound.lo",
+      "layer" : 24,
+      "parents" : [
+        113,
+        114
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 116,
+      "kind" : "affine",
+      "label" : "weapon.manualFound",
+      "layer" : 25,
+      "parents" : [
+        112,
+        115
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 117,
+      "kind" : "affine",
+      "label" : "weapon.key4.notFound",
+      "layer" : 26,
+      "parents" : [
+        116
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 118,
+      "kind" : "reglu",
+      "label" : "weapon.key4.first",
+      "layer" : 27,
+      "parents" : [
+        14,
+        117
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 119,
+      "kind" : "affine",
+      "label" : "weapon.key4.number",
+      "layer" : 28,
+      "parents" : [
+        118
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 120,
+      "kind" : "affine",
+      "label" : "weapon.manualNumber",
+      "layer" : 29,
+      "parents" : [
+        109,
+        119
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 121,
+      "kind" : "affine",
+      "label" : "weapon.manualFound.sum",
+      "layer" : 28,
+      "parents" : [
+        116,
+        118
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 122,
+      "kind" : "affine",
+      "label" : "weapon.manualFound.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 123,
+      "kind" : "reglu",
+      "label" : "weapon.manualFound.hi",
+      "layer" : 29,
+      "parents" : [
+        121,
+        122
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 124,
+      "kind" : "affine",
+      "label" : "weapon.manualFound.minusOne",
+      "layer" : 29,
+      "parents" : [
+        121
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 125,
+      "kind" : "affine",
+      "label" : "weapon.manualFound.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 126,
+      "kind" : "reglu",
+      "label" : "weapon.manualFound.lo",
+      "layer" : 30,
+      "parents" : [
+        124,
+        125
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 127,
+      "kind" : "affine",
+      "label" : "weapon.manualFound",
+      "layer" : 31,
+      "parents" : [
+        123,
+        126
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 128,
+      "kind" : "affine",
+      "label" : "weapon.key5.notFound",
+      "layer" : 32,
+      "parents" : [
+        127
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 129,
+      "kind" : "reglu",
+      "label" : "weapon.key5.first",
+      "layer" : 33,
+      "parents" : [
+        15,
+        128
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 130,
+      "kind" : "affine",
+      "label" : "weapon.key5.number",
+      "layer" : 34,
+      "parents" : [
+        129
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 131,
+      "kind" : "affine",
+      "label" : "weapon.manualNumber",
+      "layer" : 35,
+      "parents" : [
+        120,
+        130
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 132,
+      "kind" : "affine",
+      "label" : "weapon.manualFound.sum",
+      "layer" : 34,
+      "parents" : [
+        127,
+        129
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 133,
+      "kind" : "affine",
+      "label" : "weapon.manualFound.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 134,
+      "kind" : "reglu",
+      "label" : "weapon.manualFound.hi",
+      "layer" : 35,
+      "parents" : [
+        132,
+        133
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 135,
+      "kind" : "affine",
+      "label" : "weapon.manualFound.minusOne",
+      "layer" : 35,
+      "parents" : [
+        132
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 136,
+      "kind" : "affine",
+      "label" : "weapon.manualFound.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 137,
+      "kind" : "reglu",
+      "label" : "weapon.manualFound.lo",
+      "layer" : 36,
+      "parents" : [
+        135,
+        136
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 138,
+      "kind" : "affine",
+      "label" : "weapon.manualFound",
+      "layer" : 37,
+      "parents" : [
+        134,
+        137
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 139,
+      "kind" : "affine",
+      "label" : "weapon.key6.notFound",
+      "layer" : 38,
+      "parents" : [
+        138
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 140,
+      "kind" : "reglu",
+      "label" : "weapon.key6.first",
+      "layer" : 39,
+      "parents" : [
+        16,
+        139
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 141,
+      "kind" : "affine",
+      "label" : "weapon.key6.number",
+      "layer" : 40,
+      "parents" : [
+        140
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 142,
+      "kind" : "affine",
+      "label" : "weapon.manualNumber",
+      "layer" : 41,
+      "parents" : [
+        131,
+        141
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 143,
+      "kind" : "affine",
+      "label" : "weapon.manualFound.sum",
+      "layer" : 40,
+      "parents" : [
+        138,
+        140
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 144,
+      "kind" : "affine",
+      "label" : "weapon.manualFound.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 145,
+      "kind" : "reglu",
+      "label" : "weapon.manualFound.hi",
+      "layer" : 41,
+      "parents" : [
+        143,
+        144
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 146,
+      "kind" : "affine",
+      "label" : "weapon.manualFound.minusOne",
+      "layer" : 41,
+      "parents" : [
+        143
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 147,
+      "kind" : "affine",
+      "label" : "weapon.manualFound.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 148,
+      "kind" : "reglu",
+      "label" : "weapon.manualFound.lo",
+      "layer" : 42,
+      "parents" : [
+        146,
+        147
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 149,
+      "kind" : "affine",
+      "label" : "weapon.manualFound",
+      "layer" : 43,
+      "parents" : [
+        145,
+        148
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 150,
+      "kind" : "affine",
+      "label" : "weapon.key7.notFound",
+      "layer" : 44,
+      "parents" : [
+        149
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 151,
+      "kind" : "reglu",
+      "label" : "weapon.key7.first",
+      "layer" : 45,
+      "parents" : [
+        17,
+        150
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 152,
+      "kind" : "affine",
+      "label" : "weapon.key7.number",
+      "layer" : 46,
+      "parents" : [
+        151
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 153,
+      "kind" : "affine",
+      "label" : "weapon.manualNumber",
+      "layer" : 47,
+      "parents" : [
+        142,
+        152
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 154,
+      "kind" : "affine",
+      "label" : "weapon.manualFound.sum",
+      "layer" : 46,
+      "parents" : [
+        149,
+        151
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 155,
+      "kind" : "affine",
+      "label" : "weapon.manualFound.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 156,
+      "kind" : "reglu",
+      "label" : "weapon.manualFound.hi",
+      "layer" : 47,
+      "parents" : [
+        154,
+        155
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 157,
+      "kind" : "affine",
+      "label" : "weapon.manualFound.minusOne",
+      "layer" : 47,
+      "parents" : [
+        154
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 158,
+      "kind" : "affine",
+      "label" : "weapon.manualFound.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 159,
+      "kind" : "reglu",
+      "label" : "weapon.manualFound.lo",
+      "layer" : 48,
+      "parents" : [
+        157,
+        158
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 160,
+      "kind" : "affine",
+      "label" : "weapon.manualFound",
+      "layer" : 49,
+      "parents" : [
+        156,
+        159
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 161,
+      "kind" : "affine",
+      "label" : "weapon.nextPositive.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 162,
+      "kind" : "reglu",
+      "label" : "weapon.nextPositive.hi",
+      "layer" : 2,
+      "parents" : [
+        19,
+        161
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 163,
+      "kind" : "affine",
+      "label" : "weapon.nextPositive.minusOne",
+      "layer" : 1,
+      "parents" : [
+        19
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 164,
+      "kind" : "affine",
+      "label" : "weapon.nextPositive.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 165,
+      "kind" : "reglu",
+      "label" : "weapon.nextPositive.lo",
+      "layer" : 2,
+      "parents" : [
+        163,
+        164
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 166,
+      "kind" : "affine",
+      "label" : "weapon.nextPositive",
+      "layer" : 3,
+      "parents" : [
+        162,
+        165
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 167,
+      "kind" : "affine",
+      "label" : "weapon.nextNegativeSign",
+      "layer" : 1,
+      "parents" : [
+        19
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 168,
+      "kind" : "affine",
+      "label" : "weapon.nextNegative.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 169,
+      "kind" : "reglu",
+      "label" : "weapon.nextNegative.hi",
+      "layer" : 2,
+      "parents" : [
+        167,
+        168
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 170,
+      "kind" : "affine",
+      "label" : "weapon.nextNegative.minusOne",
+      "layer" : 2,
+      "parents" : [
+        167
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 171,
+      "kind" : "affine",
+      "label" : "weapon.nextNegative.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 172,
+      "kind" : "reglu",
+      "label" : "weapon.nextNegative.lo",
+      "layer" : 3,
+      "parents" : [
+        170,
+        171
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 173,
+      "kind" : "affine",
+      "label" : "weapon.nextNegative",
+      "layer" : 4,
+      "parents" : [
+        169,
+        172
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 174,
+      "kind" : "affine",
+      "label" : "weapon.nextAny.sum",
+      "layer" : 5,
+      "parents" : [
+        166,
+        173
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 175,
+      "kind" : "affine",
+      "label" : "weapon.nextAny.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 176,
+      "kind" : "reglu",
+      "label" : "weapon.nextAny.hi",
+      "layer" : 6,
+      "parents" : [
+        174,
+        175
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 177,
+      "kind" : "affine",
+      "label" : "weapon.nextAny.minusOne",
+      "layer" : 6,
+      "parents" : [
+        174
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 178,
+      "kind" : "affine",
+      "label" : "weapon.nextAny.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 179,
+      "kind" : "reglu",
+      "label" : "weapon.nextAny.lo",
+      "layer" : 7,
+      "parents" : [
+        177,
+        178
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 180,
+      "kind" : "affine",
+      "label" : "weapon.nextAny",
+      "layer" : 8,
+      "parents" : [
+        176,
+        179
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 181,
+      "kind" : "reglu",
+      "label" : "weapon.cycleActive",
+      "layer" : 9,
+      "parents" : [
+        18,
+        180
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 182,
+      "kind" : "affine",
+      "label" : "weapon.noChange",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 183,
+      "kind" : "affine",
+      "label" : "weapon.pendingNoChange.negativeB",
+      "layer" : 2,
+      "parents" : [
+        182
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 184,
+      "kind" : "affine",
+      "label" : "weapon.pendingNoChange.difference",
+      "layer" : 3,
+      "parents" : [
+        21,
+        183
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 185,
+      "kind" : "affine",
+      "label" : "weapon.pendingNoChange.greater.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 186,
+      "kind" : "reglu",
+      "label" : "weapon.pendingNoChange.greater.hi",
+      "layer" : 4,
+      "parents" : [
+        184,
+        185
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 187,
+      "kind" : "affine",
+      "label" : "weapon.pendingNoChange.greater.minusOne",
+      "layer" : 4,
+      "parents" : [
+        184
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 188,
+      "kind" : "affine",
+      "label" : "weapon.pendingNoChange.greater.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 189,
+      "kind" : "reglu",
+      "label" : "weapon.pendingNoChange.greater.lo",
+      "layer" : 5,
+      "parents" : [
+        187,
+        188
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 190,
+      "kind" : "affine",
+      "label" : "weapon.pendingNoChange.greater",
+      "layer" : 6,
+      "parents" : [
+        186,
+        189
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 191,
+      "kind" : "affine",
+      "label" : "weapon.pendingNoChange.reverse",
+      "layer" : 4,
+      "parents" : [
+        184
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 192,
+      "kind" : "affine",
+      "label" : "weapon.pendingNoChange.less.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 193,
+      "kind" : "reglu",
+      "label" : "weapon.pendingNoChange.less.hi",
+      "layer" : 5,
+      "parents" : [
+        191,
+        192
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 194,
+      "kind" : "affine",
+      "label" : "weapon.pendingNoChange.less.minusOne",
+      "layer" : 5,
+      "parents" : [
+        191
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 195,
+      "kind" : "affine",
+      "label" : "weapon.pendingNoChange.less.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 196,
+      "kind" : "reglu",
+      "label" : "weapon.pendingNoChange.less.lo",
+      "layer" : 6,
+      "parents" : [
+        194,
+        195
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 197,
+      "kind" : "affine",
+      "label" : "weapon.pendingNoChange.less",
+      "layer" : 7,
+      "parents" : [
+        193,
+        196
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 198,
+      "kind" : "affine",
+      "label" : "weapon.pendingNoChange.different.sum",
+      "layer" : 8,
+      "parents" : [
+        190,
+        197
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 199,
+      "kind" : "affine",
+      "label" : "weapon.pendingNoChange.different.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 200,
+      "kind" : "reglu",
+      "label" : "weapon.pendingNoChange.different.hi",
+      "layer" : 9,
+      "parents" : [
+        198,
+        199
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 201,
+      "kind" : "affine",
+      "label" : "weapon.pendingNoChange.different.minusOne",
+      "layer" : 9,
+      "parents" : [
+        198
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 202,
+      "kind" : "affine",
+      "label" : "weapon.pendingNoChange.different.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 203,
+      "kind" : "reglu",
+      "label" : "weapon.pendingNoChange.different.lo",
+      "layer" : 10,
+      "parents" : [
+        201,
+        202
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 204,
+      "kind" : "affine",
+      "label" : "weapon.pendingNoChange.different",
+      "layer" : 11,
+      "parents" : [
+        200,
+        203
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 205,
+      "kind" : "affine",
+      "label" : "weapon.pendingNoChange",
+      "layer" : 12,
+      "parents" : [
+        204
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 206,
+      "kind" : "reglu",
+      "label" : "weapon.current.yes",
+      "layer" : 13,
+      "parents" : [
+        20,
+        205
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 207,
+      "kind" : "affine",
+      "label" : "weapon.current.not",
+      "layer" : 13,
+      "parents" : [
+        205
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 208,
+      "kind" : "reglu",
+      "label" : "weapon.current.no",
+      "layer" : 14,
+      "parents" : [
+        21,
+        207
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 209,
+      "kind" : "affine",
+      "label" : "weapon.current",
+      "layer" : 15,
+      "parents" : [
+        206,
+        208
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 210,
+      "kind" : "index-read",
+      "label" : "weapon.start",
+      "layer" : 16,
+      "parents" : [
+        209
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 211,
+      "kind" : "affine",
+      "label" : "weapon.noStrength",
+      "layer" : 1,
+      "parents" : [
+        31
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 212,
+      "kind" : "reglu",
+      "label" : "weapon.fistBlocked",
+      "layer" : 2,
+      "parents" : [
+        29,
+        211
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 213,
+      "kind" : "affine",
+      "label" : "weapon.fistAllowed",
+      "layer" : 3,
+      "parents" : [
+        212
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 214,
+      "kind" : "reglu",
+      "label" : "weapon.fistSelectable",
+      "layer" : 4,
+      "parents" : [
+        22,
+        213
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 215,
+      "kind" : "reglu",
+      "label" : "weapon.sharewareBlocked",
+      "layer" : 1,
+      "parents" : [
+        33,
+        34
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 216,
+      "kind" : "affine",
+      "label" : "weapon.superAllowed",
+      "layer" : 1,
+      "parents" : [
+        32
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 217,
+      "kind" : "reglu",
+      "label" : "weapon.superSelectable",
+      "layer" : 2,
+      "parents" : [
+        30,
+        216
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 218,
+      "kind" : "affine",
+      "label" : "weapon.ammoAllowed5",
+      "layer" : 2,
+      "parents" : [
+        215
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 219,
+      "kind" : "reglu",
+      "label" : "weapon.selectable5",
+      "layer" : 3,
+      "parents" : [
+        27,
+        218
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 220,
+      "kind" : "affine",
+      "label" : "weapon.ammoAllowed6",
+      "layer" : 2,
+      "parents" : [
+        215
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 221,
+      "kind" : "reglu",
+      "label" : "weapon.selectable6",
+      "layer" : 3,
+      "parents" : [
+        28,
+        220
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 222,
+      "kind" : "affine",
+      "label" : "weapon.candidateAddressScale",
+      "layer" : 17,
+      "parents" : [
+        210
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 223,
+      "kind" : "affine",
+      "label" : "weapon.candidateAddress0",
+      "layer" : 18,
+      "parents" : [
+        222
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 224,
+      "kind" : "index-read",
+      "label" : "weapon.forward0",
+      "layer" : 19,
+      "parents" : [
+        223
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 225,
+      "kind" : "index-read",
+      "label" : "weapon.reverse0",
+      "layer" : 19,
+      "parents" : [
+        223
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 226,
+      "kind" : "reglu",
+      "label" : "weapon.candidate0.yes",
+      "layer" : 20,
+      "parents" : [
+        224,
+        166
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 227,
+      "kind" : "affine",
+      "label" : "weapon.candidate0.not",
+      "layer" : 4,
+      "parents" : [
+        166
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 228,
+      "kind" : "reglu",
+      "label" : "weapon.candidate0.no",
+      "layer" : 20,
+      "parents" : [
+        225,
+        227
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 229,
+      "kind" : "affine",
+      "label" : "weapon.candidate0",
+      "layer" : 21,
+      "parents" : [
+        226,
+        228
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 230,
+      "kind" : "index-read",
+      "label" : "weapon.enum0",
+      "layer" : 22,
+      "parents" : [
+        229
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 231,
+      "kind" : "index-read",
+      "label" : "weapon.eligible0",
+      "layer" : 23,
+      "parents" : [
+        230,
+        214,
+        23,
+        24,
+        25,
+        26,
+        219,
+        221,
+        29,
+        217
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 232,
+      "kind" : "affine",
+      "label" : "weapon.notFound0",
+      "layer" : 2,
+      "parents" : [
+        55
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 233,
+      "kind" : "reglu",
+      "label" : "weapon.take0",
+      "layer" : 24,
+      "parents" : [
+        231,
+        232
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 234,
+      "kind" : "reglu",
+      "label" : "weapon.chosen0",
+      "layer" : 25,
+      "parents" : [
+        229,
+        233
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 235,
+      "kind" : "affine",
+      "label" : "weapon.selectedOrder",
+      "layer" : 26,
+      "parents" : [
+        55,
+        234
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 236,
+      "kind" : "affine",
+      "label" : "weapon.found.sum",
+      "layer" : 25,
+      "parents" : [
+        55,
+        233
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 237,
+      "kind" : "affine",
+      "label" : "weapon.found.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 238,
+      "kind" : "reglu",
+      "label" : "weapon.found.hi",
+      "layer" : 26,
+      "parents" : [
+        236,
+        237
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 239,
+      "kind" : "affine",
+      "label" : "weapon.found.minusOne",
+      "layer" : 26,
+      "parents" : [
+        236
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 240,
+      "kind" : "affine",
+      "label" : "weapon.found.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 241,
+      "kind" : "reglu",
+      "label" : "weapon.found.lo",
+      "layer" : 27,
+      "parents" : [
+        239,
+        240
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 242,
+      "kind" : "affine",
+      "label" : "weapon.found",
+      "layer" : 28,
+      "parents" : [
+        238,
+        241
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 243,
+      "kind" : "affine",
+      "label" : "weapon.candidateAddressScale",
+      "layer" : 17,
+      "parents" : [
+        210
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 244,
+      "kind" : "affine",
+      "label" : "weapon.candidateAddress1",
+      "layer" : 18,
+      "parents" : [
+        243
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 245,
+      "kind" : "index-read",
+      "label" : "weapon.forward1",
+      "layer" : 19,
+      "parents" : [
+        244
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 246,
+      "kind" : "index-read",
+      "label" : "weapon.reverse1",
+      "layer" : 19,
+      "parents" : [
+        244
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 247,
+      "kind" : "reglu",
+      "label" : "weapon.candidate1.yes",
+      "layer" : 20,
+      "parents" : [
+        245,
+        166
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 248,
+      "kind" : "affine",
+      "label" : "weapon.candidate1.not",
+      "layer" : 4,
+      "parents" : [
+        166
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 249,
+      "kind" : "reglu",
+      "label" : "weapon.candidate1.no",
+      "layer" : 20,
+      "parents" : [
+        246,
+        248
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 250,
+      "kind" : "affine",
+      "label" : "weapon.candidate1",
+      "layer" : 21,
+      "parents" : [
+        247,
+        249
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 251,
+      "kind" : "index-read",
+      "label" : "weapon.enum1",
+      "layer" : 22,
+      "parents" : [
+        250
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 252,
+      "kind" : "index-read",
+      "label" : "weapon.eligible1",
+      "layer" : 23,
+      "parents" : [
+        251,
+        214,
+        23,
+        24,
+        25,
+        26,
+        219,
+        221,
+        29,
+        217
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 253,
+      "kind" : "affine",
+      "label" : "weapon.notFound1",
+      "layer" : 29,
+      "parents" : [
+        242
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 254,
+      "kind" : "reglu",
+      "label" : "weapon.take1",
+      "layer" : 30,
+      "parents" : [
+        252,
+        253
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 255,
+      "kind" : "reglu",
+      "label" : "weapon.chosen1",
+      "layer" : 31,
+      "parents" : [
+        250,
+        254
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 256,
+      "kind" : "affine",
+      "label" : "weapon.selectedOrder",
+      "layer" : 32,
+      "parents" : [
+        235,
+        255
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 257,
+      "kind" : "affine",
+      "label" : "weapon.found.sum",
+      "layer" : 31,
+      "parents" : [
+        242,
+        254
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 258,
+      "kind" : "affine",
+      "label" : "weapon.found.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 259,
+      "kind" : "reglu",
+      "label" : "weapon.found.hi",
+      "layer" : 32,
+      "parents" : [
+        257,
+        258
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 260,
+      "kind" : "affine",
+      "label" : "weapon.found.minusOne",
+      "layer" : 32,
+      "parents" : [
+        257
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 261,
+      "kind" : "affine",
+      "label" : "weapon.found.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 262,
+      "kind" : "reglu",
+      "label" : "weapon.found.lo",
+      "layer" : 33,
+      "parents" : [
+        260,
+        261
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 263,
+      "kind" : "affine",
+      "label" : "weapon.found",
+      "layer" : 34,
+      "parents" : [
+        259,
+        262
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 264,
+      "kind" : "affine",
+      "label" : "weapon.candidateAddressScale",
+      "layer" : 17,
+      "parents" : [
+        210
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 265,
+      "kind" : "affine",
+      "label" : "weapon.candidateAddress2",
+      "layer" : 18,
+      "parents" : [
+        264
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 266,
+      "kind" : "index-read",
+      "label" : "weapon.forward2",
+      "layer" : 19,
+      "parents" : [
+        265
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 267,
+      "kind" : "index-read",
+      "label" : "weapon.reverse2",
+      "layer" : 19,
+      "parents" : [
+        265
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 268,
+      "kind" : "reglu",
+      "label" : "weapon.candidate2.yes",
+      "layer" : 20,
+      "parents" : [
+        266,
+        166
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 269,
+      "kind" : "affine",
+      "label" : "weapon.candidate2.not",
+      "layer" : 4,
+      "parents" : [
+        166
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 270,
+      "kind" : "reglu",
+      "label" : "weapon.candidate2.no",
+      "layer" : 20,
+      "parents" : [
+        267,
+        269
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 271,
+      "kind" : "affine",
+      "label" : "weapon.candidate2",
+      "layer" : 21,
+      "parents" : [
+        268,
+        270
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 272,
+      "kind" : "index-read",
+      "label" : "weapon.enum2",
+      "layer" : 22,
+      "parents" : [
+        271
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 273,
+      "kind" : "index-read",
+      "label" : "weapon.eligible2",
+      "layer" : 23,
+      "parents" : [
+        272,
+        214,
+        23,
+        24,
+        25,
+        26,
+        219,
+        221,
+        29,
+        217
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 274,
+      "kind" : "affine",
+      "label" : "weapon.notFound2",
+      "layer" : 35,
+      "parents" : [
+        263
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 275,
+      "kind" : "reglu",
+      "label" : "weapon.take2",
+      "layer" : 36,
+      "parents" : [
+        273,
+        274
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 276,
+      "kind" : "reglu",
+      "label" : "weapon.chosen2",
+      "layer" : 37,
+      "parents" : [
+        271,
+        275
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 277,
+      "kind" : "affine",
+      "label" : "weapon.selectedOrder",
+      "layer" : 38,
+      "parents" : [
+        256,
+        276
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 278,
+      "kind" : "affine",
+      "label" : "weapon.found.sum",
+      "layer" : 37,
+      "parents" : [
+        263,
+        275
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 279,
+      "kind" : "affine",
+      "label" : "weapon.found.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 280,
+      "kind" : "reglu",
+      "label" : "weapon.found.hi",
+      "layer" : 38,
+      "parents" : [
+        278,
+        279
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 281,
+      "kind" : "affine",
+      "label" : "weapon.found.minusOne",
+      "layer" : 38,
+      "parents" : [
+        278
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 282,
+      "kind" : "affine",
+      "label" : "weapon.found.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 283,
+      "kind" : "reglu",
+      "label" : "weapon.found.lo",
+      "layer" : 39,
+      "parents" : [
+        281,
+        282
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 284,
+      "kind" : "affine",
+      "label" : "weapon.found",
+      "layer" : 40,
+      "parents" : [
+        280,
+        283
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 285,
+      "kind" : "affine",
+      "label" : "weapon.candidateAddressScale",
+      "layer" : 17,
+      "parents" : [
+        210
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 286,
+      "kind" : "affine",
+      "label" : "weapon.candidateAddress3",
+      "layer" : 18,
+      "parents" : [
+        285
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 287,
+      "kind" : "index-read",
+      "label" : "weapon.forward3",
+      "layer" : 19,
+      "parents" : [
+        286
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 288,
+      "kind" : "index-read",
+      "label" : "weapon.reverse3",
+      "layer" : 19,
+      "parents" : [
+        286
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 289,
+      "kind" : "reglu",
+      "label" : "weapon.candidate3.yes",
+      "layer" : 20,
+      "parents" : [
+        287,
+        166
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 290,
+      "kind" : "affine",
+      "label" : "weapon.candidate3.not",
+      "layer" : 4,
+      "parents" : [
+        166
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 291,
+      "kind" : "reglu",
+      "label" : "weapon.candidate3.no",
+      "layer" : 20,
+      "parents" : [
+        288,
+        290
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 292,
+      "kind" : "affine",
+      "label" : "weapon.candidate3",
+      "layer" : 21,
+      "parents" : [
+        289,
+        291
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 293,
+      "kind" : "index-read",
+      "label" : "weapon.enum3",
+      "layer" : 22,
+      "parents" : [
+        292
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 294,
+      "kind" : "index-read",
+      "label" : "weapon.eligible3",
+      "layer" : 23,
+      "parents" : [
+        293,
+        214,
+        23,
+        24,
+        25,
+        26,
+        219,
+        221,
+        29,
+        217
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 295,
+      "kind" : "affine",
+      "label" : "weapon.notFound3",
+      "layer" : 41,
+      "parents" : [
+        284
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 296,
+      "kind" : "reglu",
+      "label" : "weapon.take3",
+      "layer" : 42,
+      "parents" : [
+        294,
+        295
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 297,
+      "kind" : "reglu",
+      "label" : "weapon.chosen3",
+      "layer" : 43,
+      "parents" : [
+        292,
+        296
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 298,
+      "kind" : "affine",
+      "label" : "weapon.selectedOrder",
+      "layer" : 44,
+      "parents" : [
+        277,
+        297
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 299,
+      "kind" : "affine",
+      "label" : "weapon.found.sum",
+      "layer" : 43,
+      "parents" : [
+        284,
+        296
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 300,
+      "kind" : "affine",
+      "label" : "weapon.found.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 301,
+      "kind" : "reglu",
+      "label" : "weapon.found.hi",
+      "layer" : 44,
+      "parents" : [
+        299,
+        300
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 302,
+      "kind" : "affine",
+      "label" : "weapon.found.minusOne",
+      "layer" : 44,
+      "parents" : [
+        299
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 303,
+      "kind" : "affine",
+      "label" : "weapon.found.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 304,
+      "kind" : "reglu",
+      "label" : "weapon.found.lo",
+      "layer" : 45,
+      "parents" : [
+        302,
+        303
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 305,
+      "kind" : "affine",
+      "label" : "weapon.found",
+      "layer" : 46,
+      "parents" : [
+        301,
+        304
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 306,
+      "kind" : "affine",
+      "label" : "weapon.candidateAddressScale",
+      "layer" : 17,
+      "parents" : [
+        210
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 307,
+      "kind" : "affine",
+      "label" : "weapon.candidateAddress4",
+      "layer" : 18,
+      "parents" : [
+        306
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 308,
+      "kind" : "index-read",
+      "label" : "weapon.forward4",
+      "layer" : 19,
+      "parents" : [
+        307
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 309,
+      "kind" : "index-read",
+      "label" : "weapon.reverse4",
+      "layer" : 19,
+      "parents" : [
+        307
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 310,
+      "kind" : "reglu",
+      "label" : "weapon.candidate4.yes",
+      "layer" : 20,
+      "parents" : [
+        308,
+        166
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 311,
+      "kind" : "affine",
+      "label" : "weapon.candidate4.not",
+      "layer" : 4,
+      "parents" : [
+        166
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 312,
+      "kind" : "reglu",
+      "label" : "weapon.candidate4.no",
+      "layer" : 20,
+      "parents" : [
+        309,
+        311
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 313,
+      "kind" : "affine",
+      "label" : "weapon.candidate4",
+      "layer" : 21,
+      "parents" : [
+        310,
+        312
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 314,
+      "kind" : "index-read",
+      "label" : "weapon.enum4",
+      "layer" : 22,
+      "parents" : [
+        313
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 315,
+      "kind" : "index-read",
+      "label" : "weapon.eligible4",
+      "layer" : 23,
+      "parents" : [
+        314,
+        214,
+        23,
+        24,
+        25,
+        26,
+        219,
+        221,
+        29,
+        217
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 316,
+      "kind" : "affine",
+      "label" : "weapon.notFound4",
+      "layer" : 47,
+      "parents" : [
+        305
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 317,
+      "kind" : "reglu",
+      "label" : "weapon.take4",
+      "layer" : 48,
+      "parents" : [
+        315,
+        316
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 318,
+      "kind" : "reglu",
+      "label" : "weapon.chosen4",
+      "layer" : 49,
+      "parents" : [
+        313,
+        317
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 319,
+      "kind" : "affine",
+      "label" : "weapon.selectedOrder",
+      "layer" : 50,
+      "parents" : [
+        298,
+        318
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 320,
+      "kind" : "affine",
+      "label" : "weapon.found.sum",
+      "layer" : 49,
+      "parents" : [
+        305,
+        317
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 321,
+      "kind" : "affine",
+      "label" : "weapon.found.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 322,
+      "kind" : "reglu",
+      "label" : "weapon.found.hi",
+      "layer" : 50,
+      "parents" : [
+        320,
+        321
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 323,
+      "kind" : "affine",
+      "label" : "weapon.found.minusOne",
+      "layer" : 50,
+      "parents" : [
+        320
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 324,
+      "kind" : "affine",
+      "label" : "weapon.found.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 325,
+      "kind" : "reglu",
+      "label" : "weapon.found.lo",
+      "layer" : 51,
+      "parents" : [
+        323,
+        324
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 326,
+      "kind" : "affine",
+      "label" : "weapon.found",
+      "layer" : 52,
+      "parents" : [
+        322,
+        325
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 327,
+      "kind" : "affine",
+      "label" : "weapon.candidateAddressScale",
+      "layer" : 17,
+      "parents" : [
+        210
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 328,
+      "kind" : "affine",
+      "label" : "weapon.candidateAddress5",
+      "layer" : 18,
+      "parents" : [
+        327
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 329,
+      "kind" : "index-read",
+      "label" : "weapon.forward5",
+      "layer" : 19,
+      "parents" : [
+        328
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 330,
+      "kind" : "index-read",
+      "label" : "weapon.reverse5",
+      "layer" : 19,
+      "parents" : [
+        328
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 331,
+      "kind" : "reglu",
+      "label" : "weapon.candidate5.yes",
+      "layer" : 20,
+      "parents" : [
+        329,
+        166
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 332,
+      "kind" : "affine",
+      "label" : "weapon.candidate5.not",
+      "layer" : 4,
+      "parents" : [
+        166
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 333,
+      "kind" : "reglu",
+      "label" : "weapon.candidate5.no",
+      "layer" : 20,
+      "parents" : [
+        330,
+        332
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 334,
+      "kind" : "affine",
+      "label" : "weapon.candidate5",
+      "layer" : 21,
+      "parents" : [
+        331,
+        333
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 335,
+      "kind" : "index-read",
+      "label" : "weapon.enum5",
+      "layer" : 22,
+      "parents" : [
+        334
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 336,
+      "kind" : "index-read",
+      "label" : "weapon.eligible5",
+      "layer" : 23,
+      "parents" : [
+        335,
+        214,
+        23,
+        24,
+        25,
+        26,
+        219,
+        221,
+        29,
+        217
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 337,
+      "kind" : "affine",
+      "label" : "weapon.notFound5",
+      "layer" : 53,
+      "parents" : [
+        326
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 338,
+      "kind" : "reglu",
+      "label" : "weapon.take5",
+      "layer" : 54,
+      "parents" : [
+        336,
+        337
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 339,
+      "kind" : "reglu",
+      "label" : "weapon.chosen5",
+      "layer" : 55,
+      "parents" : [
+        334,
+        338
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 340,
+      "kind" : "affine",
+      "label" : "weapon.selectedOrder",
+      "layer" : 56,
+      "parents" : [
+        319,
+        339
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 341,
+      "kind" : "affine",
+      "label" : "weapon.found.sum",
+      "layer" : 55,
+      "parents" : [
+        326,
+        338
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 342,
+      "kind" : "affine",
+      "label" : "weapon.found.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 343,
+      "kind" : "reglu",
+      "label" : "weapon.found.hi",
+      "layer" : 56,
+      "parents" : [
+        341,
+        342
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 344,
+      "kind" : "affine",
+      "label" : "weapon.found.minusOne",
+      "layer" : 56,
+      "parents" : [
+        341
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 345,
+      "kind" : "affine",
+      "label" : "weapon.found.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 346,
+      "kind" : "reglu",
+      "label" : "weapon.found.lo",
+      "layer" : 57,
+      "parents" : [
+        344,
+        345
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 347,
+      "kind" : "affine",
+      "label" : "weapon.found",
+      "layer" : 58,
+      "parents" : [
+        343,
+        346
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 348,
+      "kind" : "affine",
+      "label" : "weapon.candidateAddressScale",
+      "layer" : 17,
+      "parents" : [
+        210
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 349,
+      "kind" : "affine",
+      "label" : "weapon.candidateAddress6",
+      "layer" : 18,
+      "parents" : [
+        348
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 350,
+      "kind" : "index-read",
+      "label" : "weapon.forward6",
+      "layer" : 19,
+      "parents" : [
+        349
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 351,
+      "kind" : "index-read",
+      "label" : "weapon.reverse6",
+      "layer" : 19,
+      "parents" : [
+        349
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 352,
+      "kind" : "reglu",
+      "label" : "weapon.candidate6.yes",
+      "layer" : 20,
+      "parents" : [
+        350,
+        166
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 353,
+      "kind" : "affine",
+      "label" : "weapon.candidate6.not",
+      "layer" : 4,
+      "parents" : [
+        166
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 354,
+      "kind" : "reglu",
+      "label" : "weapon.candidate6.no",
+      "layer" : 20,
+      "parents" : [
+        351,
+        353
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 355,
+      "kind" : "affine",
+      "label" : "weapon.candidate6",
+      "layer" : 21,
+      "parents" : [
+        352,
+        354
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 356,
+      "kind" : "index-read",
+      "label" : "weapon.enum6",
+      "layer" : 22,
+      "parents" : [
+        355
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 357,
+      "kind" : "index-read",
+      "label" : "weapon.eligible6",
+      "layer" : 23,
+      "parents" : [
+        356,
+        214,
+        23,
+        24,
+        25,
+        26,
+        219,
+        221,
+        29,
+        217
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 358,
+      "kind" : "affine",
+      "label" : "weapon.notFound6",
+      "layer" : 59,
+      "parents" : [
+        347
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 359,
+      "kind" : "reglu",
+      "label" : "weapon.take6",
+      "layer" : 60,
+      "parents" : [
+        357,
+        358
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 360,
+      "kind" : "reglu",
+      "label" : "weapon.chosen6",
+      "layer" : 61,
+      "parents" : [
+        355,
+        359
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 361,
+      "kind" : "affine",
+      "label" : "weapon.selectedOrder",
+      "layer" : 62,
+      "parents" : [
+        340,
+        360
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 362,
+      "kind" : "affine",
+      "label" : "weapon.found.sum",
+      "layer" : 61,
+      "parents" : [
+        347,
+        359
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 363,
+      "kind" : "affine",
+      "label" : "weapon.found.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 364,
+      "kind" : "reglu",
+      "label" : "weapon.found.hi",
+      "layer" : 62,
+      "parents" : [
+        362,
+        363
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 365,
+      "kind" : "affine",
+      "label" : "weapon.found.minusOne",
+      "layer" : 62,
+      "parents" : [
+        362
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 366,
+      "kind" : "affine",
+      "label" : "weapon.found.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 367,
+      "kind" : "reglu",
+      "label" : "weapon.found.lo",
+      "layer" : 63,
+      "parents" : [
+        365,
+        366
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 368,
+      "kind" : "affine",
+      "label" : "weapon.found",
+      "layer" : 64,
+      "parents" : [
+        364,
+        367
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 369,
+      "kind" : "affine",
+      "label" : "weapon.candidateAddressScale",
+      "layer" : 17,
+      "parents" : [
+        210
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 370,
+      "kind" : "affine",
+      "label" : "weapon.candidateAddress7",
+      "layer" : 18,
+      "parents" : [
+        369
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 371,
+      "kind" : "index-read",
+      "label" : "weapon.forward7",
+      "layer" : 19,
+      "parents" : [
+        370
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 372,
+      "kind" : "index-read",
+      "label" : "weapon.reverse7",
+      "layer" : 19,
+      "parents" : [
+        370
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 373,
+      "kind" : "reglu",
+      "label" : "weapon.candidate7.yes",
+      "layer" : 20,
+      "parents" : [
+        371,
+        166
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 374,
+      "kind" : "affine",
+      "label" : "weapon.candidate7.not",
+      "layer" : 4,
+      "parents" : [
+        166
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 375,
+      "kind" : "reglu",
+      "label" : "weapon.candidate7.no",
+      "layer" : 20,
+      "parents" : [
+        372,
+        374
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 376,
+      "kind" : "affine",
+      "label" : "weapon.candidate7",
+      "layer" : 21,
+      "parents" : [
+        373,
+        375
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 377,
+      "kind" : "index-read",
+      "label" : "weapon.enum7",
+      "layer" : 22,
+      "parents" : [
+        376
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 378,
+      "kind" : "index-read",
+      "label" : "weapon.eligible7",
+      "layer" : 23,
+      "parents" : [
+        377,
+        214,
+        23,
+        24,
+        25,
+        26,
+        219,
+        221,
+        29,
+        217
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 379,
+      "kind" : "affine",
+      "label" : "weapon.notFound7",
+      "layer" : 65,
+      "parents" : [
+        368
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 380,
+      "kind" : "reglu",
+      "label" : "weapon.take7",
+      "layer" : 66,
+      "parents" : [
+        378,
+        379
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 381,
+      "kind" : "reglu",
+      "label" : "weapon.chosen7",
+      "layer" : 67,
+      "parents" : [
+        376,
+        380
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 382,
+      "kind" : "affine",
+      "label" : "weapon.selectedOrder",
+      "layer" : 68,
+      "parents" : [
+        361,
+        381
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 383,
+      "kind" : "affine",
+      "label" : "weapon.found.sum",
+      "layer" : 67,
+      "parents" : [
+        368,
+        380
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 384,
+      "kind" : "affine",
+      "label" : "weapon.found.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 385,
+      "kind" : "reglu",
+      "label" : "weapon.found.hi",
+      "layer" : 68,
+      "parents" : [
+        383,
+        384
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 386,
+      "kind" : "affine",
+      "label" : "weapon.found.minusOne",
+      "layer" : 68,
+      "parents" : [
+        383
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 387,
+      "kind" : "affine",
+      "label" : "weapon.found.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 388,
+      "kind" : "reglu",
+      "label" : "weapon.found.lo",
+      "layer" : 69,
+      "parents" : [
+        386,
+        387
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 389,
+      "kind" : "affine",
+      "label" : "weapon.found",
+      "layer" : 70,
+      "parents" : [
+        385,
+        388
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 390,
+      "kind" : "affine",
+      "label" : "weapon.candidateAddressScale",
+      "layer" : 17,
+      "parents" : [
+        210
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 391,
+      "kind" : "affine",
+      "label" : "weapon.candidateAddress8",
+      "layer" : 18,
+      "parents" : [
+        390
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 392,
+      "kind" : "index-read",
+      "label" : "weapon.forward8",
+      "layer" : 19,
+      "parents" : [
+        391
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 393,
+      "kind" : "index-read",
+      "label" : "weapon.reverse8",
+      "layer" : 19,
+      "parents" : [
+        391
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 394,
+      "kind" : "reglu",
+      "label" : "weapon.candidate8.yes",
+      "layer" : 20,
+      "parents" : [
+        392,
+        166
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 395,
+      "kind" : "affine",
+      "label" : "weapon.candidate8.not",
+      "layer" : 4,
+      "parents" : [
+        166
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 396,
+      "kind" : "reglu",
+      "label" : "weapon.candidate8.no",
+      "layer" : 20,
+      "parents" : [
+        393,
+        395
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 397,
+      "kind" : "affine",
+      "label" : "weapon.candidate8",
+      "layer" : 21,
+      "parents" : [
+        394,
+        396
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 398,
+      "kind" : "affine",
+      "label" : "weapon.notFound8",
+      "layer" : 71,
+      "parents" : [
+        389
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 399,
+      "kind" : "reglu",
+      "label" : "weapon.take8",
+      "layer" : 72,
+      "parents" : [
+        56,
+        398
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 400,
+      "kind" : "reglu",
+      "label" : "weapon.chosen8",
+      "layer" : 73,
+      "parents" : [
+        397,
+        399
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 401,
+      "kind" : "affine",
+      "label" : "weapon.selectedOrder",
+      "layer" : 74,
+      "parents" : [
+        382,
+        400
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 402,
+      "kind" : "index-read",
+      "label" : "weapon.cycleNumber",
+      "layer" : 75,
+      "parents" : [
+        401
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 403,
+      "kind" : "reglu",
+      "label" : "weapon.number.yes",
+      "layer" : 76,
+      "parents" : [
+        402,
+        181
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 404,
+      "kind" : "affine",
+      "label" : "weapon.number.not",
+      "layer" : 10,
+      "parents" : [
+        181
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 405,
+      "kind" : "reglu",
+      "label" : "weapon.number.no",
+      "layer" : 48,
+      "parents" : [
+        153,
+        404
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 406,
+      "kind" : "affine",
+      "label" : "weapon.number",
+      "layer" : 77,
+      "parents" : [
+        403,
+        405
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 407,
+      "kind" : "affine",
+      "label" : "buttons.change.sum",
+      "layer" : 50,
+      "parents" : [
+        181,
+        160
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 408,
+      "kind" : "affine",
+      "label" : "buttons.change.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 409,
+      "kind" : "reglu",
+      "label" : "buttons.change.hi",
+      "layer" : 51,
+      "parents" : [
+        407,
+        408
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 410,
+      "kind" : "affine",
+      "label" : "buttons.change.minusOne",
+      "layer" : 51,
+      "parents" : [
+        407
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 411,
+      "kind" : "affine",
+      "label" : "buttons.change.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 412,
+      "kind" : "reglu",
+      "label" : "buttons.change.lo",
+      "layer" : 52,
+      "parents" : [
+        410,
+        411
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 413,
+      "kind" : "affine",
+      "label" : "buttons.change",
+      "layer" : 53,
+      "parents" : [
+        409,
+        412
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 414,
+      "kind" : "reglu",
+      "label" : "dclick.directUseReset.yes",
+      "layer" : 6,
+      "parents" : [
+        55,
+        72
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 415,
+      "kind" : "affine",
+      "label" : "dclick.directUseReset.not",
+      "layer" : 6,
+      "parents" : [
+        72
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 416,
+      "kind" : "reglu",
+      "label" : "dclick.directUseReset.no",
+      "layer" : 7,
+      "parents" : [
+        38,
+        415
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 417,
+      "kind" : "affine",
+      "label" : "dclick.directUseReset",
+      "layer" : 8,
+      "parents" : [
+        414,
+        416
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 418,
+      "kind" : "affine",
+      "label" : "dclick.forward.same.negativeB",
+      "layer" : 1,
+      "parents" : [
+        37
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 419,
+      "kind" : "affine",
+      "label" : "dclick.forward.same.difference",
+      "layer" : 2,
+      "parents" : [
+        51,
+        418
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 420,
+      "kind" : "affine",
+      "label" : "dclick.forward.same.greater.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 421,
+      "kind" : "reglu",
+      "label" : "dclick.forward.same.greater.hi",
+      "layer" : 3,
+      "parents" : [
+        419,
+        420
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 422,
+      "kind" : "affine",
+      "label" : "dclick.forward.same.greater.minusOne",
+      "layer" : 3,
+      "parents" : [
+        419
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 423,
+      "kind" : "affine",
+      "label" : "dclick.forward.same.greater.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 424,
+      "kind" : "reglu",
+      "label" : "dclick.forward.same.greater.lo",
+      "layer" : 4,
+      "parents" : [
+        422,
+        423
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 425,
+      "kind" : "affine",
+      "label" : "dclick.forward.same.greater",
+      "layer" : 5,
+      "parents" : [
+        421,
+        424
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 426,
+      "kind" : "affine",
+      "label" : "dclick.forward.same.reverse",
+      "layer" : 3,
+      "parents" : [
+        419
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 427,
+      "kind" : "affine",
+      "label" : "dclick.forward.same.less.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 428,
+      "kind" : "reglu",
+      "label" : "dclick.forward.same.less.hi",
+      "layer" : 4,
+      "parents" : [
+        426,
+        427
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 429,
+      "kind" : "affine",
+      "label" : "dclick.forward.same.less.minusOne",
+      "layer" : 4,
+      "parents" : [
+        426
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 430,
+      "kind" : "affine",
+      "label" : "dclick.forward.same.less.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 431,
+      "kind" : "reglu",
+      "label" : "dclick.forward.same.less.lo",
+      "layer" : 5,
+      "parents" : [
+        429,
+        430
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 432,
+      "kind" : "affine",
+      "label" : "dclick.forward.same.less",
+      "layer" : 6,
+      "parents" : [
+        428,
+        431
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 433,
+      "kind" : "affine",
+      "label" : "dclick.forward.same.different.sum",
+      "layer" : 7,
+      "parents" : [
+        425,
+        432
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 434,
+      "kind" : "affine",
+      "label" : "dclick.forward.same.different.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 435,
+      "kind" : "reglu",
+      "label" : "dclick.forward.same.different.hi",
+      "layer" : 8,
+      "parents" : [
+        433,
+        434
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 436,
+      "kind" : "affine",
+      "label" : "dclick.forward.same.different.minusOne",
+      "layer" : 8,
+      "parents" : [
+        433
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 437,
+      "kind" : "affine",
+      "label" : "dclick.forward.same.different.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 438,
+      "kind" : "reglu",
+      "label" : "dclick.forward.same.different.lo",
+      "layer" : 9,
+      "parents" : [
+        436,
+        437
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 439,
+      "kind" : "affine",
+      "label" : "dclick.forward.same.different",
+      "layer" : 10,
+      "parents" : [
+        435,
+        438
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 440,
+      "kind" : "affine",
+      "label" : "dclick.forward.same",
+      "layer" : 11,
+      "parents" : [
+        439
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 441,
+      "kind" : "affine",
+      "label" : "dclick.forward.changed",
+      "layer" : 12,
+      "parents" : [
+        440
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 442,
+      "kind" : "affine",
+      "label" : "dclick.forward.oneNegative",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 443,
+      "kind" : "affine",
+      "label" : "dclick.forward.afterOne",
+      "layer" : 2,
+      "parents" : [
+        36,
+        442
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 444,
+      "kind" : "affine",
+      "label" : "dclick.forward.timeReady.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 445,
+      "kind" : "reglu",
+      "label" : "dclick.forward.timeReady.hi",
+      "layer" : 3,
+      "parents" : [
+        443,
+        444
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 446,
+      "kind" : "affine",
+      "label" : "dclick.forward.timeReady.minusOne",
+      "layer" : 3,
+      "parents" : [
+        443
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 447,
+      "kind" : "affine",
+      "label" : "dclick.forward.timeReady.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 448,
+      "kind" : "reglu",
+      "label" : "dclick.forward.timeReady.lo",
+      "layer" : 4,
+      "parents" : [
+        446,
+        447
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 449,
+      "kind" : "affine",
+      "label" : "dclick.forward.timeReady",
+      "layer" : 5,
+      "parents" : [
+        445,
+        448
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 450,
+      "kind" : "reglu",
+      "label" : "dclick.forward.edge",
+      "layer" : 13,
+      "parents" : [
+        441,
+        449
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 451,
+      "kind" : "reglu",
+      "label" : "dclick.forward.press",
+      "layer" : 14,
+      "parents" : [
+        450,
+        51
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 452,
+      "kind" : "affine",
+      "label" : "dclick.forward.edgeClicks",
+      "layer" : 15,
+      "parents" : [
+        417,
+        451
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 453,
+      "kind" : "affine",
+      "label" : "dclick.forward.two",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 454,
+      "kind" : "affine",
+      "label" : "dclick.forward.twoClicks.negativeB",
+      "layer" : 2,
+      "parents" : [
+        453
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 455,
+      "kind" : "affine",
+      "label" : "dclick.forward.twoClicks.difference",
+      "layer" : 16,
+      "parents" : [
+        452,
+        454
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 456,
+      "kind" : "affine",
+      "label" : "dclick.forward.twoClicks.greater.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 457,
+      "kind" : "reglu",
+      "label" : "dclick.forward.twoClicks.greater.hi",
+      "layer" : 17,
+      "parents" : [
+        455,
+        456
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 458,
+      "kind" : "affine",
+      "label" : "dclick.forward.twoClicks.greater.minusOne",
+      "layer" : 17,
+      "parents" : [
+        455
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 459,
+      "kind" : "affine",
+      "label" : "dclick.forward.twoClicks.greater.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 460,
+      "kind" : "reglu",
+      "label" : "dclick.forward.twoClicks.greater.lo",
+      "layer" : 18,
+      "parents" : [
+        458,
+        459
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 461,
+      "kind" : "affine",
+      "label" : "dclick.forward.twoClicks.greater",
+      "layer" : 19,
+      "parents" : [
+        457,
+        460
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 462,
+      "kind" : "affine",
+      "label" : "dclick.forward.twoClicks.reverse",
+      "layer" : 17,
+      "parents" : [
+        455
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 463,
+      "kind" : "affine",
+      "label" : "dclick.forward.twoClicks.less.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 464,
+      "kind" : "reglu",
+      "label" : "dclick.forward.twoClicks.less.hi",
+      "layer" : 18,
+      "parents" : [
+        462,
+        463
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 465,
+      "kind" : "affine",
+      "label" : "dclick.forward.twoClicks.less.minusOne",
+      "layer" : 18,
+      "parents" : [
+        462
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 466,
+      "kind" : "affine",
+      "label" : "dclick.forward.twoClicks.less.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 467,
+      "kind" : "reglu",
+      "label" : "dclick.forward.twoClicks.less.lo",
+      "layer" : 19,
+      "parents" : [
+        465,
+        466
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 468,
+      "kind" : "affine",
+      "label" : "dclick.forward.twoClicks.less",
+      "layer" : 20,
+      "parents" : [
+        464,
+        467
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 469,
+      "kind" : "affine",
+      "label" : "dclick.forward.twoClicks.different.sum",
+      "layer" : 21,
+      "parents" : [
+        461,
+        468
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 470,
+      "kind" : "affine",
+      "label" : "dclick.forward.twoClicks.different.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 471,
+      "kind" : "reglu",
+      "label" : "dclick.forward.twoClicks.different.hi",
+      "layer" : 22,
+      "parents" : [
+        469,
+        470
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 472,
+      "kind" : "affine",
+      "label" : "dclick.forward.twoClicks.different.minusOne",
+      "layer" : 22,
+      "parents" : [
+        469
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 473,
+      "kind" : "affine",
+      "label" : "dclick.forward.twoClicks.different.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 474,
+      "kind" : "reglu",
+      "label" : "dclick.forward.twoClicks.different.lo",
+      "layer" : 23,
+      "parents" : [
+        472,
+        473
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 475,
+      "kind" : "affine",
+      "label" : "dclick.forward.twoClicks.different",
+      "layer" : 24,
+      "parents" : [
+        471,
+        474
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 476,
+      "kind" : "affine",
+      "label" : "dclick.forward.twoClicks",
+      "layer" : 25,
+      "parents" : [
+        475
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 477,
+      "kind" : "reglu",
+      "label" : "dclick.forward.double",
+      "layer" : 26,
+      "parents" : [
+        450,
+        476
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 478,
+      "kind" : "affine",
+      "label" : "dclick.forward.zero",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 479,
+      "kind" : "reglu",
+      "label" : "dclick.forward.edgeClicksFinal.yes",
+      "layer" : 27,
+      "parents" : [
+        478,
+        477
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 480,
+      "kind" : "affine",
+      "label" : "dclick.forward.edgeClicksFinal.not",
+      "layer" : 27,
+      "parents" : [
+        477
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 481,
+      "kind" : "reglu",
+      "label" : "dclick.forward.edgeClicksFinal.no",
+      "layer" : 28,
+      "parents" : [
+        452,
+        480
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 482,
+      "kind" : "affine",
+      "label" : "dclick.forward.edgeClicksFinal",
+      "layer" : 29,
+      "parents" : [
+        479,
+        481
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 483,
+      "kind" : "affine",
+      "label" : "dclick.forward.resetTime",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 484,
+      "kind" : "reglu",
+      "label" : "dclick.forward.edgeTime.yes",
+      "layer" : 27,
+      "parents" : [
+        36,
+        477
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 485,
+      "kind" : "affine",
+      "label" : "dclick.forward.edgeTime.not",
+      "layer" : 27,
+      "parents" : [
+        477
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 486,
+      "kind" : "reglu",
+      "label" : "dclick.forward.edgeTime.no",
+      "layer" : 28,
+      "parents" : [
+        483,
+        485
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 487,
+      "kind" : "affine",
+      "label" : "dclick.forward.edgeTime",
+      "layer" : 29,
+      "parents" : [
+        484,
+        486
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 488,
+      "kind" : "affine",
+      "label" : "dclick.forward.elapsed",
+      "layer" : 1,
+      "parents" : [
+        36,
+        54
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 489,
+      "kind" : "affine",
+      "label" : "dclick.forward.negativeTwenty",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 490,
+      "kind" : "affine",
+      "label" : "dclick.forward.afterTwenty",
+      "layer" : 2,
+      "parents" : [
+        488,
+        489
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 491,
+      "kind" : "affine",
+      "label" : "dclick.forward.expired.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 492,
+      "kind" : "reglu",
+      "label" : "dclick.forward.expired.hi",
+      "layer" : 3,
+      "parents" : [
+        490,
+        491
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 493,
+      "kind" : "affine",
+      "label" : "dclick.forward.expired.minusOne",
+      "layer" : 3,
+      "parents" : [
+        490
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 494,
+      "kind" : "affine",
+      "label" : "dclick.forward.expired.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 495,
+      "kind" : "reglu",
+      "label" : "dclick.forward.expired.lo",
+      "layer" : 4,
+      "parents" : [
+        493,
+        494
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 496,
+      "kind" : "affine",
+      "label" : "dclick.forward.expired",
+      "layer" : 5,
+      "parents" : [
+        492,
+        495
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 497,
+      "kind" : "affine",
+      "label" : "dclick.forward.clearState",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 498,
+      "kind" : "reglu",
+      "label" : "dclick.forward.idleState.yes",
+      "layer" : 6,
+      "parents" : [
+        497,
+        496
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 499,
+      "kind" : "affine",
+      "label" : "dclick.forward.idleState.not",
+      "layer" : 6,
+      "parents" : [
+        496
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 500,
+      "kind" : "reglu",
+      "label" : "dclick.forward.idleState.no",
+      "layer" : 7,
+      "parents" : [
+        37,
+        499
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 501,
+      "kind" : "affine",
+      "label" : "dclick.forward.idleState",
+      "layer" : 8,
+      "parents" : [
+        498,
+        500
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 502,
+      "kind" : "affine",
+      "label" : "dclick.forward.clearClicks",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 503,
+      "kind" : "reglu",
+      "label" : "dclick.forward.idleClicks.yes",
+      "layer" : 6,
+      "parents" : [
+        502,
+        496
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 504,
+      "kind" : "affine",
+      "label" : "dclick.forward.idleClicks.not",
+      "layer" : 6,
+      "parents" : [
+        496
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 505,
+      "kind" : "reglu",
+      "label" : "dclick.forward.idleClicks.no",
+      "layer" : 9,
+      "parents" : [
+        417,
+        504
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 506,
+      "kind" : "affine",
+      "label" : "dclick.forward.idleClicks",
+      "layer" : 10,
+      "parents" : [
+        503,
+        505
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 507,
+      "kind" : "reglu",
+      "label" : "dclick.forward.timeActive.yes",
+      "layer" : 30,
+      "parents" : [
+        487,
+        450
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 508,
+      "kind" : "affine",
+      "label" : "dclick.forward.timeActive.not",
+      "layer" : 14,
+      "parents" : [
+        450
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 509,
+      "kind" : "reglu",
+      "label" : "dclick.forward.timeActive.no",
+      "layer" : 15,
+      "parents" : [
+        488,
+        508
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 510,
+      "kind" : "affine",
+      "label" : "dclick.forward.timeActive",
+      "layer" : 31,
+      "parents" : [
+        507,
+        509
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 511,
+      "kind" : "reglu",
+      "label" : "dclick.forward.time.yes",
+      "layer" : 32,
+      "parents" : [
+        510,
+        35
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 512,
+      "kind" : "affine",
+      "label" : "dclick.forward.time.not",
+      "layer" : 1,
+      "parents" : [
+        35
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 513,
+      "kind" : "reglu",
+      "label" : "dclick.forward.time.no",
+      "layer" : 2,
+      "parents" : [
+        36,
+        512
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 514,
+      "kind" : "affine",
+      "label" : "dclick.forward.time",
+      "layer" : 33,
+      "parents" : [
+        511,
+        513
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 515,
+      "kind" : "reglu",
+      "label" : "dclick.forward.stateActive.yes",
+      "layer" : 14,
+      "parents" : [
+        51,
+        450
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 516,
+      "kind" : "affine",
+      "label" : "dclick.forward.stateActive.not",
+      "layer" : 14,
+      "parents" : [
+        450
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 517,
+      "kind" : "reglu",
+      "label" : "dclick.forward.stateActive.no",
+      "layer" : 15,
+      "parents" : [
+        501,
+        516
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 518,
+      "kind" : "affine",
+      "label" : "dclick.forward.stateActive",
+      "layer" : 16,
+      "parents" : [
+        515,
+        517
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 519,
+      "kind" : "reglu",
+      "label" : "dclick.forward.state.yes",
+      "layer" : 17,
+      "parents" : [
+        518,
+        35
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 520,
+      "kind" : "affine",
+      "label" : "dclick.forward.state.not",
+      "layer" : 1,
+      "parents" : [
+        35
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 521,
+      "kind" : "reglu",
+      "label" : "dclick.forward.state.no",
+      "layer" : 2,
+      "parents" : [
+        37,
+        520
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 522,
+      "kind" : "affine",
+      "label" : "dclick.forward.state",
+      "layer" : 18,
+      "parents" : [
+        519,
+        521
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 523,
+      "kind" : "reglu",
+      "label" : "dclick.forward.clicksActive.yes",
+      "layer" : 30,
+      "parents" : [
+        482,
+        450
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 524,
+      "kind" : "affine",
+      "label" : "dclick.forward.clicksActive.not",
+      "layer" : 14,
+      "parents" : [
+        450
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 525,
+      "kind" : "reglu",
+      "label" : "dclick.forward.clicksActive.no",
+      "layer" : 15,
+      "parents" : [
+        506,
+        524
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 526,
+      "kind" : "affine",
+      "label" : "dclick.forward.clicksActive",
+      "layer" : 31,
+      "parents" : [
+        523,
+        525
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 527,
+      "kind" : "reglu",
+      "label" : "dclick.forward.clicks.yes",
+      "layer" : 32,
+      "parents" : [
+        526,
+        35
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 528,
+      "kind" : "affine",
+      "label" : "dclick.forward.clicks.not",
+      "layer" : 1,
+      "parents" : [
+        35
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 529,
+      "kind" : "reglu",
+      "label" : "dclick.forward.clicks.no",
+      "layer" : 9,
+      "parents" : [
+        417,
+        528
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 530,
+      "kind" : "affine",
+      "label" : "dclick.forward.clicks",
+      "layer" : 33,
+      "parents" : [
+        527,
+        529
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 531,
+      "kind" : "reglu",
+      "label" : "dclick.forward.use",
+      "layer" : 27,
+      "parents" : [
+        35,
+        477
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 532,
+      "kind" : "affine",
+      "label" : "dclick.strafeButton.sum",
+      "layer" : 1,
+      "parents" : [
+        52,
+        53
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 533,
+      "kind" : "affine",
+      "label" : "dclick.strafeButton.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 534,
+      "kind" : "reglu",
+      "label" : "dclick.strafeButton.hi",
+      "layer" : 2,
+      "parents" : [
+        532,
+        533
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 535,
+      "kind" : "affine",
+      "label" : "dclick.strafeButton.minusOne",
+      "layer" : 2,
+      "parents" : [
+        532
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 536,
+      "kind" : "affine",
+      "label" : "dclick.strafeButton.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 537,
+      "kind" : "reglu",
+      "label" : "dclick.strafeButton.lo",
+      "layer" : 3,
+      "parents" : [
+        535,
+        536
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 538,
+      "kind" : "affine",
+      "label" : "dclick.strafeButton",
+      "layer" : 4,
+      "parents" : [
+        534,
+        537
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 539,
+      "kind" : "affine",
+      "label" : "dclick.strafe.same.negativeB",
+      "layer" : 1,
+      "parents" : [
+        40
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 540,
+      "kind" : "affine",
+      "label" : "dclick.strafe.same.difference",
+      "layer" : 5,
+      "parents" : [
+        538,
+        539
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 541,
+      "kind" : "affine",
+      "label" : "dclick.strafe.same.greater.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 542,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.same.greater.hi",
+      "layer" : 6,
+      "parents" : [
+        540,
+        541
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 543,
+      "kind" : "affine",
+      "label" : "dclick.strafe.same.greater.minusOne",
+      "layer" : 6,
+      "parents" : [
+        540
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 544,
+      "kind" : "affine",
+      "label" : "dclick.strafe.same.greater.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 545,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.same.greater.lo",
+      "layer" : 7,
+      "parents" : [
+        543,
+        544
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 546,
+      "kind" : "affine",
+      "label" : "dclick.strafe.same.greater",
+      "layer" : 8,
+      "parents" : [
+        542,
+        545
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 547,
+      "kind" : "affine",
+      "label" : "dclick.strafe.same.reverse",
+      "layer" : 6,
+      "parents" : [
+        540
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 548,
+      "kind" : "affine",
+      "label" : "dclick.strafe.same.less.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 549,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.same.less.hi",
+      "layer" : 7,
+      "parents" : [
+        547,
+        548
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 550,
+      "kind" : "affine",
+      "label" : "dclick.strafe.same.less.minusOne",
+      "layer" : 7,
+      "parents" : [
+        547
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 551,
+      "kind" : "affine",
+      "label" : "dclick.strafe.same.less.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 552,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.same.less.lo",
+      "layer" : 8,
+      "parents" : [
+        550,
+        551
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 553,
+      "kind" : "affine",
+      "label" : "dclick.strafe.same.less",
+      "layer" : 9,
+      "parents" : [
+        549,
+        552
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 554,
+      "kind" : "affine",
+      "label" : "dclick.strafe.same.different.sum",
+      "layer" : 10,
+      "parents" : [
+        546,
+        553
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 555,
+      "kind" : "affine",
+      "label" : "dclick.strafe.same.different.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 556,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.same.different.hi",
+      "layer" : 11,
+      "parents" : [
+        554,
+        555
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 557,
+      "kind" : "affine",
+      "label" : "dclick.strafe.same.different.minusOne",
+      "layer" : 11,
+      "parents" : [
+        554
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 558,
+      "kind" : "affine",
+      "label" : "dclick.strafe.same.different.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 559,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.same.different.lo",
+      "layer" : 12,
+      "parents" : [
+        557,
+        558
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 560,
+      "kind" : "affine",
+      "label" : "dclick.strafe.same.different",
+      "layer" : 13,
+      "parents" : [
+        556,
+        559
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 561,
+      "kind" : "affine",
+      "label" : "dclick.strafe.same",
+      "layer" : 14,
+      "parents" : [
+        560
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 562,
+      "kind" : "affine",
+      "label" : "dclick.strafe.changed",
+      "layer" : 15,
+      "parents" : [
+        561
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 563,
+      "kind" : "affine",
+      "label" : "dclick.strafe.oneNegative",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 564,
+      "kind" : "affine",
+      "label" : "dclick.strafe.afterOne",
+      "layer" : 2,
+      "parents" : [
+        39,
+        563
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 565,
+      "kind" : "affine",
+      "label" : "dclick.strafe.timeReady.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 566,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.timeReady.hi",
+      "layer" : 3,
+      "parents" : [
+        564,
+        565
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 567,
+      "kind" : "affine",
+      "label" : "dclick.strafe.timeReady.minusOne",
+      "layer" : 3,
+      "parents" : [
+        564
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 568,
+      "kind" : "affine",
+      "label" : "dclick.strafe.timeReady.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 569,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.timeReady.lo",
+      "layer" : 4,
+      "parents" : [
+        567,
+        568
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 570,
+      "kind" : "affine",
+      "label" : "dclick.strafe.timeReady",
+      "layer" : 5,
+      "parents" : [
+        566,
+        569
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 571,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.edge",
+      "layer" : 16,
+      "parents" : [
+        562,
+        570
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 572,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.press",
+      "layer" : 17,
+      "parents" : [
+        571,
+        538
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 573,
+      "kind" : "affine",
+      "label" : "dclick.strafe.edgeClicks",
+      "layer" : 18,
+      "parents" : [
+        41,
+        572
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 574,
+      "kind" : "affine",
+      "label" : "dclick.strafe.two",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 575,
+      "kind" : "affine",
+      "label" : "dclick.strafe.twoClicks.negativeB",
+      "layer" : 2,
+      "parents" : [
+        574
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 576,
+      "kind" : "affine",
+      "label" : "dclick.strafe.twoClicks.difference",
+      "layer" : 19,
+      "parents" : [
+        573,
+        575
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 577,
+      "kind" : "affine",
+      "label" : "dclick.strafe.twoClicks.greater.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 578,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.twoClicks.greater.hi",
+      "layer" : 20,
+      "parents" : [
+        576,
+        577
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 579,
+      "kind" : "affine",
+      "label" : "dclick.strafe.twoClicks.greater.minusOne",
+      "layer" : 20,
+      "parents" : [
+        576
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 580,
+      "kind" : "affine",
+      "label" : "dclick.strafe.twoClicks.greater.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 581,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.twoClicks.greater.lo",
+      "layer" : 21,
+      "parents" : [
+        579,
+        580
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 582,
+      "kind" : "affine",
+      "label" : "dclick.strafe.twoClicks.greater",
+      "layer" : 22,
+      "parents" : [
+        578,
+        581
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 583,
+      "kind" : "affine",
+      "label" : "dclick.strafe.twoClicks.reverse",
+      "layer" : 20,
+      "parents" : [
+        576
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 584,
+      "kind" : "affine",
+      "label" : "dclick.strafe.twoClicks.less.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 585,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.twoClicks.less.hi",
+      "layer" : 21,
+      "parents" : [
+        583,
+        584
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 586,
+      "kind" : "affine",
+      "label" : "dclick.strafe.twoClicks.less.minusOne",
+      "layer" : 21,
+      "parents" : [
+        583
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 587,
+      "kind" : "affine",
+      "label" : "dclick.strafe.twoClicks.less.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 588,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.twoClicks.less.lo",
+      "layer" : 22,
+      "parents" : [
+        586,
+        587
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 589,
+      "kind" : "affine",
+      "label" : "dclick.strafe.twoClicks.less",
+      "layer" : 23,
+      "parents" : [
+        585,
+        588
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 590,
+      "kind" : "affine",
+      "label" : "dclick.strafe.twoClicks.different.sum",
+      "layer" : 24,
+      "parents" : [
+        582,
+        589
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 591,
+      "kind" : "affine",
+      "label" : "dclick.strafe.twoClicks.different.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 592,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.twoClicks.different.hi",
+      "layer" : 25,
+      "parents" : [
+        590,
+        591
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 593,
+      "kind" : "affine",
+      "label" : "dclick.strafe.twoClicks.different.minusOne",
+      "layer" : 25,
+      "parents" : [
+        590
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 594,
+      "kind" : "affine",
+      "label" : "dclick.strafe.twoClicks.different.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 595,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.twoClicks.different.lo",
+      "layer" : 26,
+      "parents" : [
+        593,
+        594
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 596,
+      "kind" : "affine",
+      "label" : "dclick.strafe.twoClicks.different",
+      "layer" : 27,
+      "parents" : [
+        592,
+        595
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 597,
+      "kind" : "affine",
+      "label" : "dclick.strafe.twoClicks",
+      "layer" : 28,
+      "parents" : [
+        596
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 598,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.double",
+      "layer" : 29,
+      "parents" : [
+        571,
+        597
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 599,
+      "kind" : "affine",
+      "label" : "dclick.strafe.zero",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 600,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.edgeClicksFinal.yes",
+      "layer" : 30,
+      "parents" : [
+        599,
+        598
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 601,
+      "kind" : "affine",
+      "label" : "dclick.strafe.edgeClicksFinal.not",
+      "layer" : 30,
+      "parents" : [
+        598
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 602,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.edgeClicksFinal.no",
+      "layer" : 31,
+      "parents" : [
+        573,
+        601
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 603,
+      "kind" : "affine",
+      "label" : "dclick.strafe.edgeClicksFinal",
+      "layer" : 32,
+      "parents" : [
+        600,
+        602
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 604,
+      "kind" : "affine",
+      "label" : "dclick.strafe.resetTime",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 605,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.edgeTime.yes",
+      "layer" : 30,
+      "parents" : [
+        39,
+        598
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 606,
+      "kind" : "affine",
+      "label" : "dclick.strafe.edgeTime.not",
+      "layer" : 30,
+      "parents" : [
+        598
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 607,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.edgeTime.no",
+      "layer" : 31,
+      "parents" : [
+        604,
+        606
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 608,
+      "kind" : "affine",
+      "label" : "dclick.strafe.edgeTime",
+      "layer" : 32,
+      "parents" : [
+        605,
+        607
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 609,
+      "kind" : "affine",
+      "label" : "dclick.strafe.elapsed",
+      "layer" : 1,
+      "parents" : [
+        39,
+        54
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 610,
+      "kind" : "affine",
+      "label" : "dclick.strafe.negativeTwenty",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 611,
+      "kind" : "affine",
+      "label" : "dclick.strafe.afterTwenty",
+      "layer" : 2,
+      "parents" : [
+        609,
+        610
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 612,
+      "kind" : "affine",
+      "label" : "dclick.strafe.expired.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 613,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.expired.hi",
+      "layer" : 3,
+      "parents" : [
+        611,
+        612
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 614,
+      "kind" : "affine",
+      "label" : "dclick.strafe.expired.minusOne",
+      "layer" : 3,
+      "parents" : [
+        611
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 615,
+      "kind" : "affine",
+      "label" : "dclick.strafe.expired.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 616,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.expired.lo",
+      "layer" : 4,
+      "parents" : [
+        614,
+        615
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 617,
+      "kind" : "affine",
+      "label" : "dclick.strafe.expired",
+      "layer" : 5,
+      "parents" : [
+        613,
+        616
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 618,
+      "kind" : "affine",
+      "label" : "dclick.strafe.clearState",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 619,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.idleState.yes",
+      "layer" : 6,
+      "parents" : [
+        618,
+        617
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 620,
+      "kind" : "affine",
+      "label" : "dclick.strafe.idleState.not",
+      "layer" : 6,
+      "parents" : [
+        617
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 621,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.idleState.no",
+      "layer" : 7,
+      "parents" : [
+        40,
+        620
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 622,
+      "kind" : "affine",
+      "label" : "dclick.strafe.idleState",
+      "layer" : 8,
+      "parents" : [
+        619,
+        621
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 623,
+      "kind" : "affine",
+      "label" : "dclick.strafe.clearClicks",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 624,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.idleClicks.yes",
+      "layer" : 6,
+      "parents" : [
+        623,
+        617
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 625,
+      "kind" : "affine",
+      "label" : "dclick.strafe.idleClicks.not",
+      "layer" : 6,
+      "parents" : [
+        617
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 626,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.idleClicks.no",
+      "layer" : 7,
+      "parents" : [
+        41,
+        625
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 627,
+      "kind" : "affine",
+      "label" : "dclick.strafe.idleClicks",
+      "layer" : 8,
+      "parents" : [
+        624,
+        626
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 628,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.timeActive.yes",
+      "layer" : 33,
+      "parents" : [
+        608,
+        571
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 629,
+      "kind" : "affine",
+      "label" : "dclick.strafe.timeActive.not",
+      "layer" : 17,
+      "parents" : [
+        571
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 630,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.timeActive.no",
+      "layer" : 18,
+      "parents" : [
+        609,
+        629
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 631,
+      "kind" : "affine",
+      "label" : "dclick.strafe.timeActive",
+      "layer" : 34,
+      "parents" : [
+        628,
+        630
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 632,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.time.yes",
+      "layer" : 35,
+      "parents" : [
+        631,
+        35
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 633,
+      "kind" : "affine",
+      "label" : "dclick.strafe.time.not",
+      "layer" : 1,
+      "parents" : [
+        35
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 634,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.time.no",
+      "layer" : 2,
+      "parents" : [
+        39,
+        633
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 635,
+      "kind" : "affine",
+      "label" : "dclick.strafe.time",
+      "layer" : 36,
+      "parents" : [
+        632,
+        634
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 636,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.stateActive.yes",
+      "layer" : 17,
+      "parents" : [
+        538,
+        571
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 637,
+      "kind" : "affine",
+      "label" : "dclick.strafe.stateActive.not",
+      "layer" : 17,
+      "parents" : [
+        571
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 638,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.stateActive.no",
+      "layer" : 18,
+      "parents" : [
+        622,
+        637
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 639,
+      "kind" : "affine",
+      "label" : "dclick.strafe.stateActive",
+      "layer" : 19,
+      "parents" : [
+        636,
+        638
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 640,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.state.yes",
+      "layer" : 20,
+      "parents" : [
+        639,
+        35
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 641,
+      "kind" : "affine",
+      "label" : "dclick.strafe.state.not",
+      "layer" : 1,
+      "parents" : [
+        35
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 642,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.state.no",
+      "layer" : 2,
+      "parents" : [
+        40,
+        641
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 643,
+      "kind" : "affine",
+      "label" : "dclick.strafe.state",
+      "layer" : 21,
+      "parents" : [
+        640,
+        642
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 644,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.clicksActive.yes",
+      "layer" : 33,
+      "parents" : [
+        603,
+        571
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 645,
+      "kind" : "affine",
+      "label" : "dclick.strafe.clicksActive.not",
+      "layer" : 17,
+      "parents" : [
+        571
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 646,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.clicksActive.no",
+      "layer" : 18,
+      "parents" : [
+        627,
+        645
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 647,
+      "kind" : "affine",
+      "label" : "dclick.strafe.clicksActive",
+      "layer" : 34,
+      "parents" : [
+        644,
+        646
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 648,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.clicks.yes",
+      "layer" : 35,
+      "parents" : [
+        647,
+        35
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 649,
+      "kind" : "affine",
+      "label" : "dclick.strafe.clicks.not",
+      "layer" : 1,
+      "parents" : [
+        35
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 650,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.clicks.no",
+      "layer" : 2,
+      "parents" : [
+        41,
+        649
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 651,
+      "kind" : "affine",
+      "label" : "dclick.strafe.clicks",
+      "layer" : 36,
+      "parents" : [
+        648,
+        650
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 652,
+      "kind" : "reglu",
+      "label" : "dclick.strafe.use",
+      "layer" : 30,
+      "parents" : [
+        35,
+        598
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 653,
+      "kind" : "affine",
+      "label" : "buttons.use.sum",
+      "layer" : 28,
+      "parents" : [
+        72,
+        531
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 654,
+      "kind" : "affine",
+      "label" : "buttons.use.sum",
+      "layer" : 31,
+      "parents" : [
+        653,
+        652
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 655,
+      "kind" : "affine",
+      "label" : "buttons.use.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 656,
+      "kind" : "reglu",
+      "label" : "buttons.use.hi",
+      "layer" : 32,
+      "parents" : [
+        654,
+        655
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 657,
+      "kind" : "affine",
+      "label" : "buttons.use.minusOne",
+      "layer" : 32,
+      "parents" : [
+        654
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 658,
+      "kind" : "affine",
+      "label" : "buttons.use.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 659,
+      "kind" : "reglu",
+      "label" : "buttons.use.lo",
+      "layer" : 33,
+      "parents" : [
+        657,
+        658
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 660,
+      "kind" : "affine",
+      "label" : "buttons.use",
+      "layer" : 34,
+      "parents" : [
+        656,
+        659
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 661,
+      "kind" : "affine",
+      "label" : "buttons.useBit",
+      "layer" : 35,
+      "parents" : [
+        660
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 662,
+      "kind" : "affine",
+      "label" : "buttons.changeBit",
+      "layer" : 54,
+      "parents" : [
+        413
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 663,
+      "kind" : "affine",
+      "label" : "buttons.weaponBits",
+      "layer" : 78,
+      "parents" : [
+        406
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 664,
+      "kind" : "affine",
+      "label" : "buttons.normal.sum",
+      "layer" : 36,
+      "parents" : [
+        64,
+        661
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 665,
+      "kind" : "affine",
+      "label" : "buttons.normal.sum",
+      "layer" : 55,
+      "parents" : [
+        664,
+        662
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 666,
+      "kind" : "affine",
+      "label" : "buttons.normal.sum",
+      "layer" : 79,
+      "parents" : [
+        665,
+        663
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 667,
+      "kind" : "affine",
+      "label" : "buttons.pauseCode",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 668,
+      "kind" : "reglu",
+      "label" : "buttons.pause.yes",
+      "layer" : 2,
+      "parents" : [
+        667,
+        42
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 669,
+      "kind" : "affine",
+      "label" : "buttons.pause.not",
+      "layer" : 1,
+      "parents" : [
+        42
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 670,
+      "kind" : "reglu",
+      "label" : "buttons.pause.no",
+      "layer" : 80,
+      "parents" : [
+        666,
+        669
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 671,
+      "kind" : "affine",
+      "label" : "buttons.pause",
+      "layer" : 81,
+      "parents" : [
+        668,
+        670
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 672,
+      "kind" : "affine",
+      "label" : "buttons.saveCode",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 673,
+      "kind" : "affine",
+      "label" : "buttons.saveSlot",
+      "layer" : 1,
+      "parents" : [
+        44
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 674,
+      "kind" : "affine",
+      "label" : "buttons.saveValue",
+      "layer" : 2,
+      "parents" : [
+        672,
+        673
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 675,
+      "kind" : "reglu",
+      "label" : "buttons.final.yes",
+      "layer" : 3,
+      "parents" : [
+        674,
+        43
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 676,
+      "kind" : "affine",
+      "label" : "buttons.final.not",
+      "layer" : 1,
+      "parents" : [
+        43
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 677,
+      "kind" : "reglu",
+      "label" : "buttons.final.no",
+      "layer" : 82,
+      "parents" : [
+        671,
+        676
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 678,
+      "kind" : "affine",
+      "label" : "buttons.final",
+      "layer" : 83,
+      "parents" : [
+        675,
+        677
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 679,
+      "kind" : "affine",
+      "label" : "lowres.desired",
+      "layer" : 1,
+      "parents" : [
+        2,
+        46
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 680,
+      "kind" : "affine",
+      "label" : "lowres.tableAddress",
+      "layer" : 2,
+      "parents" : [
+        679
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 681,
+      "kind" : "index-read",
+      "label" : "lowres.rounded",
+      "layer" : 3,
+      "parents" : [
+        680
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 682,
+      "kind" : "reglu",
+      "label" : "angleturn.final.yes.positive",
+      "layer" : 4,
+      "parents" : [
+        681,
+        45
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 683,
+      "kind" : "affine",
+      "label" : "angleturn.final.yes.negativeInput",
+      "layer" : 4,
+      "parents" : [
+        681
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 684,
+      "kind" : "reglu",
+      "label" : "angleturn.final.yes.negative",
+      "layer" : 5,
+      "parents" : [
+        683,
+        45
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 685,
+      "kind" : "affine",
+      "label" : "angleturn.final.yes",
+      "layer" : 6,
+      "parents" : [
+        682,
+        684
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 686,
+      "kind" : "affine",
+      "label" : "angleturn.final.not",
+      "layer" : 1,
+      "parents" : [
+        45
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 687,
+      "kind" : "reglu",
+      "label" : "angleturn.final.no.positive",
+      "layer" : 2,
+      "parents" : [
+        2,
+        686
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 688,
+      "kind" : "affine",
+      "label" : "angleturn.final.no.negativeInput",
+      "layer" : 1,
+      "parents" : [
+        2
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 689,
+      "kind" : "reglu",
+      "label" : "angleturn.final.no.negative",
+      "layer" : 2,
+      "parents" : [
+        688,
+        686
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 690,
+      "kind" : "affine",
+      "label" : "angleturn.final.no",
+      "layer" : 3,
+      "parents" : [
+        687,
+        689
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 691,
+      "kind" : "affine",
+      "label" : "angleturn.final",
+      "layer" : 7,
+      "parents" : [
+        685,
+        690
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 692,
+      "kind" : "affine",
+      "label" : "lowres.negativeRounded",
+      "layer" : 4,
+      "parents" : [
+        681
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 693,
+      "kind" : "affine",
+      "label" : "lowres.error",
+      "layer" : 5,
+      "parents" : [
+        679,
+        692
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 694,
+      "kind" : "reglu",
+      "label" : "lowres.carry.yes.positive",
+      "layer" : 6,
+      "parents" : [
+        693,
+        45
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 695,
+      "kind" : "affine",
+      "label" : "lowres.carry.yes.negativeInput",
+      "layer" : 6,
+      "parents" : [
+        693
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 696,
+      "kind" : "reglu",
+      "label" : "lowres.carry.yes.negative",
+      "layer" : 7,
+      "parents" : [
+        695,
+        45
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 697,
+      "kind" : "affine",
+      "label" : "lowres.carry.yes",
+      "layer" : 8,
+      "parents" : [
+        694,
+        696
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 698,
+      "kind" : "affine",
+      "label" : "lowres.carry.not",
+      "layer" : 1,
+      "parents" : [
+        45
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 699,
+      "kind" : "reglu",
+      "label" : "lowres.carry.no.positive",
+      "layer" : 2,
+      "parents" : [
+        46,
+        698
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 700,
+      "kind" : "affine",
+      "label" : "lowres.carry.no.negativeInput",
+      "layer" : 1,
+      "parents" : [
+        46
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 701,
+      "kind" : "reglu",
+      "label" : "lowres.carry.no.negative",
+      "layer" : 2,
+      "parents" : [
+        700,
+        698
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 702,
+      "kind" : "affine",
+      "label" : "lowres.carry.no",
+      "layer" : 3,
+      "parents" : [
+        699,
+        701
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 703,
+      "kind" : "affine",
+      "label" : "lowres.carry",
+      "layer" : 9,
+      "parents" : [
+        697,
+        702
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 704,
+      "kind" : "affine",
+      "label" : "mouse.xZero.negativeB",
+      "layer" : 2,
+      "parents" : [
+        55
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 705,
+      "kind" : "affine",
+      "label" : "mouse.xZero.difference",
+      "layer" : 3,
+      "parents" : [
+        50,
+        704
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 706,
+      "kind" : "affine",
+      "label" : "mouse.xZero.greater.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 707,
+      "kind" : "reglu",
+      "label" : "mouse.xZero.greater.hi",
+      "layer" : 4,
+      "parents" : [
+        705,
+        706
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 708,
+      "kind" : "affine",
+      "label" : "mouse.xZero.greater.minusOne",
+      "layer" : 4,
+      "parents" : [
+        705
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 709,
+      "kind" : "affine",
+      "label" : "mouse.xZero.greater.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 710,
+      "kind" : "reglu",
+      "label" : "mouse.xZero.greater.lo",
+      "layer" : 5,
+      "parents" : [
+        708,
+        709
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 711,
+      "kind" : "affine",
+      "label" : "mouse.xZero.greater",
+      "layer" : 6,
+      "parents" : [
+        707,
+        710
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 712,
+      "kind" : "affine",
+      "label" : "mouse.xZero.reverse",
+      "layer" : 4,
+      "parents" : [
+        705
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 713,
+      "kind" : "affine",
+      "label" : "mouse.xZero.less.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 714,
+      "kind" : "reglu",
+      "label" : "mouse.xZero.less.hi",
+      "layer" : 5,
+      "parents" : [
+        712,
+        713
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 715,
+      "kind" : "affine",
+      "label" : "mouse.xZero.less.minusOne",
+      "layer" : 5,
+      "parents" : [
+        712
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 716,
+      "kind" : "affine",
+      "label" : "mouse.xZero.less.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 717,
+      "kind" : "reglu",
+      "label" : "mouse.xZero.less.lo",
+      "layer" : 6,
+      "parents" : [
+        715,
+        716
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 718,
+      "kind" : "affine",
+      "label" : "mouse.xZero.less",
+      "layer" : 7,
+      "parents" : [
+        714,
+        717
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 719,
+      "kind" : "affine",
+      "label" : "mouse.xZero.different.sum",
+      "layer" : 8,
+      "parents" : [
+        711,
+        718
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 720,
+      "kind" : "affine",
+      "label" : "mouse.xZero.different.hi.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 721,
+      "kind" : "reglu",
+      "label" : "mouse.xZero.different.hi",
+      "layer" : 9,
+      "parents" : [
+        719,
+        720
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 722,
+      "kind" : "affine",
+      "label" : "mouse.xZero.different.minusOne",
+      "layer" : 9,
+      "parents" : [
+        719
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 723,
+      "kind" : "affine",
+      "label" : "mouse.xZero.different.lo.one",
+      "layer" : 1,
+      "parents" : [
+
+      ]
+    },
+    {
+      "boolean" : false,
+      "id" : 724,
+      "kind" : "reglu",
+      "label" : "mouse.xZero.different.lo",
+      "layer" : 10,
+      "parents" : [
+        722,
+        723
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 725,
+      "kind" : "affine",
+      "label" : "mouse.xZero.different",
+      "layer" : 11,
+      "parents" : [
+        721,
+        724
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 726,
+      "kind" : "affine",
+      "label" : "mouse.xZero",
+      "layer" : 12,
+      "parents" : [
+        725
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 727,
+      "kind" : "affine",
+      "label" : "mouse.xMoved",
+      "layer" : 13,
+      "parents" : [
+        726
+      ]
+    },
+    {
+      "boolean" : true,
+      "id" : 728,
+      "kind" : "reglu",
+      "label" : "mouse.testSpeed",
+      "layer" : 14,
+      "parents" : [
+        49,
+        727
+      ]
+    }
+  ],
+  "outputCount" : 21,
+  "outputNames" : [
+    "angleturn",
+    "buttons",
+    "chatchar",
+    "consistancy",
+    "buttons2",
+    "inventory",
+    "lookfly",
+    "arti",
+    "dclicktime",
+    "dclickstate",
+    "dclicks",
+    "dclicktime2",
+    "dclickstate2",
+    "dclicks2",
+    "lowres_carry",
+    "testcontrols_mousespeed",
+    "next_weapon",
+    "sendpause",
+    "sendsave",
+    "mousex",
+    "mousey"
+  ],
+  "roots" : [
+    691,
+    678,
+    47,
+    48,
+    55,
+    55,
+    55,
+    55,
+    514,
+    522,
+    530,
+    635,
+    643,
+    651,
+    703,
+    728,
+    55,
+    55,
+    55,
+    55,
+    55
+  ],
+  "tables" : [
+    {
+      "base" : 0,
+      "id" : 0,
+      "label" : "weapon.startMap",
+      "length" : 9
+    },
+    {
+      "base" : 9,
+      "id" : 1,
+      "label" : "weapon.orderWeapons",
+      "length" : 9
+    },
+    {
+      "base" : 18,
+      "id" : 2,
+      "label" : "weapon.orderNumbers",
+      "length" : 9
+    },
+    {
+      "base" : 27,
+      "id" : 3,
+      "label" : "weapon.selectableCellIds",
+      "length" : 9
+    },
+    {
+      "base" : 36,
+      "id" : 4,
+      "label" : "weapon.forwardCandidates",
+      "length" : 81
+    },
+    {
+      "base" : 117,
+      "id" : 5,
+      "label" : "weapon.reverseCandidates",
+      "length" : 81
+    },
+    {
+      "base" : 198,
+      "id" : 6,
+      "label" : "lowres.round256[-8320,8320]",
+      "length" : 16641
+    }
+  ]
+}

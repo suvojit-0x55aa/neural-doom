@@ -10,6 +10,14 @@ final class InspectorModel: ObservableObject {
     @Published var metalFallbacks = 0
     @Published var mismatches = 0
     @Published var fallbackReason = "none"
+    @Published var remainderTrace: RemainderTrace?
+    @Published var remainderGraph: RemainderGraph?
+    @Published var remainderDropped = 0
+    @Published var remainderCircuitTics = 0
+    @Published var remainderDomainFallbacks = 0
+    @Published var remainderMetalFallbacks = 0
+    @Published var remainderMismatches = 0
+    @Published var remainderFallbackReason = "none"
     @Published var isPaused = false
     weak var engine: EngineCoordinator?
     func publish(trace: CircuitTrace, graph: CircuitGraph, dropped: Int,
@@ -26,6 +34,22 @@ final class InspectorModel: ObservableObject {
         self.metalFallbacks = metalFallbacks; self.mismatches = mismatches
         self.fallbackReason = fallbackReason
     }
+    func publishRemainder(trace: RemainderTrace, graph: RemainderGraph, dropped: Int,
+                          circuitTics: Int, domainFallbacks: Int, metalFallbacks: Int, mismatches: Int,
+                          fallbackReason: String) {
+        self.remainderTrace = trace; self.remainderGraph = graph; self.remainderDropped = dropped
+        refreshRemainderCounts(circuitTics: circuitTics, domainFallbacks: domainFallbacks,
+                               metalFallbacks: metalFallbacks, mismatches: mismatches,
+                               fallbackReason: fallbackReason)
+    }
+    func refreshRemainderCounts(circuitTics: Int, domainFallbacks: Int, metalFallbacks: Int,
+                                mismatches: Int, fallbackReason: String) {
+        self.remainderCircuitTics = circuitTics
+        self.remainderDomainFallbacks = domainFallbacks
+        self.remainderMetalFallbacks = metalFallbacks
+        self.remainderMismatches = mismatches
+        self.remainderFallbackReason = fallbackReason
+    }
     func pause() { isPaused = true; engine?.pause() }
     func resume() { isPaused = false; engine?.resume() }
     func step() { engine?.step() }
@@ -34,7 +58,12 @@ final class InspectorModel: ObservableObject {
 struct InspectorView: View {
     @ObservedObject var model: InspectorModel
     @State private var selectedOutput = 0
+    @State private var selectedRemainderOutput = 1
     private let outputs = ["forwardmove", "sidemove", "angleturn", "turnheld"]
+    private let remainderOutputs = ["angleturn", "buttons", "chat", "consistency", "buttons2", "inventory",
+                                    "lookfly", "arti", "dclick time", "dclick state", "dclick count",
+                                    "strafe time", "strafe state", "strafe count", "lowres carry",
+                                    "mouse speed", "next weapon", "pause", "save", "mouse X", "mouse Y"]
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("CIRCUIT INSPECTOR").font(.system(.headline, design: .monospaced))
@@ -91,6 +120,48 @@ struct InspectorView: View {
                             Text("#\(node.0.id) L\(node.0.layer) \(node.0.kind) \(node.0.label) = \(Int(node.1))")
                                 .font(.system(size: 10, design: .monospaced))
                                 .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        Divider()
+                        Text("TIC REMAINDER · COMPLETE COMMAND").font(.system(.caption, design: .monospaced)).bold()
+                        if let remainder = model.remainderTrace, let remainderGraph = model.remainderGraph {
+                            Text("\(remainderGraph.operationCount) ops · \(remainderGraph.layerCount) layers · circuit \(model.remainderCircuitTics) · domain \(model.remainderDomainFallbacks) · Metal \(model.remainderMetalFallbacks) · mismatch \(model.remainderMismatches) · dropped \(model.remainderDropped)")
+                                .font(.caption).fixedSize(horizontal: false, vertical: true)
+                            Text(String(format: "Circuit attempt %.3f ms · latest fallback %@", Double(remainder.latencyNs) / 1_000_000, model.remainderFallbackReason))
+                                .font(.caption)
+                            comparison("angle final", remainder.reference.angleturn, remainder.circuit.angleturn)
+                            comparison("buttons", remainder.reference.buttons, remainder.circuit.buttons)
+                            comparison("chat", remainder.reference.chatchar, remainder.circuit.chatchar)
+                            comparison("lowres carry", remainder.reference.lowres_carry, remainder.circuit.lowres_carry)
+                            Text("Changed state cells: " + (remainder.changedStateCells.isEmpty ? "none" : remainder.changedStateCells.joined(separator: ", ")))
+                                .font(.caption).fixedSize(horizontal: false, vertical: true)
+                            DisclosureGroup("Remainder layers · activation heat and gate activity") {
+                                ForEach(remainder.layers, id: \.id) { layer in
+                                    HStack(spacing: 5) {
+                                        Text(String(format: "%02d", layer.id)).frame(width: 24, alignment: .leading)
+                                        Text("A\(layer.affine) G\(layer.reglu) I\(layer.index)").frame(width: 90, alignment: .leading)
+                                        HStack(spacing: 1) {
+                                            ForEach(0..<8, id: \.self) { bin in
+                                                Rectangle().fill(Color.cyan.opacity(layer.heat[bin] == 0 ? 0.08 : min(1, Double(layer.heat[bin]) / 5 + 0.2)))
+                                                    .frame(width: 12, height: 13)
+                                            }
+                                        }
+                                        Text("\(layer.nonzero) active · G \(layer.gateOpen)/\(layer.reglu) · B \(layer.booleanActive) · \(String(format: "%.1f", Double(layer.cpuReplayNs)/1000)) µs CPU")
+                                            .frame(maxWidth: .infinity, alignment: .trailing)
+                                    }.font(.system(size: 10, design: .monospaced))
+                                }
+                            }
+                            Picker("Remainder output neighborhood", selection: $selectedRemainderOutput) {
+                                ForEach(0..<remainderOutputs.count, id: \.self) { Text(remainderOutputs[$0]).tag($0) }
+                            }
+                            let remainderNodes = model.engine?.remainder.neighborhood(root: selectedRemainderOutput, trace: remainder) ?? []
+                            Text("\(remainderNodes.count) of at most 64 upstream operations · stable IDs").font(.caption)
+                            ForEach(remainderNodes, id: \.0.id) { node in
+                                Text("#\(node.0.id) L\(node.0.layer) \(node.0.kind) \(node.0.label) = \(Int(node.1))")
+                                    .font(.system(size: 10, design: .monospaced))
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                        } else {
+                            Text("Waiting for the first sampled remainder tic.").font(.caption)
                         }
                     }.frame(maxWidth: .infinity, alignment: .leading)
                 }

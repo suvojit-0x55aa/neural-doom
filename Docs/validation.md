@@ -1,5 +1,7 @@
 # Validation evidence — Apple M5 local run
 
+This is the stage-one checkpoint. [Stage-two validation](stage2-validation.md) records complete tic-command circuit ownership and the current performance limit. The publication boundary changed after this stage-one run.
+
 Machine: MacBook Pro, Apple M5, 16 GB RAM; macOS 26.2; Xcode 26.5; arm64 Debug builds. The app uses runtime MSL compilation because this Xcode installation lacks the optional offline Metal Toolchain. This is a local build and no remote or PR was used.
 
 ## Build, parity, and unit checks

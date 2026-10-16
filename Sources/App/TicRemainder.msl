@@ -1,0 +1,26 @@
+#include <metal_stdlib>
+using namespace metal;
+struct Op {
+    uint kind, a, b, table;
+    float wa, wb, bias, reserved;
+};
+kernel void evaluateTicRemainder(const device float *input [[buffer(0)]],
+                                 const device Op *ops [[buffer(1)]],
+                                 const device float *tables [[buffer(2)]],
+                                 device int *output [[buffer(3)]],
+                                 constant uint &count [[buffer(4)]],
+                                 constant uint *roots [[buffer(5)]],
+                                 uint tid [[thread_position_in_grid]]) {
+    if (tid != 0) return;
+    float cell[1024];
+    for (uint i = 0; i < 55; ++i) cell[i] = input[i];
+    for (uint i = 0; i < count; ++i) {
+        Op op = ops[i];
+        float a = cell[op.a], b = cell[op.b];
+        if (op.kind == 1) cell[55+i] = ((op.wa * a) + (op.wb * b)) + op.bias;
+        else if (op.kind == 2) cell[55+i] = max(0.0f, a) * max(0.0f, b);
+        else if (op.kind == 3) cell[55+i] = tables[op.table + uint(a)];
+        else cell[55+i] = cell[uint(tables[op.table + uint(a)])];
+    }
+    for (uint i = 0; i < 21; ++i) output[i] = int(cell[roots[i]]);
+}

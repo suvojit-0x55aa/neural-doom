@@ -407,9 +407,11 @@ final class CircuitRuntime {
             workerLock.lock(); workerBusy = false; workerLock.unlock()
             work.done.signal()
         }
-        let deadline = DispatchTime(uptimeNanoseconds: start + deadlineNs)
-        if work.done.wait(timeout: deadline) == .timedOut {
-            return (nil, DispatchTime.now().uptimeNanoseconds - start, "metal-timeout")
+        // Poll only within the short tic budget. A timed semaphore wake was
+        // observed tens of milliseconds late under GPU load on macOS.
+        while work.done.wait(timeout: .now()) == .timedOut {
+            let elapsed = DispatchTime.now().uptimeNanoseconds - start
+            if elapsed >= deadlineNs { return (nil, elapsed, "metal-timeout") }
         }
         let elapsed = DispatchTime.now().uptimeNanoseconds - start
         guard elapsed < deadlineNs else { return (nil, elapsed, "metal-timeout") }

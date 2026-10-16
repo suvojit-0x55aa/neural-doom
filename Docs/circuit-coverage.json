@@ -4,14 +4,14 @@
   "moduleABI": "CircuitModuleV1",
   "coverageMetric": {
     "name": "circuit-owned core modules / enumerated core modules",
-    "circuitOwned": 1,
+    "circuitOwned": 2,
     "total": 10,
     "meaning": "A migration ledger count, not a fraction of executed instructions or gameplay behavior."
   },
   "hostBoundaries": ["AppKit window and menus", "input/event collection", "file access", "Metal submission", "display presentation"],
   "modules": [
     {"id":"tic.locomotion","stage":1,"status":"circuit-owned","oracle":"reference-C every eligible tic","fallback":"reference-C on out-of-domain input, Metal error/2 ms timeout, or mismatch","state":["turnheld"],"graph":"locomotion-graph.json","verifiedSnapshots":100000},
-    {"id":"tic.remainder","stage":2,"status":"reference-C","covers":["attack","use","weapons","chat","double-click","save","pause","low-resolution turn carry"]},
+    {"id":"tic.remainder","stage":2,"status":"circuit-owned","oracle":"reference-C every eligible tic","fallback":"reference-C on out-of-domain input, Metal error/2 ms timeout, or mismatch","graph":"tic-remainder-graph.json","verifiedSnapshots":100000,"state":["double-click timers/states/counts","low-resolution turn carry","test-controls mouse speed","next weapon","pause/save flags","mouse consumption"],"covers":["attack","use","weapon selection and cycling","chat","double-click","save","pause","low-resolution turn carry"]},
     {"id":"movement.collision","stage":3,"status":"reference-C","covers":["thrust","position queries","blockmap candidates","line/thing collision","crossed specials"]},
     {"id":"interactions.combat","stage":4,"status":"reference-C","covers":["doors","switches","items","damage","weapons","projectiles","side-effect events"]},
     {"id":"thinkers.ai","stage":5,"status":"reference-C","covers":["thinker scheduler","monster state transitions","path/target decisions","RNG"]},

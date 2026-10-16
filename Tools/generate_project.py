@@ -4,11 +4,11 @@ from pathlib import Path
 
 root = Path(__file__).resolve().parents[1]
 core = sorted(p.relative_to(root).as_posix() for p in (root/'Sources/DoomCore').glob('*.c'))
-bridge = ['Sources/Bridge/EngineBridge.c', 'Sources/Bridge/MovementReference.c']
+bridge = ['Sources/Bridge/EngineBridge.c', 'Sources/Bridge/MovementReference.c', 'Sources/Bridge/TicRemainderReference.c']
 app_swift = sorted(p.relative_to(root).as_posix() for p in (root/'Sources/App').glob('*.swift'))
 app_sources = core + bridge + app_swift + []
-test_sources = core + ['Sources/Bridge/MovementReference.c', 'Sources/App/Circuit.swift', 'Sources/App/IWAD.swift', 'Tests/TestEngineHooks.c', 'Tests/main.swift']
-resources = ['Sources/App/Locomotion.msl', 'Sources/App/Present.msl', 'Assets/freedoom1.wad', 'Assets/FREEDOOM-COPYING.txt', 'Assets/FREEDOOM-CREDITS.txt']
+test_sources = core + ['Sources/Bridge/MovementReference.c', 'Sources/Bridge/TicRemainderReference.c', 'Sources/App/Circuit.swift', 'Sources/App/TicRemainder.swift', 'Sources/App/IWAD.swift', 'Tests/TestEngineHooks.c', 'Tests/main.swift']
+resources = ['Sources/App/Locomotion.msl', 'Sources/App/TicRemainder.msl', 'Sources/App/Present.msl', 'Assets/freedoom1.wad', 'Assets/FREEDOOM-COPYING.txt', 'Assets/FREEDOOM-CREDITS.txt']
 files = sorted(set(app_sources + test_sources + resources + ['Sources/App/BridgingHeader.h']))
 objects = {}
 next_id = 0x100

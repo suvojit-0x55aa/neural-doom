@@ -72,6 +72,8 @@
 
 #include "g_game.h"
 #include "MovementABI.h"
+#include "TicRemainderABI.h"
+void HU_queueChatChar(char c); // local trace fixture; upstream omits this declaration
 
 
 #define SAVEGAMESIZE	0x2c000
@@ -198,6 +200,12 @@ static const struct
 
 static boolean  gamekeydown[NUMKEYS]; 
 static int      turnheld;		// for accelerative turning 
+static signed short hm_lowres_carry;
+static int hm_script_tic;
+#ifdef HM_TEST
+static int hm_test_chat_override = -1;
+static HMTicRemainderInput hm_test_last_remainder;
+#endif
  
 static boolean  mousearray[MAX_MOUSE_BUTTONS + 1];
 static boolean *mousebuttons = &mousearray[1];  // allow [-1]
@@ -330,6 +338,22 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
     int		forward;
     int		side;
 
+    // Opt-in local WAD trace fixture: inject otherwise menu/demo-only command
+    // events at the C adapter, before both oracle and circuit snapshot them.
+    // This never runs in normal play and does not define production rules.
+    const char *hm_script = getenv("HANDWIRED_DOOM_TICCMD_SCRIPT");
+    if (hm_script && hm_script[0] == '1')
+    {
+        if (hm_script_tic == 230 || hm_script_tic == 235) sendpause = true;
+        if (hm_script_tic == 240) { sendsave = true; savegameslot = 2; }
+        if (hm_script_tic == 250) lowres_turn = true;
+        if (hm_script_tic == 280) lowres_turn = false;
+        if (hm_script_tic == 285) next_weapon = 1;
+        if (hm_script_tic == 286) next_weapon = -1;
+        if (hm_script_tic == 290) HU_queueChatChar('H');
+        ++hm_script_tic;
+    }
+
     // This adapter is the only circuit boundary allowed to inspect reference
     // engine globals. Capture before the original function consumes mouse input.
     HMMovementInput hm_input = {{
@@ -346,6 +370,48 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
         !!joybuttons[joybstraferight], joyxmove, joyymove, joystrafemove,
         turnheld, ticdup, 0
     }};
+    HMTicRemainderInput hm_remainder = {{0}};
+    int32_t *r = hm_remainder.cell;
+    r[HM_R_FIRE_KEY] = !!gamekeydown[key_fire];
+    r[HM_R_FIRE_MOUSE] = !!mousebuttons[mousebfire];
+    r[HM_R_FIRE_JOY] = !!joybuttons[joybfire];
+    r[HM_R_USE_KEY] = !!gamekeydown[key_use];
+    r[HM_R_USE_MOUSE] = !!mousebuttons[mousebuse];
+    r[HM_R_USE_JOY] = !!joybuttons[joybuse];
+    for (i = 0; i < 8; ++i) r[HM_R_WEAPON_KEY_1 + i] = !!gamekeydown[*weapon_keys[i]];
+    r[HM_R_IN_LEVEL] = gamestate == GS_LEVEL;
+    r[HM_R_NEXT_WEAPON] = next_weapon;
+    r[HM_R_READY_WEAPON] = players[consoleplayer].readyweapon;
+    r[HM_R_PENDING_WEAPON] = players[consoleplayer].pendingweapon;
+    for (i = 0; i < NUMWEAPONS; ++i) r[HM_R_OWNED_FIST + i] = !!players[consoleplayer].weaponowned[i];
+    r[HM_R_STRENGTH] = !!players[consoleplayer].powers[pw_strength];
+    r[HM_R_LOGICAL_DOOM] = logical_gamemission == doom;
+    r[HM_R_MISSION_DOOM] = gamemission == doom;
+    r[HM_R_SHAREWARE] = gamemode == shareware;
+    r[HM_R_DCLICK_USE] = !!dclick_use;
+    r[HM_R_DCLICK_TIME] = dclicktime;
+    r[HM_R_DCLICK_STATE] = !!dclickstate;
+    r[HM_R_DCLICKS] = dclicks;
+    r[HM_R_DCLICK_TIME2] = dclicktime2;
+    r[HM_R_DCLICK_STATE2] = !!dclickstate2;
+    r[HM_R_DCLICKS2] = dclicks2;
+    r[HM_R_SEND_PAUSE] = !!sendpause;
+    r[HM_R_SEND_SAVE] = !!sendsave;
+    r[HM_R_SAVE_SLOT] = savegameslot;
+    r[HM_R_LOWRES_TURN] = !!lowres_turn;
+    r[HM_R_LOWRES_CARRY] = hm_lowres_carry;
+#ifdef HM_TEST
+    r[HM_R_CHAT_CHAR] = hm_test_chat_override >= 0 ? hm_test_chat_override : (unsigned char)HU_dequeueChatChar();
+#else
+    r[HM_R_CHAT_CHAR] = (unsigned char)HU_dequeueChatChar();
+#endif
+    r[HM_R_CONSISTENCY] = consistancy[consoleplayer][maketic%BACKUPTICS];
+    r[HM_R_TEST_MOUSE_SPEED] = testcontrols_mousespeed;
+    r[HM_R_MOUSE_X] = mousex;
+    r[HM_R_MOUSE_FORWARD] = !!mousebuttons[mousebforward];
+    r[HM_R_MOUSE_STRAFE] = !!mousebuttons[mousebstrafe];
+    r[HM_R_JOY_STRAFE] = !!joybuttons[joybstrafe];
+    r[HM_R_TICDUP] = ticdup;
 
     memset(cmd, 0, sizeof(ticcmd_t));
 
@@ -444,7 +510,7 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
     }
 
     // buttons
-    cmd->chatchar = HU_dequeueChatChar(); 
+    cmd->chatchar = r[HM_R_CHAT_CHAR];
  
     if (gamekeydown[key_fire] || mousebuttons[mousebfire] 
 	|| joybuttons[joybfire]) 
@@ -607,15 +673,18 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
         cmd->angleturn = hm_committed.angleturn;
         turnheld = hm_committed.turnheld;
     }
+    r[HM_R_FORWARD] = cmd->forwardmove;
+    r[HM_R_SIDE] = cmd->sidemove;
+    r[HM_R_ANGLE_RAW] = cmd->angleturn;
+    r[HM_R_TURNHELD] = turnheld;
 
     // low-res turning
 
     if (lowres_turn)
     {
-        static signed short carry = 0;
         signed short desired_angleturn;
 
-        desired_angleturn = cmd->angleturn + carry;
+        desired_angleturn = cmd->angleturn + hm_lowres_carry;
 
         // round angleturn to the nearest 256 unit boundary
         // for recording demos with single byte values for turn
@@ -625,7 +694,42 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
         // Carry forward the error from the reduced resolution to the
         // next tic, so that successive small movements can accumulate.
 
-        carry = desired_angleturn - cmd->angleturn;
+        hm_lowres_carry = desired_angleturn - cmd->angleturn;
+    }
+    HMTicRemainderOutput hm_remainder_reference = {
+        cmd->angleturn, cmd->buttons, cmd->chatchar, cmd->consistancy,
+        cmd->buttons2, cmd->inventory, cmd->lookfly, cmd->arti,
+        dclicktime, dclickstate, dclicks, dclicktime2, dclickstate2, dclicks2,
+        hm_lowres_carry, testcontrols_mousespeed, next_weapon, sendpause,
+        sendsave, mousex, mousey
+    };
+#ifdef HM_TEST
+    hm_test_last_remainder = hm_remainder;
+#endif
+    HMTicRemainderOutput hm_remainder_committed;
+    if (HM_EvaluateRemainder(&hm_remainder, &hm_remainder_reference, &hm_remainder_committed))
+    {
+        cmd->angleturn = hm_remainder_committed.angleturn;
+        cmd->buttons = hm_remainder_committed.buttons;
+        cmd->chatchar = hm_remainder_committed.chatchar;
+        cmd->consistancy = hm_remainder_committed.consistancy;
+        cmd->buttons2 = hm_remainder_committed.buttons2;
+        cmd->inventory = hm_remainder_committed.inventory;
+        cmd->lookfly = hm_remainder_committed.lookfly;
+        cmd->arti = hm_remainder_committed.arti;
+        dclicktime = hm_remainder_committed.dclicktime;
+        dclickstate = hm_remainder_committed.dclickstate;
+        dclicks = hm_remainder_committed.dclicks;
+        dclicktime2 = hm_remainder_committed.dclicktime2;
+        dclickstate2 = hm_remainder_committed.dclickstate2;
+        dclicks2 = hm_remainder_committed.dclicks2;
+        hm_lowres_carry = hm_remainder_committed.lowres_carry;
+        testcontrols_mousespeed = hm_remainder_committed.testcontrols_mousespeed;
+        next_weapon = hm_remainder_committed.next_weapon;
+        sendpause = hm_remainder_committed.sendpause;
+        sendsave = hm_remainder_committed.sendsave;
+        mousex = hm_remainder_committed.mousex;
+        mousey = hm_remainder_committed.mousey;
     }
 } 
 
@@ -663,6 +767,75 @@ HMMovementOutput HM_TestOriginalMovement(const HMMovementInput *input)
     ticcmd_t cmd;
     G_BuildTiccmd(&cmd, 0);
     return (HMMovementOutput){cmd.forwardmove, cmd.sidemove, cmd.angleturn, turnheld};
+}
+
+HMTicRemainderOutput HM_TestOriginalRemainder(const HMMovementInput *movement,
+                                               const HMTicRemainderInput *before,
+                                               HMTicRemainderInput *captured)
+{
+    const int32_t *m = movement->cell, *v = before->cell;
+    memset(gamekeydown, 0, sizeof(gamekeydown));
+    memset(mousearray, 0, sizeof(mousearray));
+    memset(joyarray, 0, sizeof(joyarray));
+    gamekeydown[key_strafe] = m[HM_KEY_STRAFE];
+    gamekeydown[key_speed] = m[HM_SPEED];
+    gamekeydown[key_right] = m[HM_KEY_RIGHT];
+    gamekeydown[key_left] = m[HM_KEY_LEFT];
+    gamekeydown[key_up] = m[HM_KEY_UP];
+    gamekeydown[key_down] = m[HM_KEY_DOWN];
+    gamekeydown[key_strafeleft] = m[HM_KEY_STRAFE_LEFT];
+    gamekeydown[key_straferight] = m[HM_KEY_STRAFE_RIGHT];
+    gamekeydown[key_fire] = v[HM_R_FIRE_KEY];
+    gamekeydown[key_use] = v[HM_R_USE_KEY];
+    for (int j = 0; j < 8; ++j) gamekeydown[*weapon_keys[j]] = v[HM_R_WEAPON_KEY_1+j];
+    mousebfire = 0; mousebstrafe = 1; mousebforward = 2;
+    mousebbackward = 3; mousebstrafeleft = 4; mousebstraferight = 5; mousebuse = 6;
+    mousebuttons[0] = v[HM_R_FIRE_MOUSE];
+    mousebuttons[1] = m[HM_MOUSE_STRAFE];
+    mousebuttons[2] = m[HM_MOUSE_FORWARD];
+    mousebuttons[3] = m[HM_MOUSE_BACKWARD];
+    mousebuttons[4] = m[HM_MOUSE_STRAFE_LEFT];
+    mousebuttons[5] = m[HM_MOUSE_STRAFE_RIGHT];
+    mousebuttons[6] = v[HM_R_USE_MOUSE];
+    joybfire = 0; joybstrafe = 1; joybspeed = 2;
+    joybstrafeleft = 3; joybstraferight = 4; joybuse = 5;
+    joybuttons[0] = v[HM_R_FIRE_JOY];
+    joybuttons[1] = m[HM_JOY_STRAFE];
+    joybuttons[2] = m[HM_SPEED];
+    joybuttons[3] = m[HM_JOY_STRAFE_LEFT];
+    joybuttons[4] = m[HM_JOY_STRAFE_RIGHT];
+    joybuttons[5] = v[HM_R_USE_JOY];
+    joyxmove = m[HM_JOY_X]; joyymove = m[HM_JOY_Y];
+    joystrafemove = m[HM_JOY_SIDE];
+    mousex = m[HM_MOUSE_X]; mousey = m[HM_MOUSE_Y];
+    turnheld = m[HM_TURNHELD]; ticdup = m[HM_TICDUP];
+    gamestate = v[HM_R_IN_LEVEL] ? GS_LEVEL : GS_DEMOSCREEN;
+    next_weapon = v[HM_R_NEXT_WEAPON];
+    players[consoleplayer].readyweapon = v[HM_R_READY_WEAPON];
+    players[consoleplayer].pendingweapon = v[HM_R_PENDING_WEAPON];
+    for (int j = 0; j < NUMWEAPONS; ++j) players[consoleplayer].weaponowned[j] = v[HM_R_OWNED_FIST+j];
+    players[consoleplayer].powers[pw_strength] = v[HM_R_STRENGTH];
+    gamemission = v[HM_R_MISSION_DOOM] ? doom : (v[HM_R_LOGICAL_DOOM] ? pack_chex : doom2);
+    gamemode = v[HM_R_SHAREWARE] ? shareware : registered;
+    dclick_use = v[HM_R_DCLICK_USE];
+    dclicktime = v[HM_R_DCLICK_TIME]; dclickstate = v[HM_R_DCLICK_STATE]; dclicks = v[HM_R_DCLICKS];
+    dclicktime2 = v[HM_R_DCLICK_TIME2]; dclickstate2 = v[HM_R_DCLICK_STATE2]; dclicks2 = v[HM_R_DCLICKS2];
+    sendpause = v[HM_R_SEND_PAUSE]; sendsave = v[HM_R_SEND_SAVE]; savegameslot = v[HM_R_SAVE_SLOT];
+    lowres_turn = v[HM_R_LOWRES_TURN]; hm_lowres_carry = v[HM_R_LOWRES_CARRY];
+    hm_test_chat_override = v[HM_R_CHAT_CHAR];
+    consistancy[consoleplayer][0] = v[HM_R_CONSISTENCY];
+    testcontrols_mousespeed = v[HM_R_TEST_MOUSE_SPEED];
+    ticcmd_t cmd;
+    G_BuildTiccmd(&cmd, 0);
+    hm_test_chat_override = -1;
+    *captured = hm_test_last_remainder;
+    return (HMTicRemainderOutput){
+        cmd.angleturn, cmd.buttons, cmd.chatchar, cmd.consistancy,
+        cmd.buttons2, cmd.inventory, cmd.lookfly, cmd.arti,
+        dclicktime, dclickstate, dclicks, dclicktime2, dclickstate2, dclicks2,
+        hm_lowres_carry, testcontrols_mousespeed, next_weapon, sendpause,
+        sendsave, mousex, mousey
+    };
 }
 #endif
  
