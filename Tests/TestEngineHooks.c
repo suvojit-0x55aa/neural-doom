@@ -11,6 +11,7 @@ int HM_EvaluateRemainder(const HMTicRemainderInput *in, const HMTicRemainderOutp
 void DG_Init(void) {}
 void DG_DrawFrame(void) {}
 void DG_SleepMs(uint32_t ms) { (void)ms; }
-uint32_t DG_GetTicksMs(void) { return 0; }
+// Advances on every query so engine waits (screen wipe, tic pacing) terminate.
+uint32_t DG_GetTicksMs(void) { static uint32_t now; return now += 3; }
 int DG_GetKey(int *pressed, unsigned char *key) { (void)pressed; (void)key; return 0; }
 void DG_SetWindowTitle(const char *title) { (void)title; }

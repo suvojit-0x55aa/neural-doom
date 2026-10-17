@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "map": "E1M1",
+  "wadSha256": "7323bcc168c5a45ff10749b339960e98314740a734c30d4b9f3337001f9e703d",
+  "mapSha256": "622679faf3beec3ebaa09d4ae4f17f9f823a7cc857ed282c1f612c909d44b233",
+  "sourceHash": "0xb96134692dd92ccc",
+  "tables": [
+    {"id": "0x00030001", "name": "vertices", "length": 2392, "capacity": 131072, "cellsHash": "0x92fbc0a0bf797496"},
+    {"id": "0x00030002", "name": "linedefs", "length": 8225, "capacity": 458752, "cellsHash": "0x9eabf993f7c1ba99"},
+    {"id": "0x00030003", "name": "sidedefs", "length": 10974, "capacity": 393216, "cellsHash": "0xcece7868510a8d0b"},
+    {"id": "0x00030004", "name": "sectors", "length": 1274, "capacity": 458752, "cellsHash": "0x69bf57ea3ca92018"},
+    {"id": "0x00030005", "name": "nodes", "length": 9534, "capacity": 458752, "cellsHash": "0x901dc094de4ad4b2"},
+    {"id": "0x00030006", "name": "subsectors", "length": 2046, "capacity": 98304, "cellsHash": "0xe37c90fb0837fbc7"},
+    {"id": "0x00030007", "name": "segs", "length": 16456, "capacity": 524288, "cellsHash": "0x60e55cd7765c99c8"},
+    {"id": "0x00030008", "name": "things", "length": 1460, "capacity": 327680, "cellsHash": "0x31dcd9c6f306af67"},
+    {"id": "0x00030009", "name": "blockmap", "length": 3764, "capacity": 262144, "cellsHash": "0x1c3e2cfd03ed1527"},
+    {"id": "0x0003000a", "name": "reject", "length": 1037, "capacity": 1048576, "cellsHash": "0xbc2ec87b79166577"},
+    {"id": "0x0003000b", "name": "textures", "length": 11726, "capacity": 114690, "cellsHash": "0xf3f92d2201e4d5a4"},
+    {"id": "0x0003000c", "name": "patch-columns", "length": 2707507, "capacity": 8388608, "cellsHash": "0x6acc4e2a3be52eef"},
+    {"id": "0x0003000d", "name": "flats", "length": 246253, "capacity": 1050625, "cellsHash": "0xf308191ad07f99df"},
+    {"id": "0x0003000e", "name": "sprites", "length": 3413, "capacity": 65537, "cellsHash": "0x8ec20b93f6e8da78"},
+    {"id": "0x0003000f", "name": "playpal", "length": 2689, "capacity": 12289, "cellsHash": "0x7dd4bb80250d8c3a"},
+    {"id": "0x00030010", "name": "colormap", "length": 2177, "capacity": 4097, "cellsHash": "0x6e41a30b709a08f5"}
+  ]
+}

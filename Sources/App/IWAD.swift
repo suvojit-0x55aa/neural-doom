@@ -26,3 +26,22 @@ enum IWADValidator {
         return nil
     }
 }
+
+extension IWADValidator {
+    // The map the engine warps to at launch: E1M1 for Doom 1 IWADs, MAP01 otherwise.
+    static func mapTables(for url: URL) -> Result<MapTablesV1, MapTablesFailure> {
+        guard let data = try? Data(contentsOf: url, options: .mappedIfSafe) else {
+            return .failure(.malformed("IWAD became unreadable"))
+        }
+        do {
+            let map = try MapTablesV1.containsLump("E1M1", in: data) ? "E1M1" : "MAP01"
+            return .success(try MapTablesV1.decode(wad: data, map: map))
+        } catch let failure as MapTablesFailure { return .failure(failure) }
+        catch { return .failure(.malformed(error.localizedDescription)) }
+    }
+
+    // User WAD paths are never logged: only the basename and a short content fingerprint.
+    static func redactedDescription(of url: URL, tables: MapTablesV1) -> String {
+        "\(url.lastPathComponent) [sha256 \(tables.wadSHA256.prefix(12))]"
+    }
+}

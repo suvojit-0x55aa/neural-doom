@@ -2,3 +2,4 @@
 #include "MovementABI.h"
 #include "TicRemainderABI.h"
 #include "RenderStreamABI.h"
+#include "MapTablesABI.h"

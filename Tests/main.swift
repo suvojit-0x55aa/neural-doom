@@ -102,6 +102,14 @@ if let at = CommandLine.arguments.firstIndex(of: "--app-bundle"), at + 1 < Comma
     let creditsText = try String(contentsOf: credits)
     require(licenseText.contains("Redistribution and use"), "Freedoom license missing")
     require(creditsText.contains("Freedoom"), "Freedoom credits missing")
+    guard case .success(let bundledTables) = IWADValidator.mapTables(for: wad),
+          (try? Data(contentsOf: mapManifestURL)) == bundledTables.manifestJSON() else {
+        fputs("FAIL: bundled Freedoom did not load through MapTablesV1 or its manifest is stale\n", stderr); exit(1)
+    }
+    require(IWADValidator.redactedDescription(of: wad, tables: bundledTables) == "freedoom1.wad [sha256 7323bcc168c5]"
+            && !IWADValidator.redactedDescription(of: wad, tables: bundledTables).contains("/"),
+            "WAD description is not redacted to basename and fingerprint")
+    print("clean app bundle: bundled Freedoom E1M1 loaded through MapTablesV1 (source hash \(String(format: "0x%016llx", bundledTables.sourceHash)))")
     print("clean app bundle: IWAD resolves outside source tree, header/directory readable, SHA-256 \(digest), license and credits present")
     exit(0)
 }
@@ -130,6 +138,7 @@ require(graph.operationCount <= 232, "frozen graph exceeds 256-cell Metal scratc
 require(graph.liveOperationCount == graph.operationCount, "manifest counts dead builder allocations")
 require(MemoryLayout<CircuitOp>.stride == 32, "operation ABI is not 32 bytes")
 runCircuitContractTests()
+runMapTablesTests()
 if CommandLine.arguments.contains("--contracts") { exit(0) }
 guard MTLCreateSystemDefaultDevice() != nil else { fputs("FAIL: Apple Silicon Metal device unavailable\n", stderr); exit(1) }
 let circuit = CircuitRuntime(deadlineNs: 1_000_000_000)

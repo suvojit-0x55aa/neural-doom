@@ -137,6 +137,24 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
         selectedIWAD = url
         status.stringValue = "Loading \(url.lastPathComponent)…"
+        // The decoded tables are validated before the reference loader runs: damaged
+        // content stops here with a precise reason; legal content too large for the
+        // circuit tables (or unsupported) falls back to DoomGeneric with that reason logged.
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            let result = IWADValidator.mapTables(for: url)
+            DispatchQueue.main.async { self?.startEngine(engine, url: url, mapTables: result) }
+        }
+    }
+    private func startEngine(_ engine: EngineCoordinator, url: URL, mapTables: Result<MapTablesV1, MapTablesFailure>) {
+        switch mapTables {
+        case .success(let tables):
+            print("MapTablesV1: \(IWADValidator.redactedDescription(of: url, tables: tables)) \(tables.mapName) source hash \(String(format: "0x%016llx", tables.sourceHash))")
+        case .failure(.malformed(let why)):
+            status.stringValue = "This WAD is damaged (\(why)). Use File → Open IWAD to choose another file."
+            return
+        case .failure(let failure):
+            print("MapTablesV1: \(url.lastPathComponent) not table-backed, using DoomGeneric reference: \(failure)")
+        }
         engine.start(iwad: url) { [weak self] error in
             guard let self else { return }
             if let error { self.status.stringValue = error }

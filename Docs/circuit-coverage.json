@@ -16,6 +16,15 @@
     "failure": "Every non-exact status has zero output, state-delta, and event counts; no partial commit.",
     "soundOwnership": "Circuits select and order logical sound/music events; the host only performs audio-device I/O."
   },
+  "mapTables": {
+    "id": "MapTablesV1",
+    "status": "host-decoded, circuit-readable; not a circuit-owned module",
+    "abi": "Sources/Bridge/MapTablesABI.h",
+    "tables": ["vertices","linedefs","sidedefs","sectors","nodes","subsectors","segs","things","blockmap","reject","textures","patch-columns","flats","sprites","playpal","colormap"],
+    "manifest": "map-tables-e1m1.json",
+    "failureClasses": ["malformed","unsupported","capacity-exceeded"],
+    "coverageEffect": "none; coverage stays 2 of 10"
+  },
   "modules": [
     {"id":"tic.locomotion","stage":1,"status":"circuit-owned","oracle":"reference-C every eligible tic","fallback":"reference-C on out-of-domain input, Metal error/2 ms timeout, or mismatch","state":["turnheld"],"graph":"locomotion-graph.json","verifiedSnapshots":100000},
     {"id":"tic.remainder","stage":2,"status":"circuit-owned","oracle":"reference-C every eligible tic","fallback":"reference-C on out-of-domain input, Metal error/2 ms timeout, or mismatch","graph":"tic-remainder-graph.json","verifiedSnapshots":100000,"state":["double-click timers/states/counts","low-resolution turn carry","test-controls mouse speed","next weapon","pause/save flags","mouse consumption"],"covers":["attack","use","weapon selection and cycling","chat","double-click","save","pause","low-resolution turn carry"]},
