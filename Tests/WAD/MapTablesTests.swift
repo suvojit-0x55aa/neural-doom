@@ -35,8 +35,10 @@ private struct MicroWAD {
 
     // withBSP: two single-seg subsectors split by one node; otherwise zero nodes.
     static func make(withBSP: Bool) -> MicroWAD {
-        let patch = le16(2) + le16(2) + le16(1) + le16(2) + le32(16) + le32(23)
-            + [0, 2, 0, 0xA1, 0xA2, 0, 0xFF] + [1, 1, 0, 0xB1, 0, 0xFF]
+        var patch = le16(2) + le16(2) + le16(1) + le16(2)
+        patch += le32(16) + le32(23)
+        patch += [0, 2, 0, 0xA1, 0xA2, 0, 0xFF]
+        patch += [1, 1, 0, 0xB1, 0, 0xFF]
         func texture(_ n: String) -> [UInt8] {
             name8(n) + le32(0) + le16(2) + le16(2) + le32(0) + le16(1) + le16(0) + le16(0) + le16(0) + le16(1) + le16(0)
         }
@@ -67,9 +69,11 @@ private struct MicroWAD {
         if withBSP {
             m.set("SEGS", seg + seg)
             m.set("SSECTORS", le16(1) + le16(0) + le16(1) + le16(1))
-            m.set("NODES", le16(0) + le16(0) + le16(64) + le16(0)
-                + le16(10) + le16(-10 & 0xFFFF) + le16(0) + le16(64) + le16(0) + le16(-10 & 0xFFFF) + le16(-1 & 0xFFFF) + le16(64)
-                + le16(0x8000) + le16(0x8001))
+            var nodes = le16(0) + le16(0) + le16(64) + le16(0)
+            nodes += le16(10) + le16(-10 & 0xFFFF) + le16(0) + le16(64)
+            nodes += le16(0) + le16(-10 & 0xFFFF) + le16(-1 & 0xFFFF) + le16(64)
+            nodes += le16(0x8000) + le16(0x8001)
+            m.set("NODES", nodes)
         }
         return m
     }
@@ -122,7 +126,8 @@ private func snapshotTests() {
         require(tableCells(t, HM_TABLE_FLATS) == [1, 4096, 3] + flat, "flats snapshot")
         require(tableCells(t, HM_TABLE_SPRITES) == [1, f(3), f(1), f(4), 5], "sprites snapshot")
         require(tableCells(t, HM_TABLE_PLAYPAL) == [768] + packed((0..<768).map { UInt8(($0 * 7) & 255) }), "playpal snapshot")
-        require(tableCells(t, HM_TABLE_COLORMAP) == [34 * 256] + packed((0..<34 * 256).map { UInt8($0 & 255) }), "colormap snapshot")
+        let colormap = [Int32(34 * 256)] + packed((0..<34 * 256).map { UInt8($0 & 255) })
+        require(tableCells(t, HM_TABLE_COLORMAP) == colormap, "colormap snapshot")
         require(decode(MicroWAD.make(withBSP: withBSP).data(), limits: [:]).map { $0.manifestJSON() } == .success(t.manifestJSON()),
                 "micro manifest is not byte-stable")
     }
