@@ -141,6 +141,7 @@ runCircuitContractTests()
 runMapTablesTests()
 if CommandLine.arguments.contains("--contracts") { exit(0) }
 guard MTLCreateSystemDefaultDevice() != nil else { fputs("FAIL: Apple Silicon Metal device unavailable\n", stderr); exit(1) }
+runParity(CommandLine.arguments)
 let circuit = CircuitRuntime(deadlineNs: 1_000_000_000)
 var generator = Generator()
 var cpuMismatch = 0, metalMismatch = 0, extractionMismatch = 0

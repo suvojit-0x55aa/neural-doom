@@ -1,0 +1,123 @@
+{
+  "adversarial" : [
+    {
+      "expectedStatus" : 0,
+      "fixture" : "ed5fe8616afad372",
+      "name" : "nominal"
+    },
+    {
+      "expectedStatus" : 0,
+      "fixture" : "c705e545846e1be8",
+      "name" : "integer extremes"
+    },
+    {
+      "expectedStatus" : 0,
+      "fixture" : "e55ad554beb90f6a",
+      "name" : "angle wrap and equal bits"
+    },
+    {
+      "expectedStatus" : 0,
+      "fixture" : "68cbe50e1819ea72",
+      "name" : "full delta span"
+    },
+    {
+      "expectedStatus" : 0,
+      "fixture" : "969692202365a99a",
+      "name" : "zero deltas"
+    },
+    {
+      "expectedStatus" : 1,
+      "fixture" : "51853fead161a723",
+      "name" : "unsupported domain"
+    },
+    {
+      "expectedStatus" : 2,
+      "fixture" : "4195ecf54529f924",
+      "name" : "capacity+1 inputs"
+    },
+    {
+      "expectedStatus" : 2,
+      "fixture" : "0e22e4068157c5e5",
+      "name" : "capacity+1 table"
+    },
+    {
+      "expectedStatus" : 8,
+      "fixture" : "5ad0e330f300cb71",
+      "name" : "zero-length inputs"
+    },
+    {
+      "expectedStatus" : 8,
+      "fixture" : "0bbca6d405fa3860",
+      "name" : "short state"
+    },
+    {
+      "expectedStatus" : 10,
+      "fixture" : "e2af01f7ea8a2746",
+      "name" : "absent table"
+    },
+    {
+      "expectedStatus" : 10,
+      "fixture" : "b461b8536614e93e",
+      "name" : "table index at length"
+    },
+    {
+      "expectedStatus" : 10,
+      "fixture" : "6b82c6268f72b872",
+      "name" : "negative table index"
+    },
+    {
+      "expectedStatus" : 11,
+      "fixture" : "87ff41e471d3cf9d",
+      "name" : "add overflow"
+    },
+    {
+      "expectedStatus" : 11,
+      "fixture" : "71e2b94824312009",
+      "name" : "div overflow"
+    },
+    {
+      "expectedStatus" : 3,
+      "fixture" : "42050aadf3925d8d",
+      "name" : "divide by zero"
+    },
+    {
+      "expectedStatus" : 5,
+      "fixture" : "5b3d476f6b205e22",
+      "name" : "invalid ABI"
+    },
+    {
+      "expectedStatus" : 6,
+      "fixture" : "c4ba1af3f296727e",
+      "name" : "unknown event id"
+    },
+    {
+      "expectedStatus" : 7,
+      "fixture" : "eafe0d82f0ea86a0",
+      "name" : "stale source hash"
+    },
+    {
+      "expectedStatus" : 2,
+      "fixture" : "e8c8292a7219e2e5",
+      "name" : "output count over capacity"
+    },
+    {
+      "expectedStatus" : 9,
+      "fixture" : "a00162effc85bd7e",
+      "name" : "out-of-order deltas"
+    },
+    {
+      "expectedStatus" : 12,
+      "fixture" : "e31c42fd09617abb",
+      "name" : "partial output span"
+    }
+  ],
+  "baseSeed" : "0x4e445f5041524954",
+  "fixtureFormat" : 1,
+  "generatedCases" : 1000,
+  "generatedCasesDigest" : "878cdd43edea6b9f",
+  "module" : "conformance.synthetic",
+  "moduleID" : 786433,
+  "programVersion" : 1,
+  "schema" : 1,
+  "sourceHash" : "0x332e913a18e15c17"
+}

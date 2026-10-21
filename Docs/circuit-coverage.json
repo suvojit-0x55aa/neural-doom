@@ -25,6 +25,12 @@
     "failureClasses": ["malformed","unsupported","capacity-exceeded"],
     "coverageEffect": "none; coverage stays 2 of 10"
   },
+  "validation": {
+    "parityHarness": "testing/parity-harness.md",
+    "manifests": "manifests/",
+    "evidenceFields": ["seeded snapshot parity across oracle/CPU/Metal", "all 13 module statuses", "fixture and manifest freshness", "visualization invariance", "separated latency and whole-tic pacing report"],
+    "coverageEffect": "none; coverage stays 2 of 10"
+  },
   "modules": [
     {"id":"tic.locomotion","stage":1,"status":"circuit-owned","oracle":"reference-C every eligible tic","fallback":"reference-C on out-of-domain input, Metal error/2 ms timeout, or mismatch","state":["turnheld"],"graph":"locomotion-graph.json","verifiedSnapshots":100000},
     {"id":"tic.remainder","stage":2,"status":"circuit-owned","oracle":"reference-C every eligible tic","fallback":"reference-C on out-of-domain input, Metal error/2 ms timeout, or mismatch","graph":"tic-remainder-graph.json","verifiedSnapshots":100000,"state":["double-click timers/states/counts","low-resolution turn carry","test-controls mouse speed","next weapon","pause/save flags","mouse consumption"],"covers":["attack","use","weapon selection and cycling","chat","double-click","save","pause","low-resolution turn carry"]},
