@@ -20,6 +20,7 @@
 
 #include "z_zone.h"
 #include "p_local.h"
+#include "PhaseSeamABI.h"
 
 #include "doomstat.h"
 
@@ -142,10 +143,14 @@ void P_Ticker (void)
 	if (playeringame[i])
 	    P_PlayerThink (&players[i]);
 			
+    HM_PhaseSeam(HM_PHASE_THINKERS_AI, HM_SEAM_BEGIN);
     P_RunThinkers ();
+    HM_PhaseSeam(HM_PHASE_THINKERS_AI, HM_SEAM_END);
+    HM_PhaseSeam(HM_PHASE_WORLD_COMMIT, HM_SEAM_BEGIN);
     P_UpdateSpecials ();
     P_RespawnSpecials ();
 
     // for par times
     leveltime++;	
+    HM_PhaseSeam(HM_PHASE_WORLD_COMMIT, HM_SEAM_END);
 }

@@ -253,7 +253,7 @@ final class CircuitRuntime {
     private var workerBusy = false
     private var metalTimedOut = false
     private var metalLastAttemptNs: UInt64 = 0
-    private let deadlineNs: UInt64
+    var deadlineNs: UInt64 // set per call by CircuitScheduler under the whole-tic budget
     private let workerDelayNs: UInt64 // injected only by the bounded-wait regression test
     private(set) var circuitTics = 0
     private(set) var domainFallbacks = 0

@@ -19,6 +19,7 @@ final class InspectorModel: ObservableObject {
     @Published var remainderMismatches = 0
     @Published var remainderFallbackReason = "none"
     @Published var isPaused = false
+    @Published var moduleRows: [ModuleTelemetrySnapshot] = []
     weak var engine: EngineCoordinator?
     func publish(trace: CircuitTrace, graph: CircuitGraph, dropped: Int,
                  circuitTics: Int, domainFallbacks: Int, metalFallbacks: Int, mismatches: Int,
@@ -78,6 +79,7 @@ struct InspectorView: View {
                 Text("Circuit \(model.circuitTics) · domain fallback \(model.domainFallbacks) · Metal fallback \(model.metalFallbacks) · mismatch \(model.mismatches) · dropped \(model.dropped)")
                     .font(.caption).fixedSize(horizontal: false, vertical: true)
                 Text("Latest fallback: \(model.fallbackReason)").font(.caption)
+                moduleRowsView
                 HStack {
                     Button("Pause") { model.pause() }.disabled(model.isPaused)
                     Button("Step one tic") { model.step() }.disabled(!model.isPaused)
@@ -174,6 +176,20 @@ struct InspectorView: View {
                 }
             }
         }.padding(14).frame(minWidth: 530, minHeight: 600)
+    }
+    /// One generic row per scheduled module; later modules appear here with no inspector edits.
+    private var moduleRowsView: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            ForEach(model.moduleRows, id: \.id) { row in
+                Text(String(format: "%@ · phase %d · circuit %d/%d · accepted p50 %.3f p99 %.3f ms · wait p99 %.3f · commit p99 %.3f · high-water in %d out %d Δ %d ev %d · fallbacks %@",
+                            row.name, row.phase, row.circuitTics, row.attempts,
+                            Double(row.acceptedP50Ns) / 1e6, Double(row.acceptedP99Ns) / 1e6,
+                            Double(row.queueWaitP99Ns) / 1e6, Double(row.commitP99Ns) / 1e6,
+                            row.highWater.inputs, row.highWater.outputs, row.highWater.deltas, row.highWater.events,
+                            row.fallbacks.isEmpty ? "none" : row.fallbacks.map { "\($0.reason) \($0.count)" }.joined(separator: ", ")))
+                    .font(.system(size: 10, design: .monospaced)).fixedSize(horizontal: false, vertical: true)
+            }
+        }
     }
     private func comparison(_ name: String, _ c: Int32, _ circuit: Int32) -> some View {
         HStack {

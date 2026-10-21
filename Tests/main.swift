@@ -80,6 +80,7 @@ if CommandLine.arguments.contains("--data-directory-compatibility") {
     print("data directory: explicit override preserved, legacy profile reused, fresh profile renamed")
     exit(0)
 }
+runSeamChild(CommandLine.arguments)
 let graph = CircuitGraph()
 if let at = CommandLine.arguments.firstIndex(of: "--app-bundle"), at + 1 < CommandLine.arguments.count {
     let app = URL(fileURLWithPath: CommandLine.arguments[at+1], isDirectory: true)
@@ -139,6 +140,8 @@ require(graph.liveOperationCount == graph.operationCount, "manifest counts dead 
 require(MemoryLayout<CircuitOp>.stride == 32, "operation ABI is not 32 bytes")
 runCircuitContractTests()
 runMapTablesTests()
+runSchedulerTests()
+runSeamTests(CommandLine.arguments)
 if CommandLine.arguments.contains("--contracts") { exit(0) }
 guard MTLCreateSystemDefaultDevice() != nil else { fputs("FAIL: Apple Silicon Metal device unavailable\n", stderr); exit(1) }
 let circuit = CircuitRuntime(deadlineNs: 1_000_000_000)
@@ -395,4 +398,5 @@ for _ in 0..<1000 {
             "remainder visualization-on/off invariant")
     remainderVizChecks += 1
 }
+runLegacyThroughSchedulerTests(circuit: circuit, remainder: remainder, snapshots: total)
 print("remainder adversarial: \(adversarialChecks) stateful/edge snapshots; invalid-domain, Metal/deadline fallback, ring 1000/128/872, visualization \(remainderVizChecks) invariant checks + 24 live tics / 2 traces")

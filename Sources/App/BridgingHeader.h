@@ -3,3 +3,4 @@
 #include "TicRemainderABI.h"
 #include "RenderStreamABI.h"
 #include "MapTablesABI.h"
+#include "PhaseSeamABI.h"

@@ -73,6 +73,7 @@
 #include "g_game.h"
 #include "MovementABI.h"
 #include "TicRemainderABI.h"
+#include "PhaseSeamABI.h"
 void HU_queueChatChar(char c); // local trace fixture; upstream omits this declaration
 
 
@@ -337,6 +338,8 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
     int		tspeed; 
     int		forward;
     int		side;
+
+    HM_PhaseSeam(HM_PHASE_TIC_COMMANDS, HM_SEAM_BEGIN);
 
     // Opt-in local WAD trace fixture: inject otherwise menu/demo-only command
     // events at the C adapter, before both oracle and circuit snapshot them.
@@ -731,6 +734,7 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
         mousex = hm_remainder_committed.mousex;
         mousey = hm_remainder_committed.mousey;
     }
+    HM_PhaseSeam(HM_PHASE_TIC_COMMANDS, HM_SEAM_END);
 } 
 
 #ifdef HM_TEST
@@ -1249,9 +1253,11 @@ void G_Ticker (void)
     { 
       case GS_LEVEL: 
 	P_Ticker (); 
+	HM_PhaseSeam(HM_PHASE_HUD_AUTOMAP, HM_SEAM_BEGIN);
 	ST_Ticker (); 
 	AM_Ticker (); 
 	HU_Ticker ();            
+	HM_PhaseSeam(HM_PHASE_HUD_AUTOMAP, HM_SEAM_END);
 	break; 
 	 
       case GS_INTERMISSION: 

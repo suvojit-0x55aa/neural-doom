@@ -289,7 +289,7 @@ final class RemainderRuntime {
     private let workerLock = NSLock()
     private let worker = DispatchQueue(label: "handwired.doom.tic-remainder", qos: .userInteractive)
     private var workerBusy = false
-    private let deadlineNs: UInt64
+    var deadlineNs: UInt64 // set per call by CircuitScheduler under the whole-tic budget
     private var metalTimedOut = false
     private(set) var circuitTics = 0
     private(set) var domainFallbacks = 0

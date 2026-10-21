@@ -34,6 +34,7 @@
 
 #include "r_local.h"
 #include "r_sky.h"
+#include "PhaseSeamABI.h"
 
 
 
@@ -874,17 +875,21 @@ void R_RenderPlayerView (player_t* player)
     NetUpdate ();
 
     // The head node is the last node output.
+    HM_PhaseSeam(HM_PHASE_BSP_TRAVERSAL, HM_SEAM_BEGIN);
     R_RenderBSPNode (numnodes-1);
+    HM_PhaseSeam(HM_PHASE_BSP_TRAVERSAL, HM_SEAM_END);
     
     // Check for new console commands.
     NetUpdate ();
     
+    HM_PhaseSeam(HM_PHASE_RASTERIZATION, HM_SEAM_BEGIN);
     R_DrawPlanes ();
     
     // Check for new console commands.
     NetUpdate ();
     
     R_DrawMasked ();
+    HM_PhaseSeam(HM_PHASE_RASTERIZATION, HM_SEAM_END);
 
     // Check for new console commands.
     NetUpdate ();				

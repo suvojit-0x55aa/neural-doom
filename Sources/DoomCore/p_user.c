@@ -27,6 +27,7 @@
 #include "p_local.h"
 
 #include "doomstat.h"
+#include "PhaseSeamABI.h"
 
 
 
@@ -257,16 +258,19 @@ void P_PlayerThink (player_t* player)
     // Move around.
     // Reactiontime is used to prevent movement
     //  for a bit after a teleport.
+    HM_PhaseSeam(HM_PHASE_MOVEMENT_COLLISION, HM_SEAM_BEGIN);
     if (player->mo->reactiontime)
 	player->mo->reactiontime--;
     else
 	P_MovePlayer (player);
+    HM_PhaseSeam(HM_PHASE_MOVEMENT_COLLISION, HM_SEAM_END);
     
     P_CalcHeight (player);
 
     if (player->mo->subsector->sector->special)
 	P_PlayerInSpecialSector (player);
     
+    HM_PhaseSeam(HM_PHASE_INTERACTIONS_COMBAT, HM_SEAM_BEGIN);
     // Check for weapon change.
 
     // A special event has no other buttons.
@@ -325,6 +329,7 @@ void P_PlayerThink (player_t* player)
     
     // cycle psprites
     P_MovePsprites (player);
+    HM_PhaseSeam(HM_PHASE_INTERACTIONS_COMBAT, HM_SEAM_END);
     
     // Counters, time dependend power ups.
 
